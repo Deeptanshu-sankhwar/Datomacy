@@ -156,10 +156,9 @@ export default function TubeDAO() {
             </form>
             
             <Button 
-              variant="outline" 
               size="lg" 
               onClick={() => scrollToSection('how-it-works')}
-              className="border-white/20 text-white hover:bg-white/5 px-8 py-4 text-lg backdrop-blur-sm w-full sm:w-auto"
+              className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-8 py-4 text-lg font-semibold w-full sm:w-auto backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300"
             >
               <Play className="w-5 h-5 mr-2" />
               How It Works

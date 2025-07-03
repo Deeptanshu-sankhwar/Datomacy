@@ -293,7 +293,7 @@ export default function TubeDAO() {
               Why Now?
             </h2>
             <p className="text-2xl text-gray-300 mb-4">
-              You've always been the product.
+              You&apos;ve always been the product.
             </p>
             <p className="text-2xl text-white font-medium">
               Now, you become the stakeholder.
@@ -305,7 +305,7 @@ export default function TubeDAO() {
               <div className="text-6xl font-black text-red-400 mb-4 group-hover:scale-105 transition-transform duration-300">$240B+</div>
               <h3 className="text-2xl font-bold text-white mb-4">YouTube Revenue</h3>
               <p className="text-gray-300 mb-3">
-                YouTube generates hundreds of billions annually from Premium subscriptions — it's time users got their share
+                YouTube generates hundreds of billions annually from Premium subscriptions — it&apos;s time users got their share
               </p>
               <a href="https://abc.xyz/investor/" target="_blank" className="text-xs text-blue-400 hover:underline flex items-center justify-center gap-1">
                 Source: Alphabet Inc. <ExternalLink className="w-3 h-3" />
@@ -318,7 +318,7 @@ export default function TubeDAO() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">LLMs Trained on You</h3>
               <p className="text-gray-300">
-                LLMs are trained on your digital behavior and viewing patterns. It's time to own that data and profit from it.
+                LLMs are trained on your digital behavior and viewing patterns. It&apos;s time to own that data and profit from it.
               </p>
             </div>
             
@@ -447,9 +447,9 @@ export default function TubeDAO() {
                 </div>
               </div>
               
-              <h3 className="text-3xl font-bold text-white mb-4">World's Leading Data Network</h3>
+              <h3 className="text-3xl font-bold text-white mb-4">World&apos;s Leading Data Network</h3>
               <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-                Vana powers TubeDAO's secure data infrastructure with 1.3M+ users and 300+ DAOs.
+                Vana powers TubeDAO&apos;s secure data infrastructure with 1.3M+ users and 300+ DAOs.
               </p>
               
               <div className="grid grid-cols-2 gap-6">
@@ -566,7 +566,7 @@ export default function TubeDAO() {
               Your viewing data has always worked for someone else.
             </p>
             <p className="text-2xl md:text-3xl text-white font-bold">
-              It's time it worked for you.
+              It&apos;s time it worked for you.
             </p>
           </div>
         </div>
@@ -578,7 +578,7 @@ export default function TubeDAO() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
               <h3 className="text-3xl font-black text-white mb-2">TubeDAO</h3>
-              <p className="text-gray-400">The world's first YouTube Premium Data DAO</p>
+              <p className="text-gray-400">The world&apos;s first YouTube Premium Data DAO</p>
               <p className="text-gray-500 text-sm">Built on Vana • Secured by Zero-Knowledge</p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-gray-500 text-sm">Contact:</span>
@@ -659,11 +659,11 @@ function DataUploadModal({ onFileUpload, uploadProgress, isUploading }: {
           </h3>
           <div className="bg-black/40 rounded-lg p-4 font-mono text-sm">
             <div className="text-green-400">{"{"}</div>
-            <div className="text-gray-300 ml-4">"user_id": "anonymous_hash_abc123",</div>
-            <div className="text-gray-300 ml-4">"viewing_patterns": {"{"}</div>
-            <div className="text-gray-300 ml-8">"avg_session_length": "23m",</div>
-            <div className="text-gray-300 ml-8">"preferred_categories": ["tech", "education"],</div>
-            <div className="text-gray-300 ml-8">"premium_features_used": ["offline", "no_ads"]</div>
+            <div className="text-gray-300 ml-4">&quot;user_id&quot;: &quot;anonymous_hash_abc123&quot;,</div>
+            <div className="text-gray-300 ml-4">&quot;viewing_patterns&quot;: {"{"}</div>
+            <div className="text-gray-300 ml-8">&quot;avg_session_length&quot;: &quot;23m&quot;,</div>
+            <div className="text-gray-300 ml-8">&quot;preferred_categories&quot;: [&quot;tech&quot;, &quot;education&quot;],</div>
+            <div className="text-gray-300 ml-8">&quot;premium_features_used&quot;: [&quot;offline&quot;, &quot;no_ads&quot;]</div>
             <div className="text-gray-300 ml-4">{"}"}</div>
             <div className="text-green-400">{"}"}</div>
           </div>
@@ -682,11 +682,11 @@ function DataUploadModal({ onFileUpload, uploadProgress, isUploading }: {
             </li>
             <li className="flex items-start">
               <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">2</span>
-              Select <strong>"YouTube and YouTube Music"</strong> from the services list
+              Select <strong>&quot;YouTube and YouTube Music&quot;</strong> from the services list
             </li>
             <li className="flex items-start">
               <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">3</span>
-              Choose <strong>JSON format</strong> and click "Create Export"
+              Choose <strong>JSON format</strong> and click &quot;Create Export&quot;
             </li>
             <li className="flex items-start">
               <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">4</span>

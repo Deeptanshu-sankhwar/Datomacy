@@ -53,7 +53,6 @@ export default function TubeDAO() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -224,39 +223,25 @@ export default function TubeDAO() {
               <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-br-full animate-pulse"></div>
               <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-500/20 to-transparent rounded-tl-full animate-pulse delay-1000"></div>
               
-              {/* Video Element with Play Button Overlay */}
+              {/* Loom Video Embed */}
               <div className="relative p-4 md:p-8">
-                <div className="relative">
-                  <video 
-                    className="w-full h-auto rounded-2xl shadow-2xl"
-                    controls
-                    poster="/demo-thumbnail.jpg"
-                    preload="metadata"
-                    id="demo-video"
-                    onPlay={() => setIsVideoPlaying(true)}
-                    onPause={() => setIsVideoPlaying(false)}
-                    onEnded={() => setIsVideoPlaying(false)}
-                  >
-                    <source src="/demo.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  
-                  {/* Custom Play Button Overlay - Only show when video is paused */}
-                  {!isVideoPlaying && (
-                    <div className="absolute inset-0 flex items-center justify-center rounded-2xl transition-opacity duration-300">
-                      <div 
-                        className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/50 hover:scale-110 transition-all duration-300 animate-pulse group-hover:animate-none cursor-pointer" 
-                        onClick={() => {
-                          const video = document.getElementById('demo-video') as HTMLVideoElement;
-                          if (video) {
-                            video.play();
-                          }
-                        }}
-                      >
-                        <Play className="w-8 h-8 text-white ml-1" />
-                      </div>
-                    </div>
-                  )}
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                  <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+                    <iframe 
+                      src="https://www.loom.com/embed/72511ad65cbb43d48d0be3376fe22c58?sid=38e65391-04f1-4148-8616-8bedfbd976e5" 
+                      frameBorder="0" 
+                      allowFullScreen
+                      style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100%', 
+                        height: '100%',
+                        borderRadius: '1rem'
+                      }}
+                      className="rounded-2xl"
+                    />
+                  </div>
                 </div>
                 
                 {/* Subtle Gradient Overlay */}

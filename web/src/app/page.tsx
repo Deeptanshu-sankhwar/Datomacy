@@ -53,6 +53,7 @@ export default function TubeDAO() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);

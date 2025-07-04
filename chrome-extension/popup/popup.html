@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TubeDAO Extension</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <img src="../icons/logo.png" alt="TubeDAO" class="logo-icon">
+        <span class="logo-text">TubeDAO</span>
+      </div>
+      <div class="status-indicator" id="statusIndicator">
+        <div class="dot"></div>
+        <span id="statusText">Disabled</span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <!-- Consent Section -->
+      <div class="section">
+        <h3>Data Collection</h3>
+        <div class="toggle-container">
+          <label class="toggle">
+            <input type="checkbox" id="consentToggle">
+            <span class="toggle-slider"></span>
+          </label>
+          <div class="toggle-info">
+            <span class="toggle-label">Enable data capture</span>
+            <span class="toggle-description">Capture your YouTube interaction patterns locally</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy Notice -->
+      <div class="section privacy-section">
+        <div class="privacy-notice">
+          <div class="privacy-icon">🔒</div>
+          <div class="privacy-text">
+            <strong>Privacy First:</strong> All data stays on your device until you choose to export it. You own and control your behavioral data.
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="section stats-section">
+        <h3>Captured Events</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number" id="totalEvents">0</span>
+            <span class="stat-label">Total Events</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="adEvents">0</span>
+            <span class="stat-label">Ad Interactions</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="playbackEvents">0</span>
+            <span class="stat-label">Playback Actions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Preview -->
+      <div class="section" id="dataPreviewSection" style="display: none;">
+        <h3>Recent Activity</h3>
+        <div class="data-preview" id="dataPreview">
+          <!-- Recent events will be displayed here -->
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="section actions-section">
+        <button class="btn btn-primary" id="exportBtn" disabled>
+          <span class="btn-icon">📁</span>
+          Export My Data
+        </button>
+        <button class="btn btn-secondary" id="clearBtn" disabled>
+          <span class="btn-icon">🗑️</span>
+          Clear Local Data
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="footer-text">
+          Part of the <strong>TubeDAO</strong> ecosystem
+        </div>
+        <div class="footer-links">
+          <a href="https://tubedao.com" target="_blank">Website</a> • 
+          <a href="#" id="helpLink">Help</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 

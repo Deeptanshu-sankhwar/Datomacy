@@ -9,6 +9,20 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import dynamic from 'next/dynamic';
+
+const WalletConnection = dynamic(
+  () => import("@/components/WalletConnection").then((mod) => ({ default: mod.WalletConnection })),
+  { 
+    ssr: false,
+    loading: () => (
+      <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+        <Wallet className="h-4 w-4 mr-2" />
+        Connect Wallet
+      </Button>
+    )
+  }
+);
 import { 
   Play, 
   Users, 
@@ -78,8 +92,15 @@ export default function TubeDAO() {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+
+
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Header with Wallet Connection */}
+      <header className="fixed top-0 right-0 z-50 p-6">
+        <WalletConnection />
+      </header>
+
       {/* Enhanced Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div 
@@ -117,7 +138,8 @@ export default function TubeDAO() {
           
           <div className="max-w-4xl mx-auto mb-12">
             <p className="text-3xl md:text-4xl text-gray-300 mb-6 font-light leading-relaxed">
-              First-ever <span className="text-red-400 font-bold">YouTube Premium</span> Data DAO
+              <span className="text-red-400 font-bold">Unlock the Deepest YouTube Insights.</span><br />
+              Own Your Data.
             </p>
             <p className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed">
               Your viewing data was the product.<br />
@@ -191,28 +213,106 @@ export default function TubeDAO() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20 text-center p-8 hover:border-red-400/50 transition-all duration-500 group hover:scale-105">
-              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
-                <Upload className="w-10 h-10 text-white" />
+            <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 hover:border-gray-600/70 transition-all duration-500 group hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Upload className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Contribute Your Data</h3>
+                  <p className="text-gray-400 text-sm">Dual-source data collection</p>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Upload & Contribute</h3>
-              <p className="text-gray-300 text-lg">Upload your YouTube Premium data and contribute to revolutionary insights</p>
+              
+              <div className="space-y-4">
+                <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-blue-400 font-semibold">Google Takeout</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">Historical watch patterns, subscriptions, and search data</p>
+                </div>
+                
+                <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <Brain className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-purple-400 font-semibold">Chrome Extension</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">Real-time Premium features and ad interaction metrics</p>
+                </div>
+              </div>
             </Card>
             
-            <Card className="bg-gradient-to-br from-purple-500/10 to-indigo-500/5 backdrop-blur-xl border border-purple-500/20 text-center p-8 hover:border-purple-400/50 transition-all duration-500 group hover:scale-105">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
-                <Users className="w-10 h-10 text-white" />
+            <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 hover:border-gray-600/70 transition-all duration-500 group hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Participate in Governance</h3>
+                  <p className="text-gray-400 text-sm">Democratic data decisions</p>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">You Vote</h3>
-              <p className="text-gray-300 text-lg">You vote on how your data is licensed through transparent DAO governance</p>
+              
+              <div className="space-y-4">
+                <div className="bg-cyan-500/10 rounded-lg p-4 border border-cyan-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
+                      <Target className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-cyan-400 font-semibold">Proposal Voting</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">Vote on data licensing partnerships and usage policies</p>
+                </div>
+                
+                <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Shield className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-blue-400 font-semibold">Snapshot Protocol</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">Gas-free voting with full transparency and immutable records</p>
+                </div>
+              </div>
             </Card>
             
-            <Card className="bg-gradient-to-br from-yellow-500/10 to-orange-500/5 backdrop-blur-xl border border-yellow-500/20 text-center p-8 hover:border-yellow-400/50 transition-all duration-500 group hover:scale-105">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-yellow-400/30">
-                <Coins className="w-10 h-10 text-white" />
+            <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 hover:border-gray-600/70 transition-all duration-500 group hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Coins className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Earn Token Rewards</h3>
+                  <p className="text-gray-400 text-sm">Value-based compensation</p>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Receive Tokens</h3>
-              <p className="text-gray-300 text-lg">Receive tokens when your data is licensed to researchers and brands</p>
+              
+              <div className="space-y-4">
+                <div className="bg-yellow-500/10 rounded-lg p-4 border border-yellow-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                      <Wallet className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-yellow-400 font-semibold">TubeDAO Tokens</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">Earn tokens when your data is licensed to researchers and brands</p>
+                </div>
+                
+                <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-orange-400 font-semibold">Premium Multipliers</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">Higher rewards for unique data patterns and longer contribution history</p>
+                </div>
+              </div>
             </Card>
           </div>
         </div>
@@ -234,11 +334,11 @@ export default function TubeDAO() {
                   <Shield className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">Zero-Knowledge Powered</h3>
+                  <h3 className="text-2xl font-bold text-white mb-3">Unlock Unrivaled User Behavior Insights</h3>
                   <p className="text-gray-300 text-lg leading-relaxed">
-                    Not even TubeDAO sees your raw files. Advanced cryptographic anonymization protects your identity while preserving data utility.
+                    Go beyond basic analytics. Our deep data reveals <em>how</em> users truly engage with YouTube, from Premium feature adoption to their nuanced interactions with ads, providing a competitive edge for brands and creators.
                   </p>
-                  <p className="text-green-400 font-medium mt-2">✨ Differential privacy built on-chain</p>
+                  <p className="text-green-400 font-medium mt-2">✨ Granular insights previously unavailable</p>
                 </div>
               </div>
               
@@ -247,9 +347,9 @@ export default function TubeDAO() {
                   <Eye className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">You&apos;re in Control</h3>
+                  <h3 className="text-2xl font-bold text-white mb-3">Empower Creators with Actionable Premium & Ad Intelligence</h3>
                   <p className="text-gray-300 text-lg leading-relaxed">
-                    Every data decision goes through DAO governance — no more data black boxes or corporate control
+                    Help creators understand what paying subscribers truly value, and gain unprecedented insights into ad effectiveness and user tolerance, enabling smarter content and monetization strategies.
                   </p>
                 </div>
               </div>
@@ -261,9 +361,9 @@ export default function TubeDAO() {
                   <Wallet className="w-6 h-6 text-yellow-400" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">Get Rewarded When Licensed</h3>
+                  <h3 className="text-2xl font-bold text-white mb-3">Drive Fairer, User-Owned Digital Media</h3>
                   <p className="text-gray-300 text-lg leading-relaxed">
-                    Get rewarded when your YouTube Premium insights are licensed by AI companies, researchers, or media labs
+                    Shift power from platforms to users by giving them ownership and a share in the value derived from their comprehensive consumption data, fostering a more equitable and transparent digital ecosystem.
                   </p>
                 </div>
               </div>
@@ -273,9 +373,9 @@ export default function TubeDAO() {
                   <CheckCircle className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">Bank-Grade Encryption Meets DAO Transparency</h3>
+                  <h3 className="text-2xl font-bold text-white mb-3">Privacy-First via Vana&apos;s Secure Runtime</h3>
                   <p className="text-gray-300 text-lg leading-relaxed">
-                    GDPR compliance, SOC 2 standards, and institutional-grade privacy protection with full transparency
+                    All data is anonymized and aggregated within Vana&apos;s Secure Runtime (TEEs). Your raw, personal data remains private, while collective insights are made available for ethical research and AI training.
                   </p>
                 </div>
               </div>
@@ -315,9 +415,9 @@ export default function TubeDAO() {
               <div className="text-6xl font-black text-purple-400 mb-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                 <Brain className="w-16 h-16" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">LLMs Trained on You</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">Deep User Data Remains a Black Box</h3>
               <p className="text-gray-300">
-                LLMs are trained on your digital behavior and viewing patterns. It&apos;s time to own that data and profit from it.
+                Critical insights into how users truly interact with premium features and ads are locked away. TubeDAO breaks these silos, providing a granular view previously unavailable.
               </p>
             </div>
             
@@ -352,35 +452,35 @@ export default function TubeDAO() {
               {[
                 { 
                   step: "01", 
-                  title: "Upload Your Data", 
-                  desc: "Download & upload your YouTube data via Google Takeout", 
-                  icon: Upload, 
-                  detail: "Get comprehensive JSON files with watch history, subscriptions, and preferences",
-                  tooltip: "We'll guide you through the simple Google Takeout process"
+                  title: "Connect Wallet", 
+                  desc: "Connect your crypto wallet to start contributing", 
+                  icon: Wallet, 
+                  detail: "Secure wallet connection for token rewards and governance",
+                  tooltip: "MetaMask, WalletConnect, and other popular wallets supported"
                 },
                 { 
                   step: "02", 
-                  title: "Secure Processing", 
-                  desc: "Advanced cryptographic anonymization protects your identity", 
-                  icon: Shield, 
-                  detail: "Zero-knowledge proofs ensure even TubeDAO can't see your raw data",
-                  tooltip: "Military-grade privacy protection"
+                  title: "Contribute Your Data", 
+                  desc: "Two powerful ways to share your YouTube insights", 
+                  icon: Upload, 
+                  detail: "Option A: Google Takeout Import for foundational history. Option B: Install our Chrome Extension for deep, real-time insights on Premium features and ad interactions",
+                  tooltip: "Chrome extension captures granular data on Premium usage and ad metrics"
                 },
                 { 
                   step: "03", 
-                  title: "DAO Governance", 
-                  desc: "Vote on data usage proposals through Snapshot governance", 
-                  icon: Users, 
-                  detail: "Community-driven decisions on research partnerships and licensing deals",
-                  tooltip: "Every licensing decision goes through transparent DAO vote"
+                  title: "Vana Validates & Tokenizes", 
+                  desc: "Vana&apos;s DataDAO validates and issues TubeDAO tokens", 
+                  icon: Shield, 
+                  detail: "Your anonymized contributions are validated and you receive TubeDAO VRC-20 tokens representing ownership in this high-value dataset",
+                  tooltip: "Powered by Vana's secure validation infrastructure"
                 },
                 { 
                   step: "04", 
-                  title: "Earn Rewards", 
-                  desc: "Receive tokens when data is licensed to approved partners", 
+                  title: "Earn & Govern", 
+                  desc: "Receive tokens and participate in DAO governance", 
                   icon: Coins, 
-                  detail: "Automatic distribution based on data contribution value and rarity",
-                  tooltip: "Higher rewards for unique viewing patterns and longer history"
+                  detail: "Your TubeDAO tokens represent your share of future data sales and governance rights in the ecosystem",
+                  tooltip: "Higher rewards for richer data contributions and active governance"
                 }
               ].map((item, index) => (
                 <div key={index} className="text-center group relative">
@@ -419,81 +519,117 @@ export default function TubeDAO() {
         </div>
       </section>
 
-      {/* Built on Real Rails - Redesigned */}
+      {/* Built on Real Data - COMPLETELY REVAMPED */}
       <section className="py-32 bg-gradient-to-b from-purple-900/10 to-transparent">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-black mb-8 text-white">
-              Built on Real Rails
+              Unlocking Unprecedented User Behavior & Ad Intelligence
             </h2>
-            <p className="text-xl text-gray-300">
-              Powered by proven infrastructure trusted by millions
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Our dual-source approach captures both foundational patterns and the deep, granular insights that drive real competitive advantage
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Vana Card */}
-            <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/5 backdrop-blur-xl border border-purple-500/20 p-8 hover:border-purple-400/50 transition-all duration-500 hover:scale-105">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center">
-                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 text-xl font-bold">
-                    VANA
-                  </Badge>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Foundational Insights */}
+            <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/5 backdrop-blur-xl border border-blue-500/20 p-8 hover:border-blue-400/50 transition-all duration-500 hover:scale-105">
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/25">
+                  <FileText className="w-10 h-10 text-white" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-purple-400" />
-                  <ExternalLink className="w-4 h-4 text-gray-400" />
-                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Foundational Insights</h3>
+                <p className="text-blue-400 font-semibold mb-4">(from Google Takeout)</p>
               </div>
               
-              <h3 className="text-3xl font-bold text-white mb-4">World&apos;s Leading Data Network</h3>
-              <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-                Vana powers TubeDAO&apos;s secure data infrastructure with 1.3M+ users and 300+ DAOs.
-              </p>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-black text-purple-400 mb-2">1.3M+</div>
-                  <div className="text-sm text-gray-400">Active Users</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-black text-pink-400 mb-2">300+</div>
-                  <div className="text-sm text-gray-400">DataDAOs</div>
-                </div>
+              <div className="space-y-4 text-gray-300">
+                <p className="text-lg leading-relaxed">Leverage your existing YouTube history:</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center"><span className="text-blue-400 mr-2">•</span> Watch patterns & viewing history</li>
+                  <li className="flex items-center"><span className="text-blue-400 mr-2">•</span> Search queries & interests</li>
+                  <li className="flex items-center"><span className="text-blue-400 mr-2">•</span> Subscribed channels & creators</li>
+                  <li className="flex items-center"><span className="text-blue-400 mr-2">•</span> Playlist preferences & organization</li>
+                </ul>
+                <p className="text-xs text-gray-400 italic mt-4">
+                  Examples: &quot;Top Genres Watched,&quot; &quot;Favorite Creators,&quot; &quot;Content Discovery Patterns&quot;
+                </p>
               </div>
             </Card>
             
-            {/* Privacy Card */}
-            <Card className="bg-gradient-to-br from-green-500/10 to-blue-500/5 backdrop-blur-xl border border-green-500/20 p-8 hover:border-green-400/50 transition-all duration-500 hover:scale-105">
-              <div className="flex items-center justify-between mb-6">
-                <Badge className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-2 text-xl font-bold">
-                  PRIVACY
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <Github className="w-4 h-4 text-gray-400" />
+            {/* Deep Dive Insights */}
+            <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/5 backdrop-blur-xl border border-purple-500/20 p-8 hover:border-purple-400/50 transition-all duration-500 hover:scale-105">
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/25">
+                  <Brain className="w-10 h-10 text-white" />
                 </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Deep Dive Insights</h3>
+                <p className="text-purple-400 font-semibold mb-4">(from Chrome Extension)</p>
               </div>
               
-              <h3 className="text-3xl font-bold text-white mb-4">Enterprise-Grade Protection</h3>
-              <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-                Military-grade privacy infrastructure with ZKPs, confidential smart contracts, and TEE technology.
-              </p>
-              
-              <div className="space-y-4">
-                {[
-                  "🔐 TEE Technology",
-                  "🔍 Zero-Knowledge Proofs", 
-                  "📜 Confidential Smart Contracts",
-                  "🛡️ Differential Privacy"
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center text-gray-300 text-lg">
-                    <span className="mr-3">{item.split(' ')[0]}</span>
-                    <span>{item.substring(2)}</span>
-                  </div>
-                ))}
+              <div className="space-y-4 text-gray-300">
+                <p className="text-lg leading-relaxed">Our Chrome Extension captures the missing pieces:</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center"><span className="text-purple-400 mr-2">🎯</span> Premium feature usage patterns</li>
+                  <li className="flex items-center"><span className="text-pink-400 mr-2">📺</span> Ad interaction & skip behavior</li>
+                  <li className="flex items-center"><span className="text-cyan-400 mr-2">⚡</span> Real-time engagement metrics</li>
+                  <li className="flex items-center"><span className="text-yellow-400 mr-2">💡</span> Content stickiness insights</li>
+                </ul>
+                <p className="text-xs text-gray-400 italic mt-4">
+                  Deep behavioral data that drives competitive advantage for creators and advertisers.
+                </p>
               </div>
             </Card>
+            
+            {/* Privacy & Aggregation */}
+            <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 backdrop-blur-xl border border-green-500/20 p-8 hover:border-green-400/50 transition-all duration-500 hover:scale-105">
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/25">
+                  <Shield className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Privacy & Aggregation</h3>
+                <p className="text-green-400 font-semibold mb-4">(Powered by Vana)</p>
+              </div>
+              
+              <div className="space-y-4 text-gray-300">
+                <p className="text-lg leading-relaxed">All data is anonymized and aggregated within <strong>Vana&apos;s Secure Runtime (TEEs)</strong>.</p>
+                
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start">
+                    <span className="text-green-400 mr-2 mt-1">🔒</span>
+                    <div>
+                      <strong>Your raw, personal data remains private</strong>
+                      <p className="text-gray-400">Never exposed to TubeDAO or data buyers</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <span className="text-green-400 mr-2 mt-1">📊</span>
+                    <div>
+                      <strong>Collective insights made available</strong>
+                      <p className="text-gray-400">For ethical research and AI training</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <span className="text-green-400 mr-2 mt-1">💰</span>
+                    <div>
+                      <strong>You earn from data value</strong>
+                      <p className="text-gray-400">TubeDAO tokens represent your ownership stake</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+          
+          {/* Value Proposition Footer */}
+          <div className="mt-16 bg-gradient-to-r from-red-500/10 to-purple-500/10 rounded-3xl p-8 border border-red-500/20 text-center">
+            <h3 className="text-3xl font-bold text-white mb-4">The Missing Piece of the Digital Economy</h3>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              By combining <span className="text-blue-400 font-semibold">foundational data</span> with <span className="text-purple-400 font-semibold">granular behavioral insights</span>, 
+              TubeDAO creates the most comprehensive and valuable dataset in the creator economy — 
+              finally giving users ownership and fair compensation for their digital contributions.
+            </p>
           </div>
         </div>
       </section>
@@ -609,7 +745,7 @@ export default function TubeDAO() {
           <Separator className="my-8 bg-white/10" />
           
           <div className="text-center text-gray-500">
-            <p>&copy; 2024 TubeDAO. All rights reserved.</p>
+            <p>&copy; 2025 TubeDAO. All rights reserved.</p>
             <p className="mt-2">Powered by Vana • Featured in Web3 Data Innovation</p>
           </div>
         </div>

@@ -53,6 +53,7 @@ export default function TubeDAO() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -195,6 +196,103 @@ export default function TubeDAO() {
           {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
             <ChevronDown className="w-6 h-6 text-gray-400" />
+          </div>
+        </div>
+      </section>
+
+      {/* Demo Video Section */}
+      <section className="py-32 relative bg-gradient-to-b from-transparent via-gray-900/10 to-transparent">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black mb-6 text-white">
+              Watch How It Works
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              See our Chrome extension capture real-time YouTube data and how users maintain complete control over their digital footprint.
+            </p>
+          </div>
+          
+          <div className="relative group">
+            {/* Video Player Container with Enhanced Floating Animation */}
+            <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-xl rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl hover:shadow-purple-500/20 transition-all duration-700 hover:border-purple-500/30 hover:scale-[1.02] animate-pulse hover:animate-none group-hover:shadow-purple-500/30">
+              {/* Floating Orbs for Animation */}
+              <div className="absolute -top-4 -left-4 w-8 h-8 bg-purple-500/30 rounded-full blur-sm animate-bounce"></div>
+              <div className="absolute -top-6 -right-6 w-6 h-6 bg-pink-500/40 rounded-full blur-sm animate-bounce delay-1000"></div>
+              <div className="absolute -bottom-4 -left-6 w-10 h-10 bg-red-500/20 rounded-full blur-sm animate-bounce delay-500"></div>
+              
+              {/* Decorative Corner Elements */}
+              <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-br-full animate-pulse"></div>
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-500/20 to-transparent rounded-tl-full animate-pulse delay-1000"></div>
+              
+              {/* Video Element with Play Button Overlay */}
+              <div className="relative p-4 md:p-8">
+                <div className="relative">
+                  <video 
+                    className="w-full h-auto rounded-2xl shadow-2xl"
+                    controls
+                    poster="/demo-thumbnail.jpg"
+                    preload="metadata"
+                    id="demo-video"
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                    onEnded={() => setIsVideoPlaying(false)}
+                  >
+                    <source src="/demo.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  
+                  {/* Custom Play Button Overlay - Only show when video is paused */}
+                  {!isVideoPlaying && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-2xl transition-opacity duration-300">
+                      <div 
+                        className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/50 hover:scale-110 transition-all duration-300 animate-pulse group-hover:animate-none cursor-pointer" 
+                        onClick={() => {
+                          const video = document.getElementById('demo-video') as HTMLVideoElement;
+                          if (video) {
+                            video.play();
+                          }
+                        }}
+                      >
+                        <Play className="w-8 h-8 text-white ml-1" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Subtle Gradient Overlay */}
+                <div className="absolute inset-4 md:inset-8 rounded-2xl pointer-events-none">
+                  <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 opacity-80 animate-pulse"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 opacity-80 animate-pulse delay-500"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Key Features Highlighted */}
+          <div className="mt-24 grid md:grid-cols-3 gap-6">
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Privacy First</h3>
+              <p className="text-gray-400 text-sm">Data stays local until you choose to contribute</p>
+            </div>
+            
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-pink-500/25">
+                <Brain className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Real-Time Capture</h3>
+              <p className="text-gray-400 text-sm">Live behavioral data as you browse YouTube</p>
+            </div>
+            
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
+                <Coins className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Earn Rewards</h3>
+              <p className="text-gray-400 text-sm">Get tokens when your data creates value</p>
+            </div>
           </div>
         </div>
       </section>
@@ -469,7 +567,7 @@ export default function TubeDAO() {
                 { 
                   step: "03", 
                   title: "Vana Validates & Tokenizes", 
-                  desc: "Vana&apos;s DataDAO validates and issues TubeDAO tokens", 
+                  desc: "Vana DataDAO validates and issues TubeDAO tokens", 
                   icon: Shield, 
                   detail: "Your anonymized contributions are validated and you receive TubeDAO VRC-20 tokens representing ownership in this high-value dataset",
                   tooltip: "Powered by Vana's secure validation infrastructure"

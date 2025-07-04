@@ -1,5 +1,9 @@
 # TubeDAO
 
+<div align="center">
+  <img src="./tube-dao.png" alt="TubeDAO Logo" width="200"/>
+</div>
+
 **Own Your YouTube Data. Unlock the Deepest YouTube Insights.**
 
 TubeDAO is the first YouTube Premium Data DAO built on the Vana ecosystem. We're turning your everyday YouTube viewing behavior into user-owned data that powers ethical advertising insights and better content strategies.

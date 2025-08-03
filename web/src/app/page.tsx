@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import dynamic from 'next/dynamic';
+import { useAccount } from 'wagmi';
 
 const WalletConnection = dynamic(
   () => import("@/components/WalletConnection").then((mod) => ({ default: mod.WalletConnection })),
@@ -23,6 +24,22 @@ const WalletConnection = dynamic(
     )
   }
 );
+
+const Dashboard = dynamic(
+  () => import("@/components/Dashboard").then((mod) => ({ default: mod.Dashboard })),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+);
+
 import { 
   Play, 
   Users, 
@@ -48,6 +65,21 @@ import {
 } from "lucide-react";
 
 export default function TubeDAO() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return <ClientTubeDAO />;
+}
+
+function ClientTubeDAO() {
+  const { isConnected } = useAccount();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -59,6 +91,10 @@ export default function TubeDAO() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (isConnected) {
+    return <Dashboard />;
+  }
 
   const handleWaitlistSignup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,12 +132,10 @@ export default function TubeDAO() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Header with Wallet Connection */}
       <header className="fixed top-0 right-0 z-50 p-6">
         <WalletConnection />
       </header>
 
-      {/* Enhanced Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div 
           className="absolute top-0 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse" 
@@ -117,7 +151,6 @@ export default function TubeDAO() {
         />
       </div>
 
-      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-6">
         <div className="container mx-auto text-center max-w-6xl relative z-10">
           <div className="flex justify-center items-center mb-8">
@@ -199,7 +232,6 @@ export default function TubeDAO() {
         </div>
       </section>
 
-      {/* Demo Video Section */}
       <section className="py-32 relative bg-gradient-to-b from-transparent via-gray-900/10 to-transparent">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="text-center mb-16">
@@ -212,18 +244,14 @@ export default function TubeDAO() {
           </div>
           
           <div className="relative group">
-            {/* Video Player Container with Enhanced Floating Animation */}
             <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-xl rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl hover:shadow-purple-500/20 transition-all duration-700 hover:border-purple-500/30 hover:scale-[1.02] animate-pulse hover:animate-none group-hover:shadow-purple-500/30">
-              {/* Floating Orbs for Animation */}
               <div className="absolute -top-4 -left-4 w-8 h-8 bg-purple-500/30 rounded-full blur-sm animate-bounce"></div>
               <div className="absolute -top-6 -right-6 w-6 h-6 bg-pink-500/40 rounded-full blur-sm animate-bounce delay-1000"></div>
               <div className="absolute -bottom-4 -left-6 w-10 h-10 bg-red-500/20 rounded-full blur-sm animate-bounce delay-500"></div>
               
-              {/* Decorative Corner Elements */}
               <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-br-full animate-pulse"></div>
               <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-500/20 to-transparent rounded-tl-full animate-pulse delay-1000"></div>
               
-              {/* Loom Video Embed */}
               <div className="relative p-4 md:p-8">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
@@ -244,7 +272,6 @@ export default function TubeDAO() {
                   </div>
                 </div>
                 
-                {/* Subtle Gradient Overlay */}
                 <div className="absolute inset-4 md:inset-8 rounded-2xl pointer-events-none">
                   <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 opacity-80 animate-pulse"></div>
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 opacity-80 animate-pulse delay-500"></div>
@@ -253,7 +280,6 @@ export default function TubeDAO() {
             </div>
           </div>
           
-          {/* Key Features Highlighted */}
           <div className="mt-24 grid md:grid-cols-3 gap-6">
             <div className="text-center group">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
@@ -282,7 +308,6 @@ export default function TubeDAO() {
         </div>
       </section>
 
-      {/* What's TubeDAO */}
       <section className="py-32 relative bg-gradient-to-b from-transparent to-gray-900/20">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-20">
@@ -401,7 +426,6 @@ export default function TubeDAO() {
         </div>
       </section>
 
-      {/* Why It Matters */}
       <section className="py-32 bg-gradient-to-b from-gray-900/20 to-red-900/10 relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-20">

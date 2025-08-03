@@ -3,8 +3,24 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
+import { useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { api } from '@/lib/api';
 
 export function WalletConnection() {
+  const { address, isConnected } = useAccount();
+
+  console.log(address, isConnected);
+
+  useEffect(() => {
+    // Register wallet when connected
+    if (address) {
+      api.registerWallet(address).catch(() => {
+        // Handle registration silently
+      });
+    }
+  }, [address]);
+
   return (
     <ConnectButton.Custom>
       {({
@@ -16,8 +32,6 @@ export function WalletConnection() {
         authenticationStatus,
         mounted,
       }) => {
-        // Note: If your app doesn't use authentication, you
-        // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading';
         const connected =
           ready &&

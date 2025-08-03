@@ -9,9 +9,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Register a new wallet address
+// Register a new wallet address or update existing timestamp
 func registerWallet(c *gin.Context) {
 	var req RegisterWalletRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -21,26 +22,25 @@ func registerWallet(c *gin.Context) {
 
 	collection := db.Collection("registered_addresses")
 
-	var existing RegisteredAddress
-	err := collection.FindOne(context.Background(), bson.M{"address": req.Address}).Decode(&existing)
-	if err == nil {
-		c.JSON(http.StatusOK, gin.H{"message": "Address already registered", "data": existing})
-		return
+	// Use upsert to either create new or update existing timestamp
+	filter := bson.M{"address": req.Address}
+	update := bson.M{
+		"$set": bson.M{
+			"address":   req.Address,
+			"timestamp": time.Now(),
+		},
 	}
 
-	registration := RegisteredAddress{
-		Address:   req.Address,
-		Timestamp: time.Now(),
-	}
+	opts := options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After)
+	var result RegisteredAddress
+	err := collection.FindOneAndUpdate(context.Background(), filter, update, opts).Decode(&result)
 
-	result, err := collection.InsertOne(context.Background(), registration)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register address"})
 		return
 	}
 
-	registration.ID = result.InsertedID.(primitive.ObjectID)
-	c.JSON(http.StatusCreated, gin.H{"message": "Address registered successfully", "data": registration})
+	c.JSON(http.StatusOK, gin.H{"message": "Address registered successfully", "data": result})
 }
 
 // Get user registration data

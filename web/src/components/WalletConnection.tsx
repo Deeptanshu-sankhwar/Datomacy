@@ -8,9 +8,7 @@ import { useAccount } from 'wagmi';
 import { api } from '@/lib/api';
 
 export function WalletConnection() {
-  const { address, isConnected } = useAccount();
-
-  console.log(address, isConnected);
+  const { address } = useAccount();
 
   useEffect(() => {
     // Register wallet when connected

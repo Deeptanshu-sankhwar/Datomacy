@@ -10,6 +10,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -76,5 +77,27 @@ func initMongoDB() {
 	}
 
 	db = client.Database("tubedao")
+
+	// Create unique index on address field
+	createUniqueIndex()
+
 	log.Println("Connected to MongoDB")
+}
+
+func createUniqueIndex() {
+	collection := db.Collection("registered_addresses")
+	indexModel := mongo.IndexModel{
+		Keys:    bson.D{{Key: "address", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	_, err := collection.Indexes().CreateOne(ctx, indexModel)
+	if err != nil {
+		log.Printf("Warning: Failed to create unique index on address field: %v", err)
+	} else {
+		log.Println("Created unique index on address field")
+	}
 }

@@ -27,6 +27,7 @@ export async function submitWaitlistEntry(data: Omit<WaitlistEntry, 'timestamp'>
       },
       body: JSON.stringify(entry),
     });
+    console.log('Response:', response);
 
     return { success: true, message: 'Successfully joined the waitlist!' };
 

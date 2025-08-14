@@ -25,24 +25,33 @@
       <!-- Consent Section -->
       <div class="section">
         <h3>Data Collection</h3>
-        <div class="toggle-container">
+        <div class="toggle-container" id="toggleContainer">
           <label class="toggle">
             <input type="checkbox" id="consentToggle">
             <span class="toggle-slider"></span>
           </label>
           <div class="toggle-info">
-            <span class="toggle-label">Enable data capture</span>
-            <span class="toggle-description">Capture your YouTube interaction patterns locally</span>
+            <span class="toggle-label" id="toggleLabel">Enable data capture</span>
+            <span class="toggle-description" id="toggleDescription">Capture your YouTube interaction patterns locally</span>
           </div>
         </div>
-      </div>
-
-      <!-- Privacy Notice -->
-      <div class="section privacy-section">
-        <div class="privacy-notice">
-          <div class="privacy-icon">🔒</div>
-          <div class="privacy-text">
-            <strong>Privacy First:</strong> All data stays on your device until you choose to export it. You own and control your behavioral data.
+        
+        <!-- Authentication Status -->
+        <div class="auth-status" id="authStatus">
+          <div class="auth-status-content">
+            <div class="auth-icon" id="authIcon">🔒</div>
+            <div class="auth-text">
+              <div class="auth-title" id="authTitle">Authentication Required</div>
+              <div class="auth-subtitle" id="authSubtitle">Please authenticate your identity to start capturing data</div>
+            </div>
+            <button class="auth-button" id="authButton">
+              <span class="auth-button-icon">🔗</span>
+              Authenticate Now
+            </button>
+            <button class="auth-button secondary" id="refreshButton" style="margin-top: 8px; background: rgba(255, 255, 255, 0.1);">
+              <span class="auth-button-icon">🔄</span>
+              Refresh Status
+            </button>
           </div>
         </div>
       </div>
@@ -74,16 +83,33 @@
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="section actions-section">
-        <button class="btn btn-primary" id="exportBtn" disabled>
-          <span class="btn-icon">📁</span>
-          Export My Data
-        </button>
-        <button class="btn btn-secondary" id="clearBtn" disabled>
-          <span class="btn-icon">🗑️</span>
-          Clear Local Data
-        </button>
+      <!-- Real-time Engagement Rewards -->
+      <div class="section rewards-section" id="rewardsSection">
+        <h3>Engagement Rewards</h3>
+        <div class="rewards-container">
+          <div class="rewards-header">
+            <div class="rewards-icon">💰</div>
+            <div class="rewards-info">
+              <div class="rewards-title">Real-time Data Contribution</div>
+            </div>
+          </div>
+          <div class="rewards-stats">
+            <div class="reward-stat">
+              <span class="reward-amount" id="totalEarnings">$0.00</span>
+              <span class="reward-label">Total Earned</span>
+            </div>
+            <div class="reward-stat">
+              <span class="reward-amount" id="todayEarnings">$0.00</span>
+              <span class="reward-label">Today</span>
+            </div>
+          </div>
+          <div class="rewards-status" id="rewardsStatus">
+            <div class="status-indicator">
+              <div class="pulse-dot"></div>
+              <span>Ready to capture data</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Footer -->

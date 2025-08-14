@@ -1,15 +1,25 @@
-// Background service worker for TubeDAO Chrome Extension
+// Background service worker for TubeDAO Chrome Extension with Authentication
 
 class TubeDAOBackground {
   constructor() {
+    this.isUnlocked = false;
+    this.TUBEDAO_HOMEPAGE = 'http://localhost:3000';
+    this.BACKEND_API = 'http://localhost:8080/api';
+    this.VANA_MOKSHA_CHAIN_ID = 14800;
     this.init();
   }
 
   init() {
-    console.log('TubeDAO Background Service initialized');
     
+    this.isUnlocked = false;
+    this.blockAllFeatures();
+
     chrome.runtime.onInstalled.addListener((details) => {
       this.handleInstallation(details);
+    });
+
+    chrome.runtime.onStartup.addListener(() => {
+      this.handleStartup();
     });
 
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -18,113 +28,324 @@ class TubeDAOBackground {
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       this.handleMessage(message, sender, sendResponse);
+      return true;
     });
 
-    this.schedulePeriodicTasks();
+    this.checkAuthStatus();
   }
 
   async handleInstallation(details) {
-    if (details.reason === 'install') {
-      console.log('TubeDAO Extension installed for the first time');
+    if (details.reason === 'install') {  
+      await this.clearAuthData();
+      await this.initializeStorage();
       
-      await chrome.storage.local.set({
-        consentEnabled: false,
-        tubeDAOEvents: [],
-        installDate: new Date().toISOString(),
-        version: chrome.runtime.getManifest().version
-      });
-
-      this.showNotification(
-        'TubeDAO Extension Installed!',
-        'Click the extension icon to start capturing your YouTube data.'
-      );
+      await this.openAuthPage();
 
     } else if (details.reason === 'update') {
-      console.log('TubeDAO Extension updated');
-      await this.handleUpdate(details);
+      await this.checkAuthStatus();
     }
   }
 
-  async handleUpdate(details) {
-    const currentVersion = chrome.runtime.getManifest().version;
-    
-    await this.migrateData(details.previousVersion, currentVersion);
-    
-    await chrome.storage.local.set({ version: currentVersion });
+  async handleStartup() {
+    this.isUnlocked = false;
+    await this.checkAuthStatus();
   }
 
-  async migrateData(previousVersion, currentVersion) {
-    console.log(`Migrating data from ${previousVersion} to ${currentVersion}`);
-    
-    const result = await chrome.storage.local.get(['tubeDAOEvents']);
-    const events = result.tubeDAOEvents || [];
-    
-    const validEvents = events.filter(event => 
-      event && 
-      event.timestamp && 
-      event.event_type && 
-      event.category
-    );
+  async initializeStorage() {
+    await chrome.storage.local.set({
+      installDate: new Date().toISOString(),
+      version: chrome.runtime.getManifest().version,
+      tubeDAOEvents: []
+    });
 
-    if (validEvents.length !== events.length) {
-      console.log(`Cleaned ${events.length - validEvents.length} invalid events`);
-      await chrome.storage.local.set({ tubeDAOEvents: validEvents });
+    await chrome.storage.session.clear();
+  }
+
+  async clearAuthData() {
+    await chrome.storage.session.clear();
+    this.isUnlocked = false;
+    this.blockAllFeatures();
+  }
+
+  blockAllFeatures() {
+    this.isUnlocked = false;
+    
+    this.broadcastMessage({
+      type: 'AUTH_REQUIRED',
+      message: 'Authentication required to use TubeDAO features'
+    });
+  }
+
+  async openAuthPage() {
+    try {
+      await chrome.tabs.create({
+        url: this.TUBEDAO_HOMEPAGE,
+        active: true
+      });
+    } catch (error) {
+      console.error('Failed to open auth page:', error);
     }
+  }
+
+  async checkAuthStatus() {
+    try {
+      const sessionData = await chrome.storage.session.get(['tubedao_auth_token', 'tubedao_address', 'tubedao_chainId', 'tubedao_expiresAt']);
+      
+      if (!sessionData.tubedao_auth_token || !sessionData.tubedao_address) {
+        this.blockAllFeatures();
+        return;
+      }
+
+      if (Date.now() > sessionData.tubedao_expiresAt) { 
+        await this.clearAuthData();
+        return;
+      }
+
+      const isValid = await this.verifyToken(sessionData.tubedao_auth_token);
+      if (isValid) {
+        this.isUnlocked = true;
+        this.notifyUnlocked();
+      } else {
+        await this.clearAuthData();
+      }
+    } catch (error) {
+      console.error('Error checking auth status:', error);
+      this.blockAllFeatures();
+    }
+  }
+
+  async verifyToken(token) {
+    try {
+      const response = await fetch(`${this.BACKEND_API}/auth/status`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      return false;
+    }
+  }
+
+  notifyUnlocked() {
+    this.broadcastMessage({
+      type: 'AUTH_SUCCESS',
+      message: 'Authentication successful - features enabled'
+    });
   }
 
   handleTabUpdate(tabId, changeInfo, tab) {
     if (tab.url && tab.url.includes('youtube.com') && changeInfo.status === 'complete') {
-      this.ensureContentScriptInjected(tabId);
+      if (this.isUnlocked) {
+        this.ensureContentScriptInjected(tabId);
+      } else {
+        this.sendMessageToTab(tabId, {
+          type: 'AUTH_REQUIRED',
+          message: 'Please authenticate at TubeDAO homepage to enable data collection'
+        });
+      }
     }
   }
 
   async ensureContentScriptInjected(tabId) {
+    if (!this.isUnlocked) return;
+    
     try {
-      const response = await chrome.tabs.sendMessage(tabId, { type: 'PING' });
+      await chrome.tabs.sendMessage(tabId, { type: 'PING' });
     } catch (error) {
       try {
         await chrome.scripting.executeScript({
           target: { tabId: tabId },
           files: ['content/content.js']
         });
-        console.log(`Injected content script into tab ${tabId}`);
+        
+        setTimeout(() => {
+          this.sendMessageToTab(tabId, {
+            type: 'AUTH_SUCCESS',
+            message: 'Data collection enabled'
+          });
+        }, 100);
+        
       } catch (injectError) {
         console.log('Failed to inject content script:', injectError);
       }
     }
   }
 
-  handleMessage(message, sender, sendResponse) {
-    switch (message.type) {
-      case 'STATS_UPDATE':
-        this.forwardToPopup(message);
-        break;
-        
-      case 'GET_STATS':
-        this.getStats().then(sendResponse);
-        return true;
-        
-      case 'EXPORT_REQUEST':
-        this.handleExportRequest(message.data).then(sendResponse);
-        return true;
-        
-      case 'CLEAR_DATA':
-        this.handleClearData().then(sendResponse);
-        return true;
-        
-      default:
-        console.log('Unknown message type:', message.type);
+  async sendMessageToTab(tabId, message) {
+    try {
+      await chrome.tabs.sendMessage(tabId, message);
+    } catch (error) {
     }
+  }
+
+  async handleMessage(message, sender, sendResponse) {
+    try {
+      
+      switch (message.type) {
+        case 'AUTH_SUCCESS':
+          await this.handleAuthSuccess(message);
+          sendResponse({ success: true });
+          break;
+          
+        case 'AUTH_REQUIRED':
+          this.blockAllFeatures();
+          await this.openAuthPage();
+          sendResponse({ success: true });
+          break;
+          
+        case 'GET_AUTH_STATUS':
+          sendResponse({ 
+            isUnlocked: this.isUnlocked,
+            hasSession: await this.hasValidSession()
+          });
+          break;
+          
+        case 'LOGOUT':
+          await this.handleLogout();
+          sendResponse({ success: true });
+          break;
+          
+        case 'STATS_UPDATE':
+          if (this.isUnlocked) {
+            this.forwardToPopup(message);
+          }
+          sendResponse({ success: true });
+          break;
+          
+        case 'GET_STATS':
+          if (this.isUnlocked) {
+            const stats = await this.getStats();
+            sendResponse(stats);
+          } else {
+            sendResponse({ error: 'Authentication required' });
+          }
+          break;
+          
+        case 'EXPORT_REQUEST':
+          if (this.isUnlocked) {
+            const exportData = await this.handleExportRequest(message.data);
+            sendResponse(exportData);
+          } else {
+            sendResponse({ error: 'Authentication required' });
+          }
+          break;
+          
+        case 'CLEAR_DATA':
+          if (this.isUnlocked) {
+            const result = await this.handleClearData();
+            sendResponse(result);
+          } else {
+            sendResponse({ error: 'Authentication required' });
+          }
+          break;
+          
+        case 'ACCOUNT_CHANGED':
+          await this.handleAccountChanged(message.newAccount, message.oldAccount);
+          sendResponse({ success: true });
+          break;
+          
+        default:
+          console.log('Unknown message type:', message.type);
+          sendResponse({ error: 'Unknown message type' });
+      }
+    } catch (error) {
+      console.error('Error handling message:', error);
+      sendResponse({ error: error.message });
+    }
+  }
+
+  async handleAuthSuccess(message) {
+    const { token, address, chainId, expiresAt } = message;
+    
+    if (!token || !address) {
+      console.error('Invalid auth success message:', message);
+      return;
+    }
+
+    await chrome.storage.session.set({
+      tubedao_auth_token: token,
+      tubedao_address: address,
+      tubedao_chainId: chainId || 1,
+      tubedao_expiresAt: expiresAt || (Date.now() + 24 * 60 * 60 * 1000)
+    });
+
+    this.isUnlocked = true;
+    this.notifyUnlocked();
+    
+    this.forwardToPopup(message);
+  }
+
+  async handleLogout() {
+    const sessionData = await chrome.storage.session.get(['tubedao_auth_token']);
+    
+    if (sessionData.tubedao_auth_token) {
+      try {
+        await fetch(`${this.BACKEND_API}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionData.tubedao_auth_token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      } catch (error) {
+        console.error('Failed to notify backend about logout:', error);
+      }
+    }
+
+    await this.clearAuthData();
+    await this.openAuthPage();
+  }
+
+  async hasValidSession() {
+    try {
+      const sessionData = await chrome.storage.session.get(['tubedao_auth_token', 'tubedao_expiresAt']);
+      return sessionData.tubedao_auth_token && Date.now() < sessionData.tubedao_expiresAt;
+    } catch (error) {
+      return false;
+    }
+  }
+
+
+
+  async handleAccountChanged(newAccount, currentAccount) {
+    if (newAccount !== currentAccount) {
+      await this.clearAuthData();
+      await this.openAuthPage();
+    }
+  }
+
+
+
+  broadcastMessage(message) {
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach(tab => {
+        if (tab.url && tab.url.includes('youtube.com')) {
+          this.sendMessageToTab(tab.id, message);
+        }
+      });
+    });
+
+    this.forwardToPopup(message);
   }
 
   async forwardToPopup(message) {
     try {
       chrome.runtime.sendMessage(message);
     } catch (error) {
+      console.log('Background: Popup might not be open:', error);
     }
   }
 
   async getStats() {
+    if (!this.isUnlocked) {
+      return { error: 'Authentication required' };
+    }
+
     const result = await chrome.storage.local.get(['tubeDAOEvents']);
     const events = result.tubeDAOEvents || [];
     
@@ -137,6 +358,10 @@ class TubeDAOBackground {
   }
 
   async handleExportRequest(filters = {}) {
+    if (!this.isUnlocked) {
+      return { error: 'Authentication required' };
+    }
+
     const result = await chrome.storage.local.get(['tubeDAOEvents']);
     const events = result.tubeDAOEvents || [];
     
@@ -168,91 +393,23 @@ class TubeDAOBackground {
   }
 
   async handleClearData() {
+    if (!this.isUnlocked) {
+      return { error: 'Authentication required' };
+    }
+
     await chrome.storage.local.set({ tubeDAOEvents: [] });
     console.log('All event data cleared');
     return { success: true };
   }
 
-  schedulePeriodicTasks() {
-    setInterval(() => {
-      this.runMaintenance();
-    }, 60 * 60 * 1000);
-
-    setTimeout(() => {
-      this.runMaintenance();
-    }, 5 * 60 * 1000);
-  }
-
-  async runMaintenance() {
-    console.log('Running periodic maintenance');
-    
-    try {
-      await this.cleanupOldEvents();
-      
-      await this.optimizeStorage();
-      
-      await this.updateStatsCache();
-      
-    } catch (error) {
-      console.error('Maintenance failed:', error);
-    }
-  }
-
-  async cleanupOldEvents() {
-    const result = await chrome.storage.local.get(['tubeDAOEvents']);
-    const events = result.tubeDAOEvents || [];
-    
-    const MAX_EVENTS = 10000;
-    
-    if (events.length > MAX_EVENTS) {
-      const recentEvents = events.slice(-MAX_EVENTS);
-      await chrome.storage.local.set({ tubeDAOEvents: recentEvents });
-      
-      console.log(`Cleaned up ${events.length - MAX_EVENTS} old events`);
-    }
-  }
-
-  async optimizeStorage() {
-    const allData = await chrome.storage.local.get();
-    
-    const validKeys = ['consentEnabled', 'tubeDAOEvents', 'installDate', 'version'];
-    const keysToRemove = Object.keys(allData).filter(key => !validKeys.includes(key));
-    
-    if (keysToRemove.length > 0) {
-      await chrome.storage.local.remove(keysToRemove);
-      console.log(`Removed orphaned keys: ${keysToRemove.join(', ')}`);
-    }
-  }
-
-  async updateStatsCache() {
-    const stats = await this.getStats();
-    await chrome.storage.local.set({ 
-      statsCache: {
-        ...stats,
-        lastUpdated: new Date().toISOString()
-      }
-    });
-  }
-
   showNotification(title, message) {
     chrome.notifications.create({
       type: 'basic',
-      iconUrl: 'icons/icon-48.png',
+      iconUrl: 'icons/logo.png',
       title: title,
       message: message
     });
   }
-
-  async getStorageUsage() {
-    const usage = await chrome.storage.local.getBytesInUse();
-    const quota = chrome.storage.local.QUOTA_BYTES;
-    
-    return {
-      used: usage,
-      quota: quota,
-      percentage: Math.round((usage / quota) * 100)
-    };
-  }
 }
 
-const backgroundService = new TubeDAOBackground(); 
+const backgroundService = new TubeDAOBackground();

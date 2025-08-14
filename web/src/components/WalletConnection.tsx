@@ -3,21 +3,13 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
-import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
-import { api } from '@/lib/api';
 
 export function WalletConnection() {
   const { address } = useAccount();
 
-  useEffect(() => {
-    // Register wallet when connected
-    if (address) {
-      api.registerWallet(address).catch(() => {
-        // Handle registration silently
-      });
-    }
-  }, [address]);
+  // Note: Wallet registration is now handled by the authentication flow
+  // This component only handles wallet connection UI
 
   return (
     <ConnectButton.Custom>
@@ -54,6 +46,7 @@ export function WalletConnection() {
                 return (
                   <Button
                     onClick={openConnectModal}
+                      data-testid="connect-wallet"
                     className="bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/40 px-6 py-3 text-sm font-medium backdrop-blur-md shadow-lg transition-all duration-300"
                   >
                     <Wallet className="w-4 h-4 mr-2" />

@@ -8,66 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-// Register a new wallet address or update existing timestamp
-func registerWallet(c *gin.Context) {
-	var req RegisterWalletRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	collection := db.Collection("registered_addresses")
-
-	// Use upsert to either create new or update existing timestamp
-	filter := bson.M{"address": req.Address}
-	update := bson.M{
-		"$set": bson.M{
-			"address":   req.Address,
-			"timestamp": time.Now(),
-		},
-	}
-
-	opts := options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After)
-	var result RegisteredAddress
-	err := collection.FindOneAndUpdate(context.Background(), filter, update, opts).Decode(&result)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register address"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Address registered successfully", "data": result})
-}
-
-// Get user registration data
-func getUserData(c *gin.Context) {
-	address := c.Param("address")
-
-	collection := db.Collection("registered_addresses")
-	var user RegisteredAddress
-
-	err := collection.FindOne(context.Background(), bson.M{"address": address}).Decode(&user)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-			return
-		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user data"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": user})
-}
 
 // Upload user contribution data
 func uploadData(c *gin.Context) {
 	var req UploadDataRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	authAddress, _ := c.Get("address")
+	if authAddress != req.Address {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Address mismatch"})
 		return
 	}
 
@@ -97,6 +50,12 @@ func uploadData(c *gin.Context) {
 // Get all contributions for a user
 func getUserContributions(c *gin.Context) {
 	address := c.Param("address")
+	
+	authAddress, _ := c.Get("address")
+	if authAddress != address {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Address mismatch"})
+		return
+	}
 
 	collection := db.Collection("user_contributions")
 	cursor, err := collection.Find(context.Background(), bson.M{"address": address})
@@ -118,6 +77,12 @@ func getUserContributions(c *gin.Context) {
 // Get total rewards for a user
 func getUserRewards(c *gin.Context) {
 	address := c.Param("address")
+	
+	authAddress, _ := c.Get("address")
+	if authAddress != address {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Address mismatch"})
+		return
+	}
 
 	collection := db.Collection("user_contributions")
 	pipeline := []bson.M{

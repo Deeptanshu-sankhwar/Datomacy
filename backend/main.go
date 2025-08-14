@@ -10,7 +10,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,6 +22,7 @@ func main() {
 	}
 
 	initMongoDB()
+	initAuth(db)
 
 	r := gin.Default()
 
@@ -37,11 +37,22 @@ func main() {
 
 	api := r.Group("/api")
 	{
-		api.POST("/register-wallet", registerWallet)
-		api.GET("/user/:address", getUserData)
-		api.POST("/upload-data", uploadData)
-		api.GET("/user/:address/contributions", getUserContributions)
-		api.GET("/user/:address/rewards", getUserRewards)
+		// Authentication endpoints
+		api.POST("/auth/nonce", generateNonce)
+		api.POST("/auth/verify", verifySIWE)
+		api.POST("/auth/bind-moksha", jwtMiddleware(), bindMokshaIdentity)
+		api.POST("/auth/register-moksha", registerWithMoksha)
+		api.GET("/auth/registration-status/:registrationId", checkRegistrationStatus)
+		api.POST("/auth/logout", logout)
+		api.GET("/auth/status", jwtMiddleware(), authStatus)
+		
+		// Protected endpoints
+		protected := api.Group("", jwtMiddleware())
+		{
+			protected.POST("/upload-data", uploadData)
+			protected.GET("/user/:address/contributions", getUserContributions)
+			protected.GET("/user/:address/rewards", getUserRewards)
+		}
 	}
 
 	r.GET("/health", func(c *gin.Context) {
@@ -78,26 +89,7 @@ func initMongoDB() {
 
 	db = client.Database("tubedao")
 
-	// Create unique index on address field
-	createUniqueIndex()
-
 	log.Println("Connected to MongoDB")
 }
 
-func createUniqueIndex() {
-	collection := db.Collection("registered_addresses")
-	indexModel := mongo.IndexModel{
-		Keys:    bson.D{{Key: "address", Value: 1}},
-		Options: options.Index().SetUnique(true),
-	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	_, err := collection.Indexes().CreateOne(ctx, indexModel)
-	if err != nil {
-		log.Printf("Warning: Failed to create unique index on address field: %v", err)
-	} else {
-		log.Println("Created unique index on address field")
-	}
-}

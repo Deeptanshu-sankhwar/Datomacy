@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import dynamic from 'next/dynamic';
 import { useAccount } from 'wagmi';
+import { useAuth } from '@/hooks/useAuth';
+import { InlineAuth } from '@/components/InlineAuth';
 
 const WalletConnection = dynamic(
   () => import("@/components/WalletConnection").then((mod) => ({ default: mod.WalletConnection })),
@@ -92,8 +94,11 @@ function ClientTubeDAO() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (isConnected) {
-    return <Dashboard />;
+  const { isAuthenticated, token } = useAuth();
+  
+  // If user is authenticated, show the dashboard
+  if (isAuthenticated) {
+    return <Dashboard authToken={token} />;
   }
 
   const handleWaitlistSignup = (e: React.FormEvent) => {
@@ -133,7 +138,16 @@ function ClientTubeDAO() {
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       <header className="fixed top-0 right-0 z-50 p-6">
-        <WalletConnection />
+        <div className="flex items-center gap-4">
+          <Button 
+            onClick={() => window.open('/creators', '_blank')}
+            variant="outline"
+            className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-sm"
+          >
+            Creator Studio
+          </Button>
+          <WalletConnection />
+        </div>
       </header>
 
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -210,14 +224,7 @@ function ClientTubeDAO() {
               </Button>
             </form>
             
-            <Button 
-              size="lg" 
-              onClick={() => scrollToSection('how-it-works')}
-              className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-8 py-4 text-lg font-semibold w-full sm:w-auto backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300"
-            >
-              <Play className="w-5 h-5 mr-2" />
-              How It Works
-            </Button>
+            <InlineAuth />
           </div>
           
           <p className="text-gray-500 text-sm">
@@ -612,7 +619,6 @@ function ClientTubeDAO() {
             </div>
           </div>
           
-          {/* Real Use Case Example */}
           <div className="mt-16 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-3xl p-8 border border-purple-500/20">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">Real Use Case Example</h3>
@@ -626,7 +632,6 @@ function ClientTubeDAO() {
         </div>
       </section>
 
-      {/* Built on Real Data - COMPLETELY REVAMPED */}
       <section className="py-32 bg-gradient-to-b from-purple-900/10 to-transparent">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-20">
@@ -780,7 +785,6 @@ function ClientTubeDAO() {
             </div>
           </div>
           
-          {/* Moved form outside the box for better visibility */}
           <div className="mb-12">
             <form onSubmit={handleWaitlistSignup} className="max-w-md mx-auto">
               <div className="flex gap-3 bg-black/30 backdrop-blur-lg rounded-2xl p-3 border border-white/20">
@@ -874,6 +878,8 @@ function ClientTubeDAO() {
     </div>
   );
 }
+
+
 
 function DataUploadModal({ onFileUpload, uploadProgress, isUploading }: {
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;

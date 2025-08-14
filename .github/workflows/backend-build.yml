@@ -1,0 +1,43 @@
+name: Backend Build
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+  pull_request:
+    paths:
+      - 'backend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+          cache: true
+          
+      - name: Install dependencies
+        run: |
+          cd backend
+          go mod download
+          
+      - name: Build backend
+        run: |
+          cd backend
+          go build -v .
+          
+      - name: Run tests
+        run: |
+          cd backend
+          go test -v ./...
+          
+      - name: Check for race conditions
+        run: |
+          cd backend
+          go test -race -v ./...

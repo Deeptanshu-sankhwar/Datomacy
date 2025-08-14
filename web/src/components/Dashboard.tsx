@@ -29,9 +29,13 @@ import {
   CheckCircle2,
   ExternalLink
 } from 'lucide-react';
-import { api, UserContribution, UserRewards } from '@/lib/api';
+import { apiClient, UserContribution, UserRewards } from '@/lib/api';
 
-export function Dashboard() {
+interface DashboardProps {
+  authToken: string | null;
+}
+
+export function Dashboard({ authToken }: DashboardProps) {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const [contributions, setContributions] = useState<UserContribution[]>([]);
@@ -46,30 +50,29 @@ export function Dashboard() {
   const [copied, setCopied] = useState(false);
 
   const fetchUserData = useCallback(async () => {
-    if (!address) return;
+    if (!address || !authToken) return;
     
     try {
       setLoading(true);
       const [contributionsData, rewardsData] = await Promise.all([
-        api.getUserContributions(address),
-        api.getUserRewards(address)
+        apiClient.getUserContributions(address, authToken),
+        apiClient.getUserRewards(address, authToken)
       ]);
       
       setContributions(contributionsData);
       setRewards(rewardsData);
-    } catch {
-      // Handle error silently for now
+    } catch (e) {
+      console.error('Failed to fetch user data', e);
     } finally {
       setLoading(false);
     }
-  }, [address]);
+  }, [address, authToken]);
 
   useEffect(() => {
-    // Fetch user data when wallet is connected
-    if (isConnected && address) {
+    if (isConnected && address && authToken) {
       fetchUserData();
     }
-  }, [isConnected, address, fetchUserData]);
+  }, [isConnected, address, authToken, fetchUserData]);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -99,7 +102,6 @@ export function Dashboard() {
   };
 
   const handleFileUpload = async (file: File) => {
-    // Handle data upload
     if (!file || !address) return;
 
     try {
@@ -118,7 +120,6 @@ export function Dashboard() {
             dataContent = { rawData: content };
           }
 
-          // Simulate upload progress
           const progressInterval = setInterval(() => {
             setUploadProgress(prev => {
               if (prev >= 90) {
@@ -129,12 +130,13 @@ export function Dashboard() {
             });
           }, 200);
 
-          const uploadedData = await api.uploadData(
+          const uploadedData = await apiClient.uploadData(
             address,
             file.type || 'application/json',
             file.name,
             file.size,
-            dataContent
+            dataContent,
+            authToken!
           );
 
           clearInterval(progressInterval);
@@ -233,7 +235,6 @@ export function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-white p-6">
       <div className="container mx-auto max-w-7xl">
-        {/* Header with Logout */}
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-black mb-2">
@@ -255,7 +256,6 @@ export function Dashboard() {
           </Button>
         </div>
 
-        {/* Stats Overview */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20">
             <CardHeader className="pb-3">
@@ -303,7 +303,6 @@ export function Dashboard() {
           </Card>
         </div>
 
-        {/* Main Content */}
         <Tabs defaultValue="upload" className="space-y-6">
           <TabsList className="bg-gray-900/50 border border-gray-700/50">
             <TabsTrigger value="upload" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400">
@@ -349,13 +348,11 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                {/* Enhanced Upload Section */}
                 <div className="space-y-4">
                   <Label className="text-white text-lg font-medium">
                     Upload Your Data File
                   </Label>
                   
-                  {/* Drag & Drop Zone */}
                   <div
                     className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
                       dragActive 
@@ -576,7 +573,6 @@ export function Dashboard() {
           </TabsContent>
         </Tabs>
 
-        {/* Success Modal */}
         <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
           <DialogContent className="sm:max-w-md bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-xl border border-green-500/30">
             <DialogHeader>
@@ -586,7 +582,7 @@ export function Dashboard() {
                 </div>
               </div>
               <DialogTitle className="text-center text-2xl text-white">
-                Contribution Successful! 🎉
+                Contribution Successful!
               </DialogTitle>
               <DialogDescription className="text-center text-gray-300">
                 Your data has been processed and you&apos;ve earned TDAO tokens
@@ -634,7 +630,6 @@ export function Dashboard() {
           </DialogContent>
         </Dialog>
 
-        {/* Contribution Details Modal */}
         <Dialog open={!!selectedContribution} onOpenChange={() => setSelectedContribution(null)}>
           <DialogContent className="sm:max-w-2xl bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-xl border border-gray-700/50 max-h-[80vh] overflow-y-auto">
             {selectedContribution && (
@@ -650,7 +645,6 @@ export function Dashboard() {
                 </DialogHeader>
                 
                 <div className="space-y-6">
-                  {/* Contribution Overview */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
                       <div className="text-sm text-blue-400 mb-1">File Size</div>
@@ -670,7 +664,6 @@ export function Dashboard() {
                     </div>
                   </div>
                   
-                  {/* Data Insights */}
                   <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600/30">
                     <h4 className="text-white font-bold mb-3 flex items-center">
                       <BarChart3 className="w-4 h-4 mr-2" />
@@ -685,7 +678,6 @@ export function Dashboard() {
                     </div>
                   </div>
                   
-                  {/* Transaction Details */}
                   <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600/30">
                     <h4 className="text-white font-bold mb-3 flex items-center">
                       <Database className="w-4 h-4 mr-2" />

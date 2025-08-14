@@ -1,0 +1,44 @@
+name: Contracts Pipeline
+
+on:
+  push:
+    paths:
+      - 'contracts/**'
+  pull_request:
+    paths:
+      - 'contracts/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: contracts/package-lock.json
+          
+      - name: Install dependencies
+        run: |
+          cd contracts
+          npm ci
+          
+      - name: Compile contracts
+        run: |
+          cd contracts
+          npx hardhat compile
+          
+      - name: Run tests
+        run: |
+          cd contracts
+          npx hardhat test
+          
+      - name: Check contract size
+        run: |
+          cd contracts
+          npx hardhat size-contracts

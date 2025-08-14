@@ -3,14 +3,20 @@
   "name": "TubeDAO - Own Your YouTube Data",
   "version": "1.0.0",
   "description": "Privacy-first extension to capture your YouTube behavioral data for the TubeDAO ecosystem. Your data, your control.",
+
   
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "notifications",
+    "scripting"
   ],
   
   "host_permissions": [
-    "https://www.youtube.com/*"
+    "https://www.youtube.com/*",
+    "http://localhost:3000/*",
+    "http://localhost:8080/*"
   ],
   
   "action": {
@@ -28,6 +34,11 @@
     {
       "matches": ["https://www.youtube.com/*"],
       "js": ["content/content.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["http://localhost:3000/*"],
+      "js": ["content/tubedao-content.js"],
       "run_at": "document_end"
     }
   ],

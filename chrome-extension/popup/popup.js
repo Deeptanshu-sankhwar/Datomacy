@@ -1,4 +1,3 @@
-// Popup script for TubeDAO Chrome Extension
 class TubeDAOPopup {
   constructor() {
     this.consentToggle = document.getElementById('consentToggle');
@@ -9,21 +8,52 @@ class TubeDAOPopup {
     this.playbackEvents = document.getElementById('playbackEvents');
     this.dataPreview = document.getElementById('dataPreview');
     this.dataPreviewSection = document.getElementById('dataPreviewSection');
-    this.exportBtn = document.getElementById('exportBtn');
-    this.clearBtn = document.getElementById('clearBtn');
-    this.helpLink = document.getElementById('helpLink');
+    this.rewardsSection = document.getElementById('rewardsSection');
+    this.totalEarnings = document.getElementById('totalEarnings');
+    this.todayEarnings = document.getElementById('todayEarnings');
+    this.rewardsStatus = document.getElementById('rewardsStatus');
+    
+    this.toggleContainer = document.getElementById('toggleContainer');
+    this.toggleLabel = document.getElementById('toggleLabel');
+    this.toggleDescription = document.getElementById('toggleDescription');
+    this.authStatus = document.getElementById('authStatus');
+    this.authIcon = document.getElementById('authIcon');
+    this.authTitle = document.getElementById('authTitle');
+    this.authSubtitle = document.getElementById('authSubtitle');
+    this.authButton = document.getElementById('authButton');
+    this.refreshButton = document.getElementById('refreshButton');
+
+    this.isAuthenticated = false;
+    this.authToken = null;
+    this.consentEnabled = false;
+    this.events = [];
+    this.stats = { total: 0, adEvents: 0, playbackEvents: 0 };
+    this.earnings = { total: 0, today: 0 };
 
     this.init();
   }
 
   async init() {
+    await this.checkAuthentication();
     await this.loadSettings();
     await this.loadStats();
     await this.loadRecentEvents();
+    await this.calculateEarnings();
 
     this.setupEventListeners();
-
     this.updateUI();
+  }
+
+  async checkAuthentication() {
+    try {
+      const result = await chrome.storage.session.get(['tubedao_auth_token']);
+      this.authToken = result.tubedao_auth_token;
+      this.isAuthenticated = !!this.authToken;
+      
+    } catch (error) {
+      console.error('Error checking authentication:', error);
+      this.isAuthenticated = false;
+    }
   }
 
   async loadSettings() {
@@ -59,22 +89,27 @@ class TubeDAOPopup {
     }
   }
 
+  async calculateEarnings() {
+    this.earnings.total = (this.stats.total * 0.1).toFixed(2);
+    
+    const today = new Date().toDateString();
+    const todayEvents = this.events.filter(event => 
+      new Date(event.timestamp).toDateString() === today
+    );
+    this.earnings.today = (todayEvents.length * 0.1).toFixed(2);
+  }
+
   setupEventListeners() {
     this.consentToggle.addEventListener('change', (e) => {
       this.handleConsentChange(e.target.checked);
     });
 
-    this.exportBtn.addEventListener('click', () => {
-      this.exportData();
+    this.authButton.addEventListener('click', () => {
+      this.redirectToHomepage();
     });
 
-    this.clearBtn.addEventListener('click', () => {
-      this.clearData();
-    });
-
-    this.helpLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.showHelp();
+    this.refreshButton.addEventListener('click', () => {
+      this.refreshAuthStatus();
     });
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -82,14 +117,25 @@ class TubeDAOPopup {
         this.loadStats().then(() => {
           this.updateStats();
           this.loadRecentEvents();
+          this.calculateEarnings();
+          this.updateRewards();
         });
+      } else if (message.type === 'AUTH_SUCCESS') {
+        this.handleAuthSuccess(message);
+      } else if (message.type === 'AUTH_REQUIRED') {
+        this.handleAuthRequired();
       }
     });
   }
 
   async handleConsentChange(enabled) {
+    if (enabled && !this.isAuthenticated) {
+      this.consentToggle.checked = false;
+      this.updateUI();
+      return;
+    }
+
     this.consentEnabled = enabled;
-    
     await chrome.storage.local.set({ consentEnabled: enabled });
     
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -104,22 +150,107 @@ class TubeDAOPopup {
     this.updateUI();
   }
 
-  updateUI() {
+  handleAuthSuccess(message) {
+    this.isAuthenticated = true;
+    this.authToken = message.token;
+    
+    chrome.storage.session.set({ 
+      tubedao_auth_token: message.token,
+      tubedao_address: message.address,
+      tubedao_chainId: message.chainId,
+      tubedao_expiresAt: message.expiresAt
+    }).then(() => {
+      this.updateUI();
+      this.showToast('Authentication successful! You can now enable data capture and start earning rewards', 'success');
+    }).catch((error) => {
+      console.error('Popup: Error storing auth data:', error);
+    });
+  }
+
+  handleAuthRequired() {
+    this.isAuthenticated = false;
+    this.authToken = null;
+    
+    chrome.storage.session.remove([
+      'tubedao_auth_token',
+      'tubedao_address', 
+      'tubedao_chainId',
+      'tubedao_expiresAt'
+    ]);
+
     if (this.consentEnabled) {
+      this.consentToggle.checked = false;
+      this.consentEnabled = false;
+      chrome.storage.local.set({ consentEnabled: false });
+    }
+
+    this.updateUI();
+  }
+
+  redirectToHomepage() {
+    chrome.tabs.create({ 
+      url: 'http://localhost:3000',
+      active: true 
+    });
+  }
+
+  async refreshAuthStatus() {
+    await this.checkAuthentication();
+    this.updateUI();
+    this.showToast('Auth status refreshed', 'success');
+  }
+
+  updateUI() {
+    if (this.consentEnabled && this.isAuthenticated) {
       this.statusIndicator.classList.add('active');
       this.statusIndicator.querySelector('.dot').classList.add('active');
       this.statusText.textContent = 'Active';
     } else {
       this.statusIndicator.classList.remove('active');
       this.statusIndicator.querySelector('.dot').classList.remove('active');
-      this.statusText.textContent = 'Disabled';
+      this.statusText.textContent = this.isAuthenticated ? 'Ready' : 'Disabled';
     }
 
-    this.updateStats();
+    this.updateToggleState();
+    this.updateAuthStatus();
 
-    const hasData = this.events && this.events.length > 0;
-    this.exportBtn.disabled = !hasData;
-    this.clearBtn.disabled = !hasData;
+    this.updateStats();
+    this.updateRewards();
+  }
+
+  updateToggleState() {
+    const isEnabled = this.consentEnabled && this.isAuthenticated;
+    this.consentToggle.checked = isEnabled;
+    this.consentToggle.disabled = !this.isAuthenticated;
+    
+    if (!this.isAuthenticated) {
+      this.toggleContainer.classList.add('disabled');
+      this.toggleLabel.textContent = 'Enable data capture';
+      this.toggleDescription.textContent = 'Authentication required to start capturing data';
+    } else {
+      this.toggleContainer.classList.remove('disabled');
+      this.toggleLabel.textContent = 'Enable data capture';
+      this.toggleDescription.textContent = 'Capture your YouTube interaction patterns locally';
+    }
+  }
+
+  updateAuthStatus() {
+    if (!this.isAuthenticated) {
+      this.authStatus.classList.remove('authenticated');
+      this.authStatus.classList.add('show');
+      this.authIcon.textContent = '🔒';
+      this.authTitle.textContent = 'Authentication Required';
+      this.authButton.innerHTML = '<span class="auth-button-icon">🔗</span>Authenticate';
+    } else if (this.isAuthenticated && !this.consentEnabled) {
+      this.authStatus.classList.add('authenticated');
+      this.authStatus.classList.add('show');
+      this.authIcon.textContent = '✅';
+      this.authTitle.textContent = 'Ready to Capture Data';
+      this.authSubtitle.textContent = 'You\'re authenticated! Enable data capture to start earning rewards';
+      this.authButton.innerHTML = '<span class="auth-button-icon">💰</span>Start Earning';
+    } else {
+      this.authStatus.classList.remove('show');
+    }
   }
 
   updateStats() {
@@ -130,125 +261,61 @@ class TubeDAOPopup {
     }
   }
 
-  async exportData() {
-    if (!this.events || this.events.length === 0) {
-      this.showNotification('No data to export', 'warning');
-      return;
-    }
+  updateRewards() {
+    this.totalEarnings.textContent = `$${this.earnings.total}`;
+    this.todayEarnings.textContent = `$${this.earnings.today}`;
 
-    const exportData = {
-      metadata: {
-        source: 'TubeDAO Chrome Extension',
-        version: '1.0.0',
-        exportDate: new Date().toISOString(),
-        totalEvents: this.events.length,
-        dataTypes: [...new Set(this.events.map(e => e.category))],
-        privacyNote: 'This data was collected locally with user consent and contains anonymized behavioral patterns.'
-      },
-      summary: {
-        totalEvents: this.stats.total,
-        adInteractions: this.stats.adEvents,
-        playbackActions: this.stats.playbackEvents,
-        sessionCount: [...new Set(this.events.map(e => e.session_id))].length,
-        dateRange: {
-          start: this.events.length > 0 ? this.events[0].timestamp : null,
-          end: this.events.length > 0 ? this.events[this.events.length - 1].timestamp : null
-        }
-      },
-      events: this.events
-    };
+    const statusText = this.rewardsStatus.querySelector('span');
+    const pulseDot = this.rewardsStatus.querySelector('.pulse-dot');
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
-      type: 'application/json' 
-    });
-    
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `tubedao-data-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    
-    this.showNotification('Data exported successfully!', 'success');
-  }
-
-  async clearData() {
-    if (confirm('Are you sure you want to clear all local data? This action cannot be undone.')) {
-      await chrome.storage.local.remove(['tubeDAOEvents']);
-      this.events = [];
-      this.stats = { total: 0, adEvents: 0, playbackEvents: 0 };
-      
-      await this.loadRecentEvents();
-      this.updateUI();
-      
-      this.showNotification('Data cleared successfully', 'success');
+    if (this.consentEnabled && this.isAuthenticated) {
+      statusText.textContent = 'Capturing data in real-time';
+      pulseDot.classList.add('active');
+    } else if (this.isAuthenticated) {
+      statusText.textContent = 'Ready to capture data';
+      pulseDot.classList.remove('active');
+    } else {
+      statusText.textContent = 'Authentication required';
+      pulseDot.classList.remove('active');
     }
   }
 
-  showHelp() {
-    const helpContent = `
-🔒 Privacy First: Your data stays on your device until you export it.
+  showToast(message, type = 'info') {
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) {
+      existingToast.remove();
+    }
 
-📊 What We Capture:
-• Video interactions (play, pause, seek)
-• Ad viewing patterns (skip, complete, click)
-• Playback preferences (speed, quality)
-• Engagement signals (likes, shares)
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
 
-🎯 How It Works:
-1. Enable data capture with the toggle
-2. Browse YouTube normally
-3. Review your data anytime
-4. Export when ready to contribute
+    setTimeout(() => toast.classList.add('show'), 100);
 
-💡 Your data powers better ad experiences and creator insights while keeping you in control.
-    `;
-    
-    alert(helpContent);
-  }
-
-  showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: ${type === 'success' ? '#2ed573' : type === 'warning' ? '#ff6b6b' : '#4ecdc4'};
-      color: white;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 500;
-      z-index: 1000;
-      animation: slideInRight 0.3s ease;
-    `;
-    
-    document.body.appendChild(notification);
-    
     setTimeout(() => {
-      notification.remove();
-    }, 3000);
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
   }
 
   formatTime(timestamp) {
     const date = new Date(timestamp);
     const now = new Date();
-    const diff = now - date;
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
     
-    if (diff < 60000) {
-      return 'Just now';
-    } else if (diff < 3600000) {
-      return `${Math.floor(diff / 60000)}m ago`;
-    } else if (diff < 86400000) {
-      return `${Math.floor(diff / 3600000)}h ago`;
-    } else {
-      return date.toLocaleDateString();
-    }
+    return date.toLocaleDateString();
   }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   new TubeDAOPopup();

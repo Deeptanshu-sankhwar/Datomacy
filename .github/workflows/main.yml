@@ -1,0 +1,142 @@
+name: Main CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  web-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+          
+      - name: Install dependencies
+        run: |
+          cd web
+          npm ci
+          
+      - name: Run ESLint
+        run: |
+          cd web
+          npm run lint
+          
+      - name: Check TypeScript
+        run: |
+          cd web
+          npx tsc --noEmit
+
+  backend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+          cache: true
+          
+      - name: Install dependencies
+        run: |
+          cd backend
+          go mod download
+          
+      - name: Build backend
+        run: |
+          cd backend
+          go build -v .
+          
+      - name: Run tests
+        run: |
+          cd backend
+          go test -v ./...
+
+  contracts-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: contracts/package-lock.json
+          
+      - name: Install dependencies
+        run: |
+          cd contracts
+          npm ci
+          
+      - name: Compile contracts
+        run: |
+          cd contracts
+          npx hardhat compile
+          
+      - name: Run tests
+        run: |
+          cd contracts
+          npx hardhat test
+
+  chrome-extension-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Validate manifest.json
+        run: |
+          cd chrome-extension
+          node -e "
+            const manifest = require('./manifest.json');
+            if (!manifest.name || !manifest.version || !manifest.manifest_version) {
+              console.error('Invalid manifest.json: missing required fields');
+              process.exit(1);
+            }
+            console.log('✅ Manifest validation passed');
+          "
+          
+      - name: Check for required files
+        run: |
+          cd chrome-extension
+          required_files=(
+            'manifest.json'
+            'background/background.js'
+            'popup/popup.html'
+            'popup/popup.js'
+            'content/content.js'
+            'icons/logo.png'
+          )
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing required file: $file"
+              exit 1
+            fi
+          done
+          echo "✅ All required files present"
+          
+      - name: Validate JavaScript syntax
+        run: |
+          cd chrome-extension
+          node -c background/background.js
+          node -c popup/popup.js
+          node -c content/content.js
+          echo "✅ JavaScript syntax validation passed"

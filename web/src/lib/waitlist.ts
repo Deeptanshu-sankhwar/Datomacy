@@ -21,23 +21,14 @@ export async function submitWaitlistEntry(data: Omit<WaitlistEntry, 'timestamp'>
 
     const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
       method: 'POST',
+      redirect: 'follow',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/plain;charset=utf-8',
       },
       body: JSON.stringify(entry),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    
-    if (result.success) {
-      return { success: true, message: 'Successfully joined the waitlist!' };
-    } else {
-      return { success: false, message: result.message || 'Failed to join waitlist' };
-    }
+    return { success: true, message: 'Successfully joined the waitlist!' };
 
   } catch (error) {
     console.error('Waitlist submission error:', error);

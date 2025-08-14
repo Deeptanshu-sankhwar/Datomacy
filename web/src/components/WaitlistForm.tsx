@@ -64,16 +64,11 @@ export function WaitlistForm({
         telegram,
         source: 'Website'
       });
-
-      if (result.success) {
-        setStatus('success');
-        setMessage(result.message);
-        setEmail('');
-        setTelegram('');
-      } else {
-        setStatus('error');
-        setMessage('Failed to join waitlist. Please try again.');
-      }
+      
+      setStatus('success');
+      setMessage(result.message);
+      setEmail('');
+      setTelegram('');
     } catch (error) {
       setStatus('error');
       setMessage(`Something went wrong. Please try again. ${error}`);

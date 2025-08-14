@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+
 import dynamic from 'next/dynamic';
+import { WaitlistForm } from '@/components/WaitlistForm';
 
 const WalletConnection = dynamic(
   () => import("@/components/WalletConnection").then((mod) => ({ default: mod.WalletConnection })),
@@ -27,13 +25,11 @@ import {
   Play, 
   Users, 
   Shield, 
-  Upload, 
-  Coins, 
-  FileText, 
+  Upload,
+  Coins,
+  FileText,
   CheckCircle,
   Target,
-  Gift,
-  Bell,
   Lock,
   Eye,
   Sparkles,
@@ -48,11 +44,8 @@ import {
 } from "lucide-react";
 
 export default function TubeDAO() {
-  const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -60,33 +53,18 @@ export default function TubeDAO() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleWaitlistSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setTimeout(() => {
-        setIsSubscribed(false);
-        setEmail("");
-      }, 3000);
-    }
-  };
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setMousePosition({ x, y });
+    };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setUploadProgress(progress);
-        if (progress >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          setTimeout(() => setUploadProgress(0), 2000);
-        }
-      }, 200);
-    }
-  };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
@@ -101,19 +79,54 @@ export default function TubeDAO() {
         <WalletConnection />
       </header>
 
-      {/* Enhanced Animated Background */}
+      {/* Cursor-Responsive Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Main cursor-following gradient */}
         <div 
-          className="absolute top-0 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse" 
-          style={{ transform: `translateY(${scrollY * 0.5}px)` }}
+          className="absolute w-[800px] h-[800px] opacity-30 rounded-full blur-3xl transition-all duration-300 ease-out"
+          style={{ 
+            background: `radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, rgba(147, 51, 234, 0.3) 50%, rgba(236, 72, 153, 0.2) 100%)`,
+            left: `${mousePosition.x}%`,
+            top: `${mousePosition.y}%`,
+            transform: `translate(-50%, -50%) scale(${1 + Math.sin(Date.now() * 0.001) * 0.1})`
+          }}
+        />
+        
+        {/* Secondary gradient that follows with delay */}
+        <div 
+          className="absolute w-[600px] h-[600px] opacity-20 rounded-full blur-3xl transition-all duration-700 ease-out"
+          style={{ 
+            background: `radial-gradient(circle, rgba(79, 70, 229, 0.4) 0%, rgba(219, 39, 119, 0.3) 50%, rgba(239, 68, 68, 0.2) 100%)`,
+            left: `${mousePosition.x * 0.8 + 10}%`,
+            top: `${mousePosition.y * 0.8 + 10}%`,
+            transform: `translate(-50%, -50%) rotate(${mousePosition.x * 0.1}deg)`
+          }}
+        />
+        
+        {/* Scroll-responsive orbs */}
+        <div 
+          className="absolute w-96 h-96 bg-gradient-to-br from-red-500/10 to-purple-500/10 rounded-full blur-3xl" 
+          style={{ 
+            left: '10%',
+            top: '20%',
+            transform: `translateY(${scrollY * 0.3}px) scale(${1 + mousePosition.x * 0.002})`
+          }}
         />
         <div 
-          className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" 
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+          className="absolute w-80 h-80 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" 
+          style={{ 
+            right: '10%',
+            top: '60%',
+            transform: `translateY(${scrollY * -0.2}px) scale(${1 + mousePosition.y * 0.002})`
+          }}
         />
         <div 
-          className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-2000" 
-          style={{ transform: `translateY(${scrollY * 0.2}px)` }}
+          className="absolute w-72 h-72 bg-gradient-to-br from-pink-500/10 to-red-500/10 rounded-full blur-3xl" 
+          style={{ 
+            left: '50%',
+            bottom: '20%',
+            transform: `translateX(-50%) translateY(${scrollY * 0.4}px) scale(${1 + (mousePosition.x + mousePosition.y) * 0.001})`
+          }}
         />
       </div>
 
@@ -121,12 +134,23 @@ export default function TubeDAO() {
       <section className="relative min-h-screen flex items-center justify-center px-6">
         <div className="container mx-auto text-center max-w-6xl relative z-10">
           <div className="flex justify-center items-center mb-8">
-            <Badge className="bg-gradient-to-r from-red-500/20 to-purple-500/20 text-red-300 border-red-500/30 px-6 py-3 text-sm font-medium">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Built on Vana • Trusted by 1.3M+ Users • Featured in Web3 Innovation
-            </Badge>
+            <WaitlistForm 
+              variant="modal" 
+              triggerText=""
+              triggerClassName="bg-transparent p-0 hover:bg-transparent shadow-none"
+            >
+              <div className="relative cursor-pointer">
+                {/* Breathing glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/50 to-orange-500/50 rounded-full blur-lg animate-pulse scale-110"></div>
+                
+                <Badge className="relative bg-gradient-to-r from-yellow-500/40 to-orange-500/40 text-yellow-100 border-yellow-400/60 px-8 py-4 text-lg font-black shadow-2xl shadow-yellow-500/30 hover:scale-105 transition-transform duration-300 header-breathe cursor-pointer">
+                  <Coins className="w-5 h-5 mr-3 animate-bounce" />
+                  FIRST 300 USERS ON THE WAITLIST GET EXCLUSIVE TOKEN AIRDROP
+                </Badge>
+              </div>
+            </WaitlistForm>
           </div>
-          
+
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-8 tracking-tight">
             <span className="bg-gradient-to-r from-white via-red-200 to-pink-200 bg-clip-text text-transparent">
               TUBE
@@ -136,7 +160,9 @@ export default function TubeDAO() {
             </span>
           </h1>
           
-          <div className="max-w-4xl mx-auto mb-12">
+          <div className="max-w-4xl mx-auto mb-12 space-y-6">
+
+            
             <p className="text-3xl md:text-4xl text-gray-300 mb-6 font-light leading-relaxed">
               <span className="text-red-400 font-bold">Unlock the Deepest YouTube Insights.</span><br />
               Own Your Data.
@@ -145,46 +171,40 @@ export default function TubeDAO() {
               Your viewing data was the product.<br />
               <span className="text-white font-medium">Now it&apos;s your power.</span>
             </p>
+            
+            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-green-400" />
+                <span>Privacy Protected</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Lock className="w-4 h-4 text-blue-400" />
+                <span>Zero-Knowledge Powered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Coins className="w-4 h-4 text-yellow-400" />
+                <span>Earn Rewards</span>
+              </div>
+            </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 max-w-4xl mx-auto">
-            <form onSubmit={handleWaitlistSignup} className="flex gap-3 bg-white/5 backdrop-blur-lg rounded-2xl p-3 border border-white/10 hover:border-red-500/30 transition-all duration-300 w-full sm:w-auto">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-transparent border-0 text-white placeholder:text-gray-400 text-lg px-6 py-4 w-full sm:w-80 focus:ring-0"
-                required
+          <div className="flex flex-col gap-8 justify-center items-center mb-16 max-w-4xl mx-auto">
+            <div className="flex flex-col sm:flex-row gap-6 items-center">
+              <WaitlistForm 
+                variant="modal" 
+                triggerText="Join Waitlist"
+                triggerClassName="text-xl px-12 py-6"
               />
+              
               <Button 
-                type="submit" 
                 size="lg" 
-                className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-red-500/25 transition-all duration-300 whitespace-nowrap"
-                disabled={isSubscribed}
+                onClick={() => scrollToSection('how-it-works')}
+                className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-8 py-4 text-lg font-semibold backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300"
               >
-                {isSubscribed ? (
-                  <>
-                    <CheckCircle className="w-5 h-5 mr-2" />
-                    Joined!
-                  </>
-                ) : (
-                  <>
-                    <Bell className="w-5 h-5 mr-2" />
-                    Join Waitlist
-                  </>
-                )}
+                <Play className="w-5 h-5 mr-2" />
+                How It Works
               </Button>
-            </form>
-            
-            <Button 
-              size="lg" 
-              onClick={() => scrollToSection('how-it-works')}
-              className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-8 py-4 text-lg font-semibold w-full sm:w-auto backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300"
-            >
-              <Play className="w-5 h-5 mr-2" />
-              How It Works
-            </Button>
+            </div>
           </div>
           
           <p className="text-gray-500 text-sm">
@@ -756,27 +776,14 @@ export default function TubeDAO() {
             </div>
           </div>
           
-          {/* Moved form outside the box for better visibility */}
-          <div className="mb-12">
-            <form onSubmit={handleWaitlistSignup} className="max-w-md mx-auto">
-              <div className="flex gap-3 bg-black/30 backdrop-blur-lg rounded-2xl p-3 border border-white/20">
-                <Input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-transparent border-0 text-white placeholder:text-gray-400 text-lg px-4 focus:ring-0"
-                  required
-                />
-                <Button 
-                  type="submit" 
-                  className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 py-3 font-semibold rounded-xl shadow-lg hover:shadow-red-500/25 transition-all duration-300"
-                  disabled={isSubscribed}
-                >
-                  {isSubscribed ? "Joined!" : "Join Waitlist"}
-                </Button>
-              </div>
-            </form>
+          {/* Call to Action */}
+          <div className="mb-12 text-center">
+            <WaitlistForm 
+              variant="modal" 
+              triggerText="Join Waitlist"
+              triggerClassName="text-xl px-12 py-6"
+            />
+            <p className="text-gray-400 text-sm mt-4">First 300 users on the waitlist get exclusive token airdrop at launch</p>
           </div>
           
           <div className="text-center bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-3xl p-8 border border-red-500/20">
@@ -800,7 +807,7 @@ export default function TubeDAO() {
               <p className="text-gray-500 text-sm">Built on Vana • Secured by Zero-Knowledge</p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-gray-500 text-sm">Contact:</span>
-                <a href="mailto:hello@tubedao.org" className="text-blue-400 hover:underline text-sm">hello@tubedao.org</a>
+                <a href="mailto:deeptanshu@eonxi.com" className="text-blue-400 hover:underline text-sm">deeptanshu@eonxi.com</a>
               </div>
             </div>
             
@@ -834,130 +841,50 @@ export default function TubeDAO() {
         </div>
       </footer>
 
-      {/* Enhanced Upload Modal */}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="fixed bottom-8 right-8 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition-all duration-300">
-            <Upload className="w-6 h-6" />
-          </Button>
-        </DialogTrigger>
-        <DataUploadModal 
-          onFileUpload={handleFileUpload} 
-          uploadProgress={uploadProgress} 
-          isUploading={isUploading} 
-        />
-      </Dialog>
+      {/* Enhanced Floating Waitlist Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="relative">
+          {/* Multiple breathing glow layers */}
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-2xl opacity-40 scale-150" style={{
+            animation: 'breathe 2s ease-in-out infinite'
+          }}></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 rounded-full blur-xl opacity-30 scale-125" style={{
+            animation: 'breathe 2.5s ease-in-out infinite reverse'
+          }}></div>
+          
+          <WaitlistForm 
+            variant="modal" 
+            triggerText="Join Waitlist"
+            triggerClassName="relative px-10 py-7 text-xl font-black rounded-full shadow-2xl hover:scale-110 transition-all duration-300"
+          />
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes breathe {
+          0%, 100% { 
+            transform: scale(1);
+            opacity: 0.4;
+          }
+          50% { 
+            transform: scale(1.2);
+            opacity: 0.8;
+          }
+        }
+        
+        .header-breathe {
+          animation: breathe-header 3s ease-in-out infinite;
+        }
+        
+        @keyframes breathe-header {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+      `}</style>
+
+
     </div>
   );
 }
 
-function DataUploadModal({ onFileUpload, uploadProgress, isUploading }: {
-  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  uploadProgress: number;
-  isUploading: boolean;
-}) {
-  return (
-    <DialogContent className="sm:max-w-[700px] bg-black border border-white/20 backdrop-blur-xl">
-      <DialogHeader>
-        <DialogTitle className="text-white flex items-center text-2xl">
-          <Upload className="w-6 h-6 mr-3 text-red-400" />
-          Contribute Your YouTube Premium Data
-        </DialogTitle>
-        <DialogDescription className="text-gray-300 text-lg">
-          Help build the future of content economics. Your data stays anonymous, you keep control, and earn rewards.
-        </DialogDescription>
-      </DialogHeader>
-      
-      <div className="space-y-6">
-        {/* Data Preview Section */}
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/5 rounded-2xl p-6 border border-blue-500/20">
-          <h3 className="text-white font-bold mb-4 flex items-center text-lg">
-            <Eye className="w-5 h-5 mr-3 text-blue-400" />
-            What Your Anonymized Data Looks Like
-          </h3>
-          <div className="bg-black/40 rounded-lg p-4 font-mono text-sm">
-            <div className="text-green-400">{"{"}</div>
-            <div className="text-gray-300 ml-4">&quot;user_id&quot;: &quot;anonymous_hash_abc123&quot;,</div>
-            <div className="text-gray-300 ml-4">&quot;viewing_patterns&quot;: {"{"}</div>
-            <div className="text-gray-300 ml-8">&quot;avg_session_length&quot;: &quot;23m&quot;,</div>
-            <div className="text-gray-300 ml-8">&quot;preferred_categories&quot;: [&quot;tech&quot;, &quot;education&quot;],</div>
-            <div className="text-gray-300 ml-8">&quot;premium_features_used&quot;: [&quot;offline&quot;, &quot;no_ads&quot;]</div>
-            <div className="text-gray-300 ml-4">{"}"}</div>
-            <div className="text-green-400">{"}"}</div>
-          </div>
-          <p className="text-gray-400 text-sm mt-3">All personal identifiers removed • Geographic data aggregated • Viewing times anonymized</p>
-        </div>
-        
-        <div className="bg-gradient-to-br from-red-500/10 to-pink-500/5 rounded-2xl p-6 border border-red-500/20">
-          <h3 className="text-white font-bold mb-4 flex items-center text-lg">
-            <FileText className="w-5 h-5 mr-3 text-blue-400" />
-            How to Export Your YouTube Premium Data
-          </h3>
-          <ol className="space-y-3 text-gray-300">
-            <li className="flex items-start">
-              <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">1</span>
-              Visit <a href="https://takeout.google.com" className="text-blue-400 hover:underline font-medium" target="_blank">Google Takeout <ExternalLink className="w-4 h-4 inline ml-1" /></a>
-            </li>
-            <li className="flex items-start">
-              <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">2</span>
-              Select <strong>&quot;YouTube and YouTube Music&quot;</strong> from the services list
-            </li>
-            <li className="flex items-start">
-              <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">3</span>
-              Choose <strong>JSON format</strong> and click &quot;Create Export&quot;
-            </li>
-            <li className="flex items-start">
-              <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 font-bold">4</span>
-              Download the file and upload it below when ready
-            </li>
-          </ol>
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="data-file" className="text-white text-lg font-medium">Upload YouTube Data (JSON/ZIP)</Label>
-            <Input
-              id="data-file"
-              type="file"
-              accept=".json,.zip"
-              onChange={onFileUpload}
-              className="bg-white/5 border-white/20 text-white file:bg-gradient-to-r file:from-red-500 file:to-pink-500 file:text-white file:border-0 file:rounded-xl file:px-4 file:py-2 file:mr-4 mt-2"
-            />
-          </div>
-          
-          {isUploading && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-300">Uploading & Anonymizing...</span>
-                <span className="text-gray-300">{uploadProgress}%</span>
-              </div>
-              <Progress value={uploadProgress} className="h-3" />
-            </div>
-          )}
-          
-          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4">
-            <div className="flex items-start space-x-3">
-              <Shield className="w-5 h-5 text-green-400 mt-0.5" />
-              <div>
-                <h4 className="text-green-400 font-bold">Privacy Guaranteed</h4>
-                <p className="text-sm text-gray-300">
-                  Your data is automatically anonymized using zero-knowledge cryptography. No personal identifiers are stored or shared.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex justify-between pt-4">
-          <Button variant="outline" className="border-white/20 text-gray-300 hover:bg-white/5">
-            Learn More
-          </Button>
-          <Button className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600">
-            <Gift className="w-4 h-4 mr-2" />
-            Upload & Earn Rewards
-          </Button>
-        </div>
-      </div>
-    </DialogContent>
-  );
-} 
+ 

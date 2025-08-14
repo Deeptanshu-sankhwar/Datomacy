@@ -3,10 +3,9 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
-import { useAccount } from 'wagmi';
+
 
 export function WalletConnection() {
-  const { address } = useAccount();
 
   // Note: Wallet registration is now handled by the authentication flow
   // This component only handles wallet connection UI

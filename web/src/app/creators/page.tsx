@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,19 +15,14 @@ import {
   Users, 
   Eye, 
   Heart, 
-  MessageCircle, 
-  Share2, 
   Clock, 
   Target,
   DollarSign,
   BarChart3,
-  PieChart,
   Award,
   Sparkles,
   ArrowUpRight,
   ArrowDownRight,
-  Calendar,
-  Filter,
   Download,
   Bell
 } from 'lucide-react';
@@ -58,7 +53,7 @@ interface VideoAnalytics {
 }
 
 export default function CreatorDashboard() {
-  const [metrics, setMetrics] = useState<EngagementMetrics>({
+  const [metrics] = useState<EngagementMetrics>({
     totalViews: 2847392,
     avgWatchTime: 4.2,
     engagementRate: 8.7,
@@ -102,31 +97,31 @@ export default function CreatorDashboard() {
   ];
 
   const retentionData = [
-    { timestamp: 0, retention: 100, engagement: 95 },
-    { timestamp: 30, retention: 87, engagement: 82 },
-    { timestamp: 60, retention: 78, dropoff: true, engagement: 65 },
-    { timestamp: 90, retention: 72, engagement: 88 },
-    { timestamp: 120, retention: 68, engagement: 91 },
-    { timestamp: 150, retention: 61, engagement: 76 },
-    { timestamp: 180, retention: 55, dropoff: true, engagement: 58 },
-    { timestamp: 210, retention: 52, engagement: 85 },
-    { timestamp: 240, retention: 48, engagement: 89 },
-    { timestamp: 270, retention: 44, engagement: 92 },
-    { timestamp: 300, retention: 41, engagement: 87 },
-    { timestamp: 330, retention: 38, engagement: 83 },
-    { timestamp: 360, retention: 35, dropoff: true, engagement: 71 },
-    { timestamp: 390, retention: 32, engagement: 88 },
-    { timestamp: 420, retention: 28, engagement: 90 },
+    { timePoint: 0, retention: 100, viewers: 50000 },
+    { timePoint: 30, retention: 87, viewers: 43500 },
+    { timePoint: 60, retention: 78, viewers: 39000 },
+    { timePoint: 90, retention: 72, viewers: 36000 },
+    { timePoint: 120, retention: 68, viewers: 34000 },
+    { timePoint: 150, retention: 61, viewers: 30500 },
+    { timePoint: 180, retention: 55, viewers: 27500 },
+    { timePoint: 210, retention: 52, viewers: 26000 },
+    { timePoint: 240, retention: 48, viewers: 24000 },
+    { timePoint: 270, retention: 44, viewers: 22000 },
+    { timePoint: 300, retention: 41, viewers: 20500 },
+    { timePoint: 330, retention: 38, viewers: 19000 },
+    { timePoint: 360, retention: 35, viewers: 17500 },
+    { timePoint: 390, retention: 32, viewers: 16000 },
+    { timePoint: 420, retention: 28, viewers: 14000 },
   ];
 
-  const [audienceInsights, setAudienceInsights] = useState<AudienceInsight[]>([
+  const [audienceInsights] = useState<AudienceInsight[]>([
     { demographic: '18-24 Tech Enthusiasts', percentage: 32, engagement: 9.2, trend: 'up' },
     { demographic: '25-34 Professionals', percentage: 28, engagement: 7.8, trend: 'up' },
     { demographic: '35-44 Entrepreneurs', percentage: 24, engagement: 8.5, trend: 'stable' },
     { demographic: '45+ Investors', percentage: 16, engagement: 6.9, trend: 'down' }
   ]);
 
-  const [topVideos, setTopVideos] = useState<VideoAnalytics[]>([
+  const [topVideos] = useState<VideoAnalytics[]>([
     {
       title: 'Web3 Development Tutorial: Building Your First DApp',
       views: 456789,
@@ -351,8 +346,6 @@ export default function CreatorDashboard() {
             <VideoRetentionChart 
               data={retentionData}
               title="Video Retention Analysis"
-              duration={420}
-              averageViewDuration={252}
             />
 
             {/* Performance Overview */}

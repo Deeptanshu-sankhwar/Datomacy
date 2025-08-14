@@ -159,8 +159,9 @@ export function useAuth() {
           notifyExtension(finalAuthResponse.token, finalAuthResponse.address, finalAuthResponse.chainId, finalAuthResponse.expiresAt);
         }
 
-      } catch (verifyError: any) {
-        if (verifyError.message.includes('registration required')) {
+      } catch (verifyError: unknown) {
+        const error = verifyError as Error;
+        if (error.message.includes('registration required')) {
           // Start registration process
           await handleRegistrationFlow(messageString, siweSignature, address);
         } else {
@@ -168,17 +169,18 @@ export function useAuth() {
         }
       }
 
-    } catch (error: any) {
-      console.error('Authentication error:', error);
+    } catch (error: unknown) {
+      const authError = error as Error;
+      console.error('Authentication error:', authError);
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: error.message || 'Authentication failed',
+        error: authError.message || 'Authentication failed',
       }));
     }
   }, [address, isConnected, chainId, signMessageAsync]);
 
-  const handleMokshaBinding = useCallback(async (siweResponse: any, userAddress: string, siweMessage: string, siweSignature: string) => {
+  const handleMokshaBinding = useCallback(async (siweResponse: { tempToken: string }, userAddress: string, siweMessage: string, siweSignature: string) => {
     try {
       // Step 5: Sign binding message for Moksha identity
       const bindingMessage = `Bind this wallet to TubeDAO Moksha identity.\n\nAddress: ${userAddress}\nTimestamp: ${new Date().toISOString()}`;
@@ -221,12 +223,13 @@ export function useAuth() {
       // Notify extension about successful auth
       notifyExtension(finalAuthResponse.token, finalAuthResponse.address, finalAuthResponse.chainId, finalAuthResponse.expiresAt);
 
-    } catch (error: any) {
-      console.error('Moksha binding error:', error);
+    } catch (error: unknown) {
+      const bindingError = error as Error;
+      console.error('Moksha binding error:', bindingError);
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: error.message || 'Failed to bind Moksha identity',
+        error: bindingError.message || 'Failed to bind Moksha identity',
       }));
     }
   }, [signMessageAsync]);
@@ -259,13 +262,14 @@ export function useAuth() {
       // Step 3: Poll for registration completion
       await pollRegistrationStatus(registrationResponse.registrationId, userAddress);
 
-    } catch (error: any) {
-      console.error('Registration error:', error);
+    } catch (error: unknown) {
+      const registrationError = error as Error;
+      console.error('Registration error:', registrationError);
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
         isProcessingRegistration: false,
-        error: error.message || 'Registration failed',
+        error: registrationError.message || 'Registration failed',
       }));
     }
   }, [signMessageAsync]);
@@ -312,12 +316,13 @@ export function useAuth() {
           throw new Error('Registration timeout - please try again');
         }
 
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const pollError = error as Error;
         setAuthState(prev => ({
           ...prev,
           isLoading: false,
           isProcessingRegistration: false,
-          error: error.message || 'Registration failed',
+          error: pollError.message || 'Registration failed',
         }));
       }
     };

@@ -119,7 +119,7 @@ export function InlineAuth() {
           Complete Registration
         </Button>
         <p className="text-purple-400 text-sm text-center max-w-xs">
-          You'll need to register on the Vana Moksha network. Our relayer will handle this automatically.
+          You&apos;ll need to register on the Vana Moksha network. Our relayer will handle this automatically.
         </p>
       </div>
     );

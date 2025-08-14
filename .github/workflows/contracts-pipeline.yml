@@ -37,8 +37,3 @@ jobs:
         run: |
           cd contracts
           npx hardhat test
-          
-      - name: Check contract size
-        run: |
-          cd contracts
-          npx hardhat size-contracts

@@ -21,7 +21,7 @@ interface PricingTier {
   description: string;
   features: string[];
   popular?: boolean;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   gradient: string;
   buttonText: string;
 }
@@ -108,7 +108,7 @@ export function CreatorPricing() {
           </h2>
           
           <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Get unprecedented access to your audience's real engagement data. 
+            Get unprecedented access to your audience&apos;s real engagement data. 
             Make data-driven decisions that actually boost your revenue and growth.
           </p>
         </div>
@@ -146,7 +146,7 @@ export function CreatorPricing() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          {tiers.map((tier, index) => {
+          {tiers.map((tier) => {
             const Icon = tier.icon;
             return (
               <Card 
@@ -204,7 +204,7 @@ export function CreatorPricing() {
           <Rocket className="w-16 h-16 text-purple-400 mx-auto mb-6" />
           <h3 className="text-3xl font-bold mb-4 text-white">Ready to Transform Your Content Strategy?</h3>
           <p className="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of creators who are already using TubeDAO's deep engagement insights 
+            Join thousands of creators who are already using TubeDAO&apos;s deep engagement insights 
             to grow their channels and maximize their revenue.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

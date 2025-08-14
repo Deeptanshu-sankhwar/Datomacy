@@ -2,7 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Users } from 'lucide-react';
+import { Clock, Users } from 'lucide-react';
 
 interface HeatmapData {
   hour: number;

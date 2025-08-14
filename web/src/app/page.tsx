@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import dynamic from 'next/dynamic';
-import { useAccount } from 'wagmi';
+
 import { useAuth } from '@/hooks/useAuth';
 import { InlineAuth } from '@/components/InlineAuth';
 
@@ -43,7 +43,6 @@ const Dashboard = dynamic(
 );
 
 import { 
-  Play, 
   Users, 
   Shield, 
   Upload, 
@@ -81,7 +80,6 @@ export default function TubeDAO() {
 }
 
 function ClientTubeDAO() {
-  const { isConnected } = useAccount();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -129,9 +127,7 @@ function ClientTubeDAO() {
     }
   };
 
-  const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-  };
+
 
 
 
@@ -139,13 +135,6 @@ function ClientTubeDAO() {
     <div className="min-h-screen bg-black text-white overflow-hidden">
       <header className="fixed top-0 right-0 z-50 p-6">
         <div className="flex items-center gap-4">
-          <Button 
-            onClick={() => window.open('/creators', '_blank')}
-            variant="outline"
-            className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-sm"
-          >
-            Creator Studio
-          </Button>
           <WalletConnection />
         </div>
       </header>

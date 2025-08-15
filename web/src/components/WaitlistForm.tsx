@@ -263,67 +263,70 @@ export function WaitlistForm({
         )}
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-lg bg-black/95 backdrop-blur-xl border border-gray-600/50 p-8">
+      <DialogContent className="sm:max-w-lg max-w-[95vw] bg-black/95 backdrop-blur-xl border border-gray-600/50 p-4 sm:p-6 lg:p-8 max-h-[90vh] overflow-y-auto">
         <div>
             {/* Header */}
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-white mb-3">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">
                 Join the Waitlist
               </h2>
-              <p className="text-gray-400 text-sm">Get early access to TubeDAO chrome extension to start earning rewards and exclusive token airdrop</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Get early access to TubeDAO chrome extension to start earning rewards and exclusive token airdrop</p>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="modal-email" className="text-white text-sm font-medium mb-2 block">
-                    Email Address
-                  </Label>
-                  <Input
-                    id="modal-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-purple-400 focus:ring-1 focus:ring-purple-400/50 transition-colors"
-                    disabled={isSubmitting}
-                  />
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-4 space-y-3 sm:space-y-0">
+                  <div>
+                    <Label htmlFor="modal-email" className="text-white text-sm font-medium mb-2 block">
+                      Email Address
+                    </Label>
+                    <Input
+                      id="modal-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-purple-400 focus:ring-1 focus:ring-purple-400/50 transition-colors text-sm sm:text-base"
+                      disabled={isSubmitting}
+                    />
+                  </div>
 
-                <div>
-                  <Label htmlFor="modal-telegram" className="text-white text-sm font-medium mb-2 block">
-                    Telegram Handle
-                  </Label>
-                  <Input
-                    id="modal-telegram"
-                    type="text"
-                    value={telegram}
-                    onChange={(e) => setTelegram(e.target.value)}
-                    placeholder="@username"
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-purple-400 focus:ring-1 focus:ring-purple-400/50 transition-colors"
-                    disabled={isSubmitting}
-                  />
+                  <div>
+                    <Label htmlFor="modal-telegram" className="text-white text-sm font-medium mb-2 block">
+                      Telegram Handle
+                    </Label>
+                    <Input
+                      id="modal-telegram"
+                      type="text"
+                      value={telegram}
+                      onChange={(e) => setTelegram(e.target.value)}
+                      placeholder="@username"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-purple-400 focus:ring-1 focus:ring-purple-400/50 transition-colors text-sm sm:text-base"
+                      disabled={isSubmitting}
+                    />
+                  </div>
                 </div>
               </div>
 
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full relative overflow-hidden bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full relative overflow-hidden bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative flex items-center justify-center">
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Joining Waitlist...
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
+                      <span className="hidden sm:inline">Joining Waitlist...</span>
+                      <span className="sm:hidden">Joining...</span>
                     </>
                   ) : (
                     <>
                       <span>Join Waitlist</span>
-                      <div className="ml-2 w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      <div className="ml-2 w-4 h-4 sm:w-5 sm:h-5 bg-white/20 rounded-full flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></div>
                       </div>
                     </>
                   )}
@@ -332,20 +335,20 @@ export function WaitlistForm({
 
               {/* Status Message */}
               {status !== 'idle' && (
-                <div className={`text-center p-3 rounded-lg text-sm ${
+                <div className={`text-center p-2 sm:p-3 rounded-lg text-xs sm:text-sm ${
                   status === 'success' 
                     ? 'bg-green-500/20 text-green-300' 
                     : 'bg-red-500/20 text-red-300'
                 }`}>
                   {status === 'success' ? (
                     <div className="flex items-center justify-center gap-2">
-                      <CheckCircle className="w-4 h-4" />
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                       Successfully joined!
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-2">
-                      <AlertCircle className="w-4 h-4" />
-                      {message}
+                      <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="break-words">{message}</span>
                     </div>
                   )}
                 </div>
@@ -353,7 +356,7 @@ export function WaitlistForm({
             </form>
 
             {/* Trust Indicators */}
-            <div className="flex items-center justify-center gap-6 mt-6 text-xs text-gray-400">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:gap-6 mt-4 sm:mt-6 text-xs text-gray-400">
               <div className="flex items-center gap-1">
                 <Shield className="w-3 h-3 text-green-400" />
                 <span>Privacy Protected</span>

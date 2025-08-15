@@ -131,9 +131,9 @@ export default function TubeDAO() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-6">
+      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6">
         <div className="container mx-auto text-center max-w-6xl relative z-10">
-          <div className="flex justify-center items-center mb-8">
+          <div className="flex justify-center items-center mb-6 sm:mb-8">
             <WaitlistForm 
               variant="modal" 
               triggerText=""
@@ -143,15 +143,16 @@ export default function TubeDAO() {
                 {/* Breathing glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/50 to-orange-500/50 rounded-full blur-lg animate-pulse scale-110"></div>
                 
-                <Badge className="relative bg-gradient-to-r from-yellow-500/40 to-orange-500/40 text-yellow-100 border-yellow-400/60 px-8 py-4 text-lg font-black shadow-2xl shadow-yellow-500/30 hover:scale-105 transition-transform duration-300 header-breathe cursor-pointer">
-                  <Coins className="w-5 h-5 mr-3 animate-bounce" />
-                  FIRST 300 USERS ON THE WAITLIST GET EXCLUSIVE TOKEN AIRDROP
+                <Badge className="relative bg-gradient-to-r from-yellow-500/40 to-orange-500/40 text-yellow-100 border-yellow-400/60 px-3 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-lg font-black shadow-2xl shadow-yellow-500/30 hover:scale-105 transition-transform duration-300 header-breathe cursor-pointer">
+                  <Coins className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 mr-2 sm:mr-3 animate-bounce" />
+                  <span className="hidden sm:inline">FIRST 300 USERS ON THE WAITLIST GET EXCLUSIVE TOKEN AIRDROP</span>
+                  <span className="sm:hidden">FIRST 300 USERS GET TOKEN AIRDROP</span>
                 </Badge>
               </div>
             </WaitlistForm>
           </div>
 
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-8 tracking-tight">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black mb-6 sm:mb-8 tracking-tight">
             <span className="bg-gradient-to-r from-white via-red-200 to-pink-200 bg-clip-text text-transparent">
               TUBE
             </span>
@@ -160,73 +161,71 @@ export default function TubeDAO() {
             </span>
           </h1>
           
-          <div className="max-w-4xl mx-auto mb-12 space-y-6">
-
-            
-            <p className="text-3xl md:text-4xl text-gray-300 mb-6 font-light leading-relaxed">
+          <div className="max-w-4xl mx-auto mb-8 sm:mb-12 space-y-4 sm:space-y-6">
+            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-300 mb-4 sm:mb-6 font-light leading-relaxed">
               <span className="text-red-400 font-bold">Unlock the Deepest YouTube Insights.</span><br />
               Own Your Data.
             </p>
-            <p className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 font-light leading-relaxed">
               Your viewing data was the product.<br />
               <span className="text-white font-medium">Now it&apos;s your power.</span>
             </p>
             
-            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-400">
               <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-green-400" />
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
                 <span>Privacy Protected</span>
               </div>
               <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-blue-400" />
+                <Lock className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
                 <span>Zero-Knowledge Powered</span>
               </div>
               <div className="flex items-center gap-2">
-                <Coins className="w-4 h-4 text-yellow-400" />
+                <Coins className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" />
                 <span>Earn Rewards</span>
               </div>
             </div>
           </div>
           
-          <div className="flex flex-col gap-8 justify-center items-center mb-16 max-w-4xl mx-auto">
-            <div className="flex flex-col sm:flex-row gap-6 items-center">
+          <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8 justify-center items-center mb-12 sm:mb-16 max-w-4xl mx-auto">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full">
               <WaitlistForm 
                 variant="modal" 
                 triggerText="Join Waitlist"
-                triggerClassName="text-xl px-12 py-6"
+                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto"
               />
               
               <Button 
                 size="lg" 
                 onClick={() => scrollToSection('how-it-works')}
-                className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-8 py-4 text-lg font-semibold backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-6 sm:px-8 py-4 text-base sm:text-lg font-semibold backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
               >
-                <Play className="w-5 h-5 mr-2" />
+                <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 How It Works
               </Button>
             </div>
           </div>
           
-          <p className="text-gray-500 text-sm">
-            <Lock className="w-4 h-4 inline mr-2" />
+          <p className="text-gray-500 text-xs sm:text-sm">
+            <Lock className="w-3 h-3 sm:w-4 sm:h-4 inline mr-2" />
             Privacy Protected • No Spam • Zero-Knowledge Powered
           </p>
           
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <ChevronDown className="w-6 h-6 text-gray-400" />
+          <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
           </div>
         </div>
       </section>
 
       {/* Demo Video Section */}
-      <section className="py-32 relative bg-gradient-to-b from-transparent via-gray-900/10 to-transparent">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black mb-6 text-white">
+      <section className="py-16 sm:py-24 lg:py-32 relative bg-gradient-to-b from-transparent via-gray-900/10 to-transparent">
+        <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 text-white">
               Watch How It Works
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
               See our Chrome extension capture real-time YouTube data and how users maintain complete control over their digital footprint.
             </p>
           </div>
@@ -274,28 +273,28 @@ export default function TubeDAO() {
           </div>
           
           {/* Key Features Highlighted */}
-          <div className="mt-24 grid md:grid-cols-3 gap-6">
+          <div className="mt-16 sm:mt-20 lg:mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
-                <Shield className="w-8 h-8 text-white" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
+                <Shield className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Privacy First</h3>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-2">Privacy First</h3>
               <p className="text-gray-400 text-sm">Data stays local until you choose to contribute</p>
             </div>
             
             <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-pink-500/25">
-                <Brain className="w-8 h-8 text-white" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-pink-500/25">
+                <Brain className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Real-Time Capture</h3>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-2">Real-Time Capture</h3>
               <p className="text-gray-400 text-sm">Live behavioral data as you browse YouTube</p>
             </div>
             
-            <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
-                <Coins className="w-8 h-8 text-white" />
+            <div className="text-center group sm:col-span-2 lg:col-span-1">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
+                <Coins className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Earn Rewards</h3>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-2">Earn Rewards</h3>
               <p className="text-gray-400 text-sm">Get tokens when your data creates value</p>
             </div>
           </div>
@@ -303,19 +302,19 @@ export default function TubeDAO() {
       </section>
 
       {/* What's TubeDAO */}
-      <section className="py-32 relative bg-gradient-to-b from-transparent to-gray-900/20">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black mb-8 text-white">
+      <section className="py-16 sm:py-24 lg:py-32 relative bg-gradient-to-b from-transparent to-gray-900/20">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 text-white">
               Upload. Vote. Earn.<br />Take Back Control.
             </h2>
-                          <p className="text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                TubeDAO helps you upload & contribute your anonymized YouTube Premium data,<br />
-                <span className="text-white font-medium">you vote on how it&apos;s licensed, and earn rewards.</span>
-              </p>
+            <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
+              TubeDAO helps you upload & contribute your anonymized YouTube Premium data,<br className="hidden sm:block" />
+              <span className="text-white font-medium">you vote on how it&apos;s licensed, and earn rewards.</span>
+            </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 hover:border-gray-600/70 transition-all duration-500 group hover:scale-[1.02] shadow-2xl">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -738,59 +737,59 @@ export default function TubeDAO() {
       </section>
 
       {/* Be the First - Enhanced */}
-      <section className="py-32 bg-gradient-to-b from-transparent to-red-900/20">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="text-5xl md:text-6xl font-black mb-8 text-white">
+      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-transparent to-red-900/20">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 text-white">
             Join the Next Generation
           </h2>
-          <p className="text-2xl text-gray-300 mb-4 leading-relaxed">
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-3 sm:mb-4 leading-relaxed">
             Own your digital footprint. For real.
           </p>
-          <p className="text-xl text-gray-400 mb-16">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-400 mb-12 sm:mb-16">
             TubeDAO is launching soon. Get early access to revolutionary data ownership.
           </p>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
-                <Users className="w-10 h-10 text-white" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
+            <div className="text-center group sm:col-span-2 lg:col-span-1">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
+                <Users className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Private DAO Voting Rights</h3>
-              <p className="text-gray-300">Shape data licensing decisions with exclusive voting power via Snapshot</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Private DAO Voting Rights</h3>
+              <p className="text-gray-300 text-sm sm:text-base">Shape data licensing decisions with exclusive voting power via Snapshot</p>
             </div>
             
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-yellow-500/25">
-                <Coins className="w-10 h-10 text-white" />
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-yellow-500/25">
+                <Coins className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">First-Wave Token Bonuses</h3>
-              <p className="text-gray-300">Early contributors receive 2x token multipliers and exclusive airdrops</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">First-Wave Token Bonuses</h3>
+              <p className="text-gray-300 text-sm sm:text-base">Early contributors receive 2x token multipliers and exclusive airdrops</p>
             </div>
             
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
-                <Target className="w-10 h-10 text-white" />
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
+                <Target className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Cross-DAO Identity</h3>
-              <p className="text-gray-300">Reusable digital identity for other Vana DAOs and Web3 platforms</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Cross-DAO Identity</h3>
+              <p className="text-gray-300 text-sm sm:text-base">Reusable digital identity for other Vana DAOs and Web3 platforms</p>
             </div>
           </div>
           
           {/* Call to Action */}
-          <div className="mb-12 text-center">
+          <div className="mb-8 sm:mb-12 text-center">
             <WaitlistForm 
               variant="modal" 
               triggerText="Join Waitlist"
-              triggerClassName="text-xl px-12 py-6"
+              triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto"
             />
-            <p className="text-gray-400 text-sm mt-4">First 300 users on the waitlist get exclusive token airdrop at launch</p>
+            <p className="text-gray-400 text-xs sm:text-sm mt-3 sm:mt-4">First 300 users on the waitlist get exclusive token airdrop at launch</p>
           </div>
           
-          <div className="text-center bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-3xl p-8 border border-red-500/20">
-            <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
+          <div className="text-center bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-3xl p-6 sm:p-8 border border-red-500/20">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-300 mb-3 sm:mb-4 font-light">
               Your viewing data has always worked for someone else.
             </p>
-            <p className="text-2xl md:text-3xl text-white font-bold">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white font-bold">
               It&apos;s time it worked for you.
             </p>
           </div>
@@ -798,51 +797,51 @@ export default function TubeDAO() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-white/10 bg-gradient-to-t from-black to-transparent">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-6 md:mb-0">
-              <h3 className="text-3xl font-black text-white mb-2">TubeDAO</h3>
-              <p className="text-gray-400">The world&apos;s first YouTube Premium Data DAO</p>
-              <p className="text-gray-500 text-sm">Built on Vana • Secured by Zero-Knowledge</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-gray-500 text-sm">Contact:</span>
-                <a href="mailto:deeptanshu@eonxi.com" className="text-blue-400 hover:underline text-sm">deeptanshu@eonxi.com</a>
+      <footer className="py-8 sm:py-12 border-t border-white/10 bg-gradient-to-t from-black to-transparent">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
+            <div className="text-center lg:text-left">
+              <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">TubeDAO</h3>
+              <p className="text-gray-400 text-sm sm:text-base">The world&apos;s first YouTube Premium Data DAO</p>
+              <p className="text-gray-500 text-xs sm:text-sm">Built on Vana • Secured by Zero-Knowledge</p>
+              <div className="flex items-center justify-center lg:justify-start gap-2 mt-2">
+                <span className="text-gray-500 text-xs sm:text-sm">Contact:</span>
+                <a href="mailto:deeptanshu@eonxi.com" className="text-blue-400 hover:underline text-xs sm:text-sm">deeptanshu@eonxi.com</a>
               </div>
             </div>
             
-            <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center">
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Terms</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Docs</a>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 items-center">
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</a>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Terms</a>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Docs</a>
               </div>
               
-              <div className="flex space-x-4">
+              <div className="flex space-x-3 sm:space-x-4">
                 <a href="https://github.com/tubedao" className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-lg">
-                  <Github className="w-5 h-5" />
+                  <Github className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
                 <a href="https://x.com/tubedao" className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-lg">
-                  <Twitter className="w-5 h-5" />
+                  <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
                 <a href="https://discord.gg/tubedao" className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-lg">
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
               </div>
             </div>
           </div>
           
-          <Separator className="my-8 bg-white/10" />
+          <Separator className="my-6 sm:my-8 bg-white/10" />
           
           <div className="text-center text-gray-500">
-            <p>&copy; 2025 TubeDAO. All rights reserved.</p>
-            <p className="mt-2">Powered by Vana • Featured in Web3 Data Innovation</p>
+            <p className="text-xs sm:text-sm">&copy; 2025 TubeDAO. All rights reserved.</p>
+            <p className="mt-2 text-xs sm:text-sm">Powered by Vana • Featured in Web3 Data Innovation</p>
           </div>
         </div>
       </footer>
 
       {/* Enhanced Floating Waitlist Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50">
         <div className="relative">
           {/* Multiple breathing glow layers */}
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-2xl opacity-40 scale-150" style={{
@@ -855,7 +854,7 @@ export default function TubeDAO() {
           <WaitlistForm 
             variant="modal" 
             triggerText="Join Waitlist"
-            triggerClassName="relative px-10 py-7 text-xl font-black rounded-full shadow-2xl hover:scale-110 transition-all duration-300"
+            triggerClassName="relative px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-7 text-base sm:text-lg lg:text-xl font-black rounded-full shadow-2xl hover:scale-110 transition-all duration-300"
           />
         </div>
       </div>

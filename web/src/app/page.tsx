@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import dynamic from 'next/dynamic';
 import { WaitlistForm } from '@/components/WaitlistForm';
@@ -33,11 +34,9 @@ import {
   Lock,
   Eye,
   Sparkles,
-  Layers,
   Brain,
   Wallet,
   ChevronDown,
-  ExternalLink,
   Github,
   Twitter,
   MessageCircle
@@ -46,6 +45,8 @@ import {
 export default function TubeDAO() {
   const [scrollY, setScrollY] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+  const [showExitIntent, setShowExitIntent] = useState(false);
+  const [hasShownExitIntent, setHasShownExitIntent] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -64,13 +65,38 @@ export default function TubeDAO() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  // Exit intent detection
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    const handleMouseLeave = (e: MouseEvent) => {
+      if (e.clientY <= 50 && !hasShownExitIntent) {
+        timeoutId = setTimeout(() => {
+          setShowExitIntent(true);
+          setHasShownExitIntent(true);
+        }, 100);
+      }
+    };
 
+    const handleMouseEnter = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+
+    document.documentElement.addEventListener("mouseleave", handleMouseLeave);
+    document.documentElement.addEventListener("mouseenter", handleMouseEnter);
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.documentElement.removeEventListener("mouseleave", handleMouseLeave);
+      document.documentElement.removeEventListener("mouseenter", handleMouseEnter);
+    };
+  }, [hasShownExitIntent]);
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
-
-
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -145,8 +171,8 @@ export default function TubeDAO() {
                 
                 <Badge className="relative bg-gradient-to-r from-yellow-500/40 to-orange-500/40 text-yellow-100 border-yellow-400/60 px-3 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-lg font-black shadow-2xl shadow-yellow-500/30 hover:scale-105 transition-transform duration-300 header-breathe cursor-pointer">
                   <Coins className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 mr-2 sm:mr-3 animate-bounce" />
-                  <span className="hidden sm:inline">FIRST 300 USERS ON THE WAITLIST GET EXCLUSIVE TOKEN AIRDROP</span>
-                  <span className="sm:hidden">FIRST 300 USERS GET TOKEN AIRDROP</span>
+                  <span className="hidden sm:inline">GET PAID TO WATCH YOUTUBE • EARLY ACCESS BONUS</span>
+                  <span className="sm:hidden">GET PAID TO WATCH YOUTUBE</span>
                 </Badge>
               </div>
             </WaitlistForm>
@@ -163,12 +189,11 @@ export default function TubeDAO() {
           
           <div className="max-w-4xl mx-auto mb-8 sm:mb-12 space-y-4 sm:space-y-6">
             <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-300 mb-4 sm:mb-6 font-light leading-relaxed">
-              <span className="text-red-400 font-bold">Unlock the Deepest YouTube Insights.</span><br />
-              Own Your Data.
+              <span className="text-red-400 font-bold">Finally! Get Paid for What You&apos;re Already Doing on YouTube</span>
             </p>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 font-light leading-relaxed">
-              Your viewing data was the product.<br />
-              <span className="text-white font-medium">Now it&apos;s your power.</span>
+              You&apos;ve been watching YouTube for years, making billions for others.<br />
+              <span className="text-white font-medium">It&apos;s time you got your share. Join hundreds of smart viewers in earning TDAO tokens just by watching YouTube like you always do.</span>
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-400">
@@ -191,7 +216,7 @@ export default function TubeDAO() {
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full">
               <WaitlistForm 
                 variant="modal" 
-                triggerText="Join Waitlist"
+                triggerText="Start Earning TDAO Tokens"
                 triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto"
               />
               
@@ -201,7 +226,7 @@ export default function TubeDAO() {
                 className="bg-white/15 border border-white/50 text-white hover:bg-white/25 hover:border-white/70 px-6 sm:px-8 py-4 text-base sm:text-lg font-semibold backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
               >
                 <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                How It Works
+                See How You Earn
               </Button>
             </div>
           </div>
@@ -214,6 +239,108 @@ export default function TubeDAO() {
           {/* Scroll indicator */}
           <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
             <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section - Moved Higher */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-purple-900/10 to-gray-900/20 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+          {/* Urgency Counter */}
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center gap-4 bg-red-500/20 border border-red-500/30 rounded-full px-6 py-3 mb-6">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-white font-bold text-sm sm:text-base">LIVE: 47 spots remaining for exclusive airdrop</span>
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 text-white">
+              Start Earning From <span className="text-green-400">Your YouTube Habits</span> Today
+            </h2>
+            <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto">
+              You watch YouTube every day. <span className="text-white font-bold">Now get paid for it.</span>
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
+            <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 backdrop-blur-xl border border-green-500/20 p-6 sm:p-8 hover:border-green-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                  <Coins className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">You Earn Passive Income</h3>
+              </div>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-4">
+                <span className="text-white font-bold">You make money</span> while binge-watching your favorite creators. You can earn <span className="text-green-400 font-bold">$15-50+ monthly</span> in TDAO tokens just by watching YouTube.
+              </p>
+              <p className="text-green-400 font-medium text-sm sm:text-base">You earn $180-600+ annually for doing exactly what you already do.</p>
+              
+              {/* Earnings Calculator */}
+              <div className="mt-4 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
+                <h4 className="text-green-400 font-bold text-sm mb-2">Your Potential Earnings:</h4>
+                <div className="space-y-1 text-xs text-gray-300">
+                  <div className="flex justify-between"><span>1 hour daily:</span><span className="text-green-400 font-bold">~$12/month</span></div>
+                  <div className="flex justify-between"><span>3 hours daily:</span><span className="text-green-400 font-bold">~$35/month</span></div>
+                  <div className="flex justify-between"><span>5+ hours daily:</span><span className="text-green-400 font-bold">~$50+/month</span></div>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-yellow-500/10 to-orange-500/5 backdrop-blur-xl border border-yellow-500/20 p-6 sm:p-8 hover:border-yellow-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">You Get Your Fair Share</h3>
+              </div>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-4">
+                YouTube made <span className="text-yellow-400 font-bold">$28.8 billion from ads</span> last year. Creators got paid. Advertisers got results. <span className="text-white font-bold">You got nothing.</span>
+              </p>
+              <p className="text-yellow-400 font-medium text-sm sm:text-base">Now you get compensated for the valuable data you create every day.</p>
+              
+              {/* CTA within benefit */}
+              <div className="mt-4">
+                <WaitlistForm 
+                  variant="modal" 
+                  triggerText="Start Getting Paid Now"
+                  triggerClassName="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-[1.02] text-sm"
+                />
+              </div>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/5 backdrop-blur-xl border border-blue-500/20 p-6 sm:p-8 hover:border-blue-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">You Keep Full Privacy</h3>
+              </div>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-4">
+                <span className="text-white font-bold">You control your data completely.</span> We never track your personal info or sell your identity. Your raw data stays 100% private.
+              </p>
+              <p className="text-blue-400 font-medium text-sm sm:text-base">You get paid every time your anonymous insights create value.</p>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/5 backdrop-blur-xl border border-purple-500/20 p-6 sm:p-8 hover:border-purple-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">You Control Your Data&apos;s Future</h3>
+              </div>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-4">
+                <span className="text-white font-bold">You vote on how your data gets used.</span> As a TDAO token holder, you have real decision-making power.
+              </p>
+              <p className="text-purple-400 font-medium text-sm sm:text-base">You&apos;ll never be powerless while tech giants profit from your information again.</p>
+              
+              {/* CTA within benefit */}
+              <div className="mt-4">
+                <WaitlistForm 
+                  variant="modal" 
+                  triggerText="Claim Your Power"
+                  triggerClassName="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-[1.02] text-sm"
+                />
+              </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -306,11 +433,11 @@ export default function TubeDAO() {
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <div className="text-center mb-12 sm:mb-16 lg:mb-20">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 text-white">
-              Upload. Vote. Earn.<br />Take Back Control.
+              The Side Hustle You&apos;re Already Doing<br /><span className="text-gray-400">(Without Getting Paid)</span>
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
-              TubeDAO helps you upload & contribute your anonymized YouTube Premium data,<br className="hidden sm:block" />
-              <span className="text-white font-medium">you vote on how it&apos;s licensed, and earn rewards.</span>
+              Every video you watch generates <span className="text-yellow-400 font-bold">$240+ billion annually</span> for YouTube.<br className="hidden sm:block" />
+              <span className="text-white font-medium">Now it&apos;s time you got your share.</span>
             </p>
           </div>
           
@@ -486,65 +613,16 @@ export default function TubeDAO() {
         </div>
       </section>
 
-      {/* Why Now */}
-      <section className="py-32 bg-gradient-to-b from-red-900/10 to-transparent relative">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black mb-8 text-white">
-              Why Now?
-            </h2>
-            <p className="text-2xl text-gray-300 mb-4">
-              You&apos;ve always been the product.
-            </p>
-            <p className="text-2xl text-white font-medium">
-              Now, you become the stakeholder.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center group">
-              <div className="text-6xl font-black text-red-400 mb-4 group-hover:scale-105 transition-transform duration-300">$240B+</div>
-              <h3 className="text-2xl font-bold text-white mb-4">YouTube Revenue</h3>
-              <p className="text-gray-300 mb-3">
-                YouTube generates hundreds of billions annually from Premium subscriptions — it&apos;s time users got their share
-              </p>
-              <a href="https://abc.xyz/investor/" target="_blank" className="text-xs text-blue-400 hover:underline flex items-center justify-center gap-1">
-                Source: Alphabet Inc. <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-            
-            <div className="text-center group">
-              <div className="text-6xl font-black text-purple-400 mb-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <Brain className="w-16 h-16" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Deep User Data Remains a Black Box</h3>
-              <p className="text-gray-300">
-                Critical insights into how users truly interact with premium features and ads are locked away. TubeDAO breaks these silos, providing a granular view previously unavailable.
-              </p>
-            </div>
-            
-            <div className="text-center group">
-              <div className="text-6xl font-black text-pink-400 mb-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <Layers className="w-16 h-16" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Zero-Knowledge Era</h3>
-              <p className="text-gray-300">
-                Blockchain and ZK technology finally enable true data ownership, on-chain governance, and digital identity control
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-32 bg-gradient-to-b from-transparent to-purple-900/10 relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-black mb-8 text-white">
-              How It Works
+              From Zero to Earning in Less Than 5 Minutes
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Simple, secure, and rewarding — from data export to token earnings
+              No technical knowledge required. Start earning from your YouTube habits today.
             </p>
           </div>
           
@@ -554,35 +632,35 @@ export default function TubeDAO() {
               {[
                 { 
                   step: "01", 
-                  title: "Connect Wallet", 
-                  desc: "Connect your crypto wallet to start contributing", 
+                  title: "Connect & Get Started", 
+                  desc: "Download our Chrome extension (takes 30 seconds)", 
                   icon: Wallet, 
-                  detail: "Secure wallet connection for token rewards and governance",
-                  tooltip: "MetaMask, WalletConnect, and other popular wallets supported"
+                  detail: "Connect your wallet or create one - we'll walk you through it",
+                  tooltip: "No technical knowledge required"
                 },
                 { 
                   step: "02", 
-                  title: "Contribute Your Data", 
-                  desc: "Two powerful ways to share your YouTube insights", 
-                  icon: Upload, 
-                  detail: "Option A: Google Takeout Import for foundational history. Option B: Install our Chrome Extension for deep, real-time insights on Premium features and ad interactions",
-                  tooltip: "Chrome extension captures granular data on Premium usage and ad metrics"
+                  title: "Watch YouTube Like Always", 
+                  desc: "Keep doing exactly what you're doing", 
+                  icon: Play, 
+                  detail: "Browse YouTube, watch videos, skip ads. Our extension captures the value while keeping your data private",
+                  tooltip: "Zero changes to your routine"
                 },
                 { 
                   step: "03", 
-                  title: "Vana Validates & Tokenizes", 
-                  desc: "Vana DataDAO validates and issues TubeDAO tokens", 
-                  icon: Shield, 
-                  detail: "Your anonymized contributions are validated and you receive TubeDAO VRC-20 tokens representing ownership in this high-value dataset",
-                  tooltip: "Powered by Vana's secure validation infrastructure"
+                  title: "Earn TDAO Tokens Automatically", 
+                  desc: "Get paid when your data creates value", 
+                  icon: Coins, 
+                  detail: "Every time your anonymized data helps researchers or brands, you earn tokens automatically",
+                  tooltip: "No extra clicks. No extra effort. Just passive income"
                 },
                 { 
                   step: "04", 
-                  title: "Earn & Govern", 
-                  desc: "Receive tokens and participate in DAO governance", 
-                  icon: Coins, 
-                  detail: "Your TubeDAO tokens represent your share of future data sales and governance rights in the ecosystem",
-                  tooltip: "Higher rewards for richer data contributions and active governance"
+                  title: "Cash Out or Reinvest", 
+                  desc: "Your tokens have real value", 
+                  icon: Target, 
+                  detail: "Trade them, hold for governance votes, or reinvest to earn more. You're now a stakeholder",
+                  tooltip: "Real value from your YouTube habits"
                 }
               ].map((item, index) => (
                 <div key={index} className="text-center group relative">
@@ -762,8 +840,8 @@ export default function TubeDAO() {
               <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-yellow-500/25">
                 <Coins className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">First-Wave Token Bonuses</h3>
-              <p className="text-gray-300 text-sm sm:text-base">Early contributors receive 2x token multipliers and exclusive airdrops</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Exclusive Token Airdrop</h3>
+              <p className="text-gray-300 text-sm sm:text-base">First 300 contributors get exclusive TDAO token airdrop</p>
             </div>
             
             <div className="text-center group">
@@ -775,23 +853,81 @@ export default function TubeDAO() {
             </div>
           </div>
           
-          {/* Call to Action */}
-          <div className="mb-8 sm:mb-12 text-center">
-            <WaitlistForm 
-              variant="modal" 
-              triggerText="Join Waitlist"
-              triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto"
-            />
-            <p className="text-gray-400 text-xs sm:text-sm mt-3 sm:mt-4">First 300 users on the waitlist get exclusive token airdrop at launch</p>
+          {/* Urgency/Scarcity Section */}
+          <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-3xl p-6 sm:p-8 lg:p-12 border border-yellow-500/30 mb-8 sm:mb-12 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute top-4 right-4 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-6 left-6 w-2 h-2 bg-orange-400 rounded-full animate-bounce"></div>
+              <div className="absolute top-1/2 left-4 w-1 h-1 bg-yellow-300 rounded-full animate-ping"></div>
+            </div>
+            
+            <div className="relative z-10 text-center">
+              <div className="flex items-center justify-center gap-2 mb-4 sm:mb-6">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-white">Limited Time: Early Contributors Get Exclusive Token Airdrop</h3>
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              </div>
+              
+              <div className="max-w-4xl mx-auto mb-6 sm:mb-8">
+                <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-4">
+                  <span className="text-yellow-400 font-bold">Here&apos;s the deal:</span> The first <span className="text-yellow-400 font-bold">300 people</span> to join TubeDAO get an <span className="text-yellow-400 font-bold">exclusive token airdrop</span> at launch. <span className="text-white font-bold">Limited time only.</span>
+                </p>
+                <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-4">
+                  This means you get <span className="text-yellow-400 font-bold">free TDAO tokens</span> just for being early. Plus you earn more tokens from your ongoing YouTube data.
+                </p>
+                <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-6">
+                  But here&apos;s the catch - once we hit 300 early contributors, this airdrop <span className="text-red-400 font-bold">disappears</span>. No extensions. No exceptions.
+                </p>
+                
+                {/* Spots remaining */}
+                <div className="bg-black/30 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-yellow-500/30">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-400 mb-2">47</div>
+                  <p className="text-base sm:text-lg text-gray-300">spots remain as of today</p>
+                </div>
+                
+                <p className="text-base sm:text-lg lg:text-xl text-white font-medium mb-8">
+                  Don&apos;t let someone else take the spot that could get you <span className="text-yellow-400 font-bold">free airdrop tokens</span>.
+                </p>
+              </div>
+              
+              <WaitlistForm 
+                variant="modal" 
+                triggerText="Claim My Airdrop Spot"
+                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-black shadow-2xl hover:shadow-yellow-500/50 transform hover:scale-105"
+              />
+            </div>
           </div>
           
-          <div className="text-center bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-3xl p-6 sm:p-8 border border-red-500/20">
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-300 mb-3 sm:mb-4 font-light">
-              Your viewing data has always worked for someone else.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white font-bold">
-              It&apos;s time it worked for you.
-            </p>
+          {/* Final CTA Section - Simplified */}
+          <div className="bg-gradient-to-r from-red-500/20 to-purple-500/20 rounded-3xl p-6 sm:p-8 lg:p-12 border border-red-500/30 relative overflow-hidden">
+            <div className="relative z-10 text-center max-w-3xl mx-auto">
+              {/* Visual comparison */}
+              <div className="grid grid-cols-2 gap-8 mb-8">
+                <div className="text-center">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-400 mb-2">$0</div>
+                  <p className="text-gray-400 text-sm sm:text-base">What you earn now</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-green-400 mb-2">$600+</div>
+                  <p className="text-green-400 text-sm sm:text-base">What you could earn yearly</p>
+                </div>
+              </div>
+              
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
+                Stop giving it away. <span className="text-red-400">Start getting paid.</span>
+              </h3>
+              
+              <p className="text-lg sm:text-xl text-gray-200 mb-8">
+                Your choice: <span className="text-red-400 font-bold">Keep earning $0</span> or <span className="text-green-400 font-bold">start earning today</span>.
+              </p>
+              
+              <WaitlistForm 
+                variant="modal" 
+                triggerText="Start Earning Today"
+                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-black shadow-2xl hover:shadow-red-500/50 transform hover:scale-105 border-2 border-red-400/30 hover:border-red-400/50"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -853,11 +989,49 @@ export default function TubeDAO() {
           
           <WaitlistForm 
             variant="modal" 
-            triggerText="Join Waitlist"
+            triggerText="Start Earning"
             triggerClassName="relative px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-7 text-base sm:text-lg lg:text-xl font-black rounded-full shadow-2xl hover:scale-110 transition-all duration-300"
           />
         </div>
       </div>
+
+      {/* Exit Intent Popup */}
+      <Dialog open={showExitIntent} onOpenChange={setShowExitIntent}>
+        <DialogContent className="sm:max-w-md bg-black/95 backdrop-blur-xl border border-red-500/50 p-6">
+          <div className="text-center">
+            <div className="mb-4">
+              <h3 className="text-2xl font-bold text-white mb-2">Wait! Don&apos;t Miss Out</h3>
+              <p className="text-red-400 font-bold text-lg">Exclusive Token Airdrop Ending Soon</p>
+            </div>
+            
+            <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6">
+              <p className="text-white font-bold mb-2">LIMITED TIME:</p>
+              <p className="text-gray-300 text-sm">
+                Only <span className="text-red-400 font-bold">47 spots left</span> for the exclusive TDAO token airdrop. 
+                First 300 users get <span className="text-green-400 font-bold">free tokens at launch</span> - no purchase required.
+              </p>
+            </div>
+            
+            <div className="mb-6">
+              <div className="text-3xl font-black text-red-400 mb-2">47</div>
+              <p className="text-gray-300 text-sm">airdrop spots remaining</p>
+            </div>
+            
+            <WaitlistForm 
+              variant="modal" 
+              triggerText="Claim My Free Airdrop"
+              triggerClassName="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-black py-4 px-6 rounded-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 text-sm mb-4"
+            />
+            
+            <button 
+              onClick={() => setShowExitIntent(false)}
+              className="text-gray-400 hover:text-white text-sm underline"
+            >
+              No thanks, I&apos;ll pass on free tokens
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <style jsx>{`
         @keyframes breathe {

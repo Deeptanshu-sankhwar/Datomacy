@@ -34,11 +34,9 @@ import {
   Lock,
   Eye,
   Sparkles,
-  Layers,
   Brain,
   Wallet,
   ChevronDown,
-  ExternalLink,
   Github,
   Twitter,
   MessageCircle
@@ -69,24 +67,36 @@ export default function TubeDAO() {
 
   // Exit intent detection
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && !hasShownExitIntent) {
-        setShowExitIntent(true);
-        setHasShownExitIntent(true);
+      if (e.clientY <= 50 && !hasShownExitIntent) {
+        timeoutId = setTimeout(() => {
+          setShowExitIntent(true);
+          setHasShownExitIntent(true);
+        }, 100);
       }
     };
 
-    document.addEventListener("mouseleave", handleMouseLeave);
-    return () => document.removeEventListener("mouseleave", handleMouseLeave);
+    const handleMouseEnter = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+
+    document.documentElement.addEventListener("mouseleave", handleMouseLeave);
+    document.documentElement.addEventListener("mouseenter", handleMouseEnter);
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.documentElement.removeEventListener("mouseleave", handleMouseLeave);
+      document.documentElement.removeEventListener("mouseenter", handleMouseEnter);
+    };
   }, [hasShownExitIntent]);
-
-
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
-
-
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -315,12 +325,12 @@ export default function TubeDAO() {
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Users className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white">You Control Your Data's Future</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">You Control Your Data&apos;s Future</h3>
               </div>
               <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-4">
                 <span className="text-white font-bold">You vote on how your data gets used.</span> As a TDAO token holder, you have real decision-making power.
               </p>
-              <p className="text-purple-400 font-medium text-sm sm:text-base">You'll never be powerless while tech giants profit from your information again.</p>
+              <p className="text-purple-400 font-medium text-sm sm:text-base">You&apos;ll never be powerless while tech giants profit from your information again.</p>
               
               {/* CTA within benefit */}
               <div className="mt-4">
@@ -990,26 +1000,26 @@ export default function TubeDAO() {
         <DialogContent className="sm:max-w-md bg-black/95 backdrop-blur-xl border border-red-500/50 p-6">
           <div className="text-center">
             <div className="mb-4">
-              <h3 className="text-2xl font-bold text-white mb-2">Wait! Don't Miss Out</h3>
-              <p className="text-red-400 font-bold text-lg">Exclusive 10x Multiplier for Next 10 Minutes</p>
+              <h3 className="text-2xl font-bold text-white mb-2">Wait! Don&apos;t Miss Out</h3>
+              <p className="text-red-400 font-bold text-lg">Exclusive Token Airdrop Ending Soon</p>
             </div>
             
             <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6">
-              <p className="text-white font-bold mb-2">LIMITED TIME OFFER:</p>
+              <p className="text-white font-bold mb-2">LIMITED TIME:</p>
               <p className="text-gray-300 text-sm">
-                First 50 people who join in the next 10 minutes get a <span className="text-red-400 font-bold">10x multiplier</span> instead of 5x. 
-                That means earning up to <span className="text-green-400 font-bold">$500/month</span> instead of $50.
+                Only <span className="text-red-400 font-bold">47 spots left</span> for the exclusive TDAO token airdrop. 
+                First 300 users get <span className="text-green-400 font-bold">free tokens at launch</span> - no purchase required.
               </p>
             </div>
             
             <div className="mb-6">
               <div className="text-3xl font-black text-red-400 mb-2">47</div>
-              <p className="text-gray-300 text-sm">spots remaining</p>
+              <p className="text-gray-300 text-sm">airdrop spots remaining</p>
             </div>
             
             <WaitlistForm 
               variant="modal" 
-              triggerText="Claim My 10x Multiplier Now"
+              triggerText="Claim My Free Airdrop"
               triggerClassName="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-black py-4 px-6 rounded-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 text-sm mb-4"
             />
             
@@ -1017,7 +1027,7 @@ export default function TubeDAO() {
               onClick={() => setShowExitIntent(false)}
               className="text-gray-400 hover:text-white text-sm underline"
             >
-              No thanks, I'll pass on earning $500/month
+              No thanks, I&apos;ll pass on free tokens
             </button>
           </div>
         </DialogContent>

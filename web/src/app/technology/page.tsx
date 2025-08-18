@@ -8,12 +8,8 @@ import {
   Brain,
   FileText,
   Lock,
-  Database,
-  Zap,
   Eye,
-  Cpu,
-  Network,
-  Key
+  Cpu
 } from "lucide-react";
 
 export default function TechnologyPage() {

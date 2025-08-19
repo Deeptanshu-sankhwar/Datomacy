@@ -44,7 +44,7 @@ export default function JoinWaitlistPage() {
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
             <div className="text-center group">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/25">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
                 <Users className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Private DAO Voting Rights</h3>
@@ -52,7 +52,7 @@ export default function JoinWaitlistPage() {
             </div>
             
             <div className="text-center group">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-yellow-500/25">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
                 <Coins className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Exclusive Token Airdrop</h3>
@@ -73,12 +73,12 @@ export default function JoinWaitlistPage() {
       {/* Urgency/Scarcity Section */}
       <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-900/20 to-transparent">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
-          <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-3xl p-6 sm:p-8 lg:p-12 border border-yellow-500/30 mb-8 sm:mb-12 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 rounded-3xl p-6 sm:p-8 lg:p-12 border border-red-500/30 mb-8 sm:mb-12 relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute top-0 left-0 w-full h-full">
-              <div className="absolute top-4 right-4 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-              <div className="absolute bottom-6 left-6 w-2 h-2 bg-orange-400 rounded-full animate-bounce"></div>
-              <div className="absolute top-1/2 left-4 w-1 h-1 bg-yellow-300 rounded-full animate-ping"></div>
+              <div className="absolute top-4 right-4 w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-6 left-6 w-2 h-2 bg-pink-400 rounded-full animate-bounce"></div>
+              <div className="absolute top-1/2 left-4 w-1 h-1 bg-red-300 rounded-full animate-ping"></div>
             </div>
             
             <div className="relative z-10 text-center">
@@ -90,30 +90,30 @@ export default function JoinWaitlistPage() {
               
               <div className="max-w-4xl mx-auto mb-6 sm:mb-8">
                 <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-4">
-                  <span className="text-yellow-400 font-bold">Here&apos;s the deal:</span> The first <span className="text-yellow-400 font-bold">300 people</span> to join TubeDAO get an <span className="text-yellow-400 font-bold">exclusive token airdrop</span> at launch. <span className="text-white font-bold">Limited time only.</span>
+                  <span className="text-red-400 font-bold">Here&apos;s the deal:</span> The first <span className="text-red-400 font-bold">300 people</span> to join TubeDAO get an <span className="text-red-400 font-bold">exclusive token airdrop</span> at launch. <span className="text-white font-bold">Limited time only.</span>
                 </p>
                 <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-4">
-                  This means you get <span className="text-yellow-400 font-bold">free TDAO tokens</span> just for being early. Plus you earn more tokens from your ongoing YouTube data.
+                  This means you get <span className="text-red-400 font-bold">free TDAO tokens</span> just for being early. Plus you earn more tokens from your ongoing YouTube data.
                 </p>
                 <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-6">
                   But here&apos;s the catch - once we hit 300 early contributors, this airdrop <span className="text-red-400 font-bold">disappears</span>. No extensions. No exceptions.
                 </p>
                 
                 {/* Spots remaining */}
-                <div className="bg-black/30 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-yellow-500/30">
-                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-400 mb-2">47</div>
+                <div className="bg-black/30 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-red-500/30">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-red-400 mb-2">47</div>
                   <p className="text-base sm:text-lg text-gray-300">spots remain as of today</p>
                 </div>
                 
                 <p className="text-base sm:text-lg lg:text-xl text-white font-medium mb-8">
-                  Don&apos;t let someone else take the spot that could get you <span className="text-yellow-400 font-bold">free airdrop tokens</span>.
+                  Don&apos;t let someone else take the spot that could get you <span className="text-red-400 font-bold">free airdrop tokens</span>.
                 </p>
               </div>
               
               <WaitlistForm 
                 variant="modal" 
                 triggerText="Claim My Airdrop Spot"
-                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-black shadow-2xl hover:shadow-yellow-500/50 transform hover:scale-105"
+                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-black shadow-2xl hover:shadow-red-500/50 transform hover:scale-105"
               />
             </div>
           </div>
@@ -125,14 +125,14 @@ export default function JoinWaitlistPage() {
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 sm:mb-8 text-white">
-              What You Get as an <span className="text-yellow-400">Early Contributor</span>
+              What You Get as an <span className="text-red-400">Early Contributor</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
-            <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 backdrop-blur-xl border border-green-500/20 p-6 sm:p-8 hover:border-green-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+            <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20 p-6 sm:p-8 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Coins className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white">Immediate Token Airdrop</h3>
@@ -141,20 +141,20 @@ export default function JoinWaitlistPage() {
                 <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
                   <span className="text-white font-bold">Free TDAO tokens</span> delivered to your wallet at launch. No purchase required, no strings attached.
                 </p>
-                <div className="bg-green-500/10 rounded-lg p-4 border border-green-500/20">
-                  <h4 className="text-green-400 font-bold text-sm mb-2">Airdrop Details:</h4>
+                <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                  <h4 className="text-red-400 font-bold text-sm mb-2">Airdrop Details:</h4>
                   <div className="space-y-1 text-xs text-gray-300">
-                    <div className="flex justify-between"><span>Eligibility:</span><span className="text-green-400 font-bold">First 300 users only</span></div>
-                    <div className="flex justify-between"><span>Token amount:</span><span className="text-green-400 font-bold">TBD at launch</span></div>
-                    <div className="flex justify-between"><span>Delivery:</span><span className="text-green-400 font-bold">Mainnet launch day</span></div>
+                    <div className="flex justify-between"><span>Eligibility:</span><span className="text-red-400 font-bold">First 300 users only</span></div>
+                    <div className="flex justify-between"><span>Token amount:</span><span className="text-red-400 font-bold">TBD at launch</span></div>
+                    <div className="flex justify-between"><span>Delivery:</span><span className="text-red-400 font-bold">Mainnet launch day</span></div>
                   </div>
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/5 backdrop-blur-xl border border-blue-500/20 p-6 sm:p-8 hover:border-blue-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+            <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20 p-6 sm:p-8 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white">Exclusive Early Access</h3>
@@ -164,17 +164,17 @@ export default function JoinWaitlistPage() {
                   <span className="text-white font-bold">Be the first</span> to experience TubeDAO&apos;s revolutionary data ownership platform.
                 </p>
                 <div className="space-y-2 text-sm text-gray-300">
-                  <div className="flex items-center"><span className="text-blue-400 mr-2">•</span>Beta access to Chrome extension</div>
-                  <div className="flex items-center"><span className="text-blue-400 mr-2">•</span>Priority data upload & validation</div>
-                  <div className="flex items-center"><span className="text-blue-400 mr-2">•</span>Exclusive community Discord access</div>
-                  <div className="flex items-center"><span className="text-blue-400 mr-2">•</span>Direct feedback line to founders</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Beta access to Chrome extension</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Priority data upload & validation</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Exclusive community Discord access</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Direct feedback line to founders</div>
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/5 backdrop-blur-xl border border-purple-500/20 p-6 sm:p-8 hover:border-purple-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
+            <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20 p-6 sm:p-8 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] shadow-2xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white">Governance Voting Power</h3>
@@ -184,10 +184,10 @@ export default function JoinWaitlistPage() {
                   <span className="text-white font-bold">Shape the future</span> of TubeDAO with your voice in critical decisions.
                 </p>
                 <div className="space-y-2 text-sm text-gray-300">
-                  <div className="flex items-center"><span className="text-purple-400 mr-2">•</span>Vote on data licensing partnerships</div>
-                  <div className="flex items-center"><span className="text-purple-400 mr-2">•</span>Influence token economics & rewards</div>
-                  <div className="flex items-center"><span className="text-purple-400 mr-2">•</span>Guide platform development priorities</div>
-                  <div className="flex items-center"><span className="text-purple-400 mr-2">•</span>Approve new data usage policies</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Vote on data licensing partnerships</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Influence token economics & rewards</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Guide platform development priorities</div>
+                  <div className="flex items-center"><span className="text-red-400 mr-2">•</span>Approve new data usage policies</div>
                 </div>
               </div>
             </Card>
@@ -220,7 +220,7 @@ export default function JoinWaitlistPage() {
       {/* Final CTA Section */}
       <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-transparent to-red-900/20">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
-          <div className="bg-gradient-to-r from-red-500/20 to-purple-500/20 rounded-3xl p-6 sm:p-8 lg:p-12 border border-red-500/30 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 rounded-3xl p-6 sm:p-8 lg:p-12 border border-red-500/30 relative overflow-hidden">
             <div className="relative z-10 text-center max-w-3xl mx-auto">
               {/* Visual comparison */}
               <div className="grid grid-cols-2 gap-8 mb-8">
@@ -229,8 +229,8 @@ export default function JoinWaitlistPage() {
                   <p className="text-gray-400 text-sm sm:text-base">What you earn now</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-green-400 mb-2">$600+</div>
-                  <p className="text-green-400 text-sm sm:text-base">What you could earn yearly</p>
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-red-400 mb-2">$600+</div>
+                  <p className="text-red-400 text-sm sm:text-base">What you could earn yearly</p>
                 </div>
               </div>
               
@@ -250,7 +250,7 @@ export default function JoinWaitlistPage() {
               <WaitlistForm 
                 variant="modal" 
                 triggerText="Start Earning TDAO Tokens Today"
-                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-black shadow-2xl hover:shadow-red-500/50 transform hover:scale-105 border-2 border-red-400/30 hover:border-red-400/50 mb-6"
+                triggerClassName="text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 w-full sm:w-auto bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-black shadow-2xl hover:shadow-red-500/50 transform hover:scale-105 border-2 border-red-400/30 hover:border-red-400/50 mb-6"
               />
               
               <p className="text-sm text-gray-400">

@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { WaitlistForm } from '@/components/WaitlistForm';
 import Layout from '@/components/Layout';
 import { 
@@ -8,9 +7,6 @@ import {
   Eye,
   Wallet,
   CheckCircle,
-  DollarSign,
-  TrendingUp,
-  Users
 } from "lucide-react";
 
 export default function WhyTubeDAOPage() {

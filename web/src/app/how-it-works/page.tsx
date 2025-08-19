@@ -89,7 +89,7 @@ export default function HowItWorksPage() {
           </div>
           
           {/* Real Use Case Example */}
-          <div className="mt-16 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-3xl p-8 border border-purple-500/20">
+          <div className="mt-16 bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-3xl p-8 border border-red-500/20">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">Real Use Case Example</h3>
               <p className="text-gray-300 text-lg leading-relaxed max-w-4xl mx-auto">
@@ -127,22 +127,22 @@ export default function HowItWorksPage() {
               </div>
               
               <div className="space-y-4">
-                <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
+                <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
                       <FileText className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-blue-400 font-semibold">Google Takeout</span>
+                    <span className="text-red-400 font-semibold">Google Takeout</span>
                   </div>
                   <p className="text-gray-300 text-sm">Historical watch patterns, subscriptions, and search data</p>
                 </div>
                 
-                <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/20">
+                <div className="bg-pink-500/10 rounded-lg p-4 border border-pink-500/20">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
                       <Brain className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-purple-400 font-semibold">Chrome Extension</span>
+                    <span className="text-pink-400 font-semibold">Chrome Extension</span>
                   </div>
                   <p className="text-gray-300 text-sm">Real-time Premium features and ad interaction metrics</p>
                 </div>
@@ -151,7 +151,7 @@ export default function HowItWorksPage() {
             
             <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 hover:border-gray-600/70 transition-all duration-500 group hover:scale-[1.02] shadow-2xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -161,22 +161,22 @@ export default function HowItWorksPage() {
               </div>
               
               <div className="space-y-4">
-                <div className="bg-cyan-500/10 rounded-lg p-4 border border-cyan-500/20">
+                <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
                       <Target className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-cyan-400 font-semibold">Proposal Voting</span>
+                    <span className="text-red-400 font-semibold">Proposal Voting</span>
                   </div>
                   <p className="text-gray-300 text-sm">Vote on data licensing partnerships and usage policies</p>
                 </div>
                 
-                <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
+                <div className="bg-pink-500/10 rounded-lg p-4 border border-pink-500/20">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
                       <Shield className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-blue-400 font-semibold">Snapshot Protocol</span>
+                    <span className="text-pink-400 font-semibold">Snapshot Protocol</span>
                   </div>
                   <p className="text-gray-300 text-sm">Gas-free voting with full transparency and immutable records</p>
                 </div>
@@ -185,7 +185,7 @@ export default function HowItWorksPage() {
             
             <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 hover:border-gray-600/70 transition-all duration-500 group hover:scale-[1.02] shadow-2xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Coins className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -195,22 +195,22 @@ export default function HowItWorksPage() {
               </div>
               
               <div className="space-y-4">
-                <div className="bg-yellow-500/10 rounded-lg p-4 border border-yellow-500/20">
+                <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
                       <Wallet className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-yellow-400 font-semibold">TubeDAO Tokens</span>
+                    <span className="text-red-400 font-semibold">TubeDAO Tokens</span>
                   </div>
                   <p className="text-gray-300 text-sm">Earn tokens when your data is licensed to researchers and brands</p>
                 </div>
                 
-                <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20">
+                <div className="bg-pink-500/10 rounded-lg p-4 border border-pink-500/20">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
                       <Sparkles className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-orange-400 font-semibold">Premium Multipliers</span>
+                    <span className="text-pink-400 font-semibold">Premium Multipliers</span>
                   </div>
                   <p className="text-gray-300 text-sm">Higher rewards for unique data patterns and longer contribution history</p>
                 </div>

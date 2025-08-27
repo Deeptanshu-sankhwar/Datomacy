@@ -24,6 +24,11 @@ func main() {
 	initMongoDB()
 	initAuth(db)
 
+	// Initialize blockchain integration
+	if err := initBlockchain(); err != nil {
+		log.Printf("Blockchain initialization failed: %v", err)
+	}
+
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -45,7 +50,7 @@ func main() {
 		api.GET("/auth/registration-status/:registrationId", checkRegistrationStatus)
 		api.POST("/auth/logout", logout)
 		api.GET("/auth/status", jwtMiddleware(), authStatus)
-		
+
 		// Protected endpoints
 		protected := api.Group("", jwtMiddleware())
 		{
@@ -91,5 +96,3 @@ func initMongoDB() {
 
 	log.Println("Connected to MongoDB")
 }
-
-

@@ -2,15 +2,17 @@ package main
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// Upload user contribution data
+// Upload user contribution data with blockchain integration
 func uploadData(c *gin.Context) {
 	var req UploadDataRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -24,6 +26,33 @@ func uploadData(c *gin.Context) {
 		return
 	}
 
+	dataHash := calculateDataHash(req.DataContent)
+
+	qualityScore := calculateQualityScore(req.DataContent)
+
+	var txHash string
+	if ethClient != nil && dataPoolAddress != (common.Address{}) {
+		contributorAddr := common.HexToAddress(req.Address)
+		hash, err := submitContributionToChain(
+			contributorAddr,
+			req.DataType,
+			dataHash,
+			"",
+		)
+		if err != nil {
+			log.Printf("Blockchain submission failed: %v", err)
+		} else {
+			txHash = hash.Hex()
+
+			jobId, err := createTEEValidationJob(dataHash, req.DataType)
+			if err != nil {
+				log.Printf("TEE job creation failed: %v", err)
+			} else {
+				log.Printf("TEE validation job created: %x", jobId)
+			}
+		}
+	}
+
 	collection := db.Collection("user_contributions")
 
 	contribution := UserContribution{
@@ -32,9 +61,11 @@ func uploadData(c *gin.Context) {
 		FileName:     req.FileName,
 		FileSize:     req.FileSize,
 		DataContent:  req.DataContent,
-		RewardAmount: 1.0,
+		RewardAmount: float64(qualityScore) * 100, // Base reward * quality
 		Timestamp:    time.Now(),
-		Status:       "processed",
+		Status:       "pending_validation",
+		TxHash:       txHash,
+		QualityScore: int(qualityScore),
 	}
 
 	result, err := collection.InsertOne(context.Background(), contribution)
@@ -44,13 +75,21 @@ func uploadData(c *gin.Context) {
 	}
 
 	contribution.ID = result.InsertedID.(primitive.ObjectID)
-	c.JSON(http.StatusCreated, gin.H{"message": "Data uploaded successfully", "data": contribution})
+
+	go func() {
+		time.Sleep(5 * time.Second)
+		if err := validateContribution(dataHash, qualityScore); err != nil {
+			log.Printf("Validation failed: %v", err)
+		}
+	}()
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Data uploaded successfully", "data": contribution, "txHash": txHash})
 }
 
 // Get all contributions for a user
 func getUserContributions(c *gin.Context) {
 	address := c.Param("address")
-	
+
 	authAddress, _ := c.Get("address")
 	if authAddress != address {
 		c.JSON(http.StatusForbidden, gin.H{"error": "Address mismatch"})
@@ -77,7 +116,7 @@ func getUserContributions(c *gin.Context) {
 // Get total rewards for a user
 func getUserRewards(c *gin.Context) {
 	address := c.Param("address")
-	
+
 	authAddress, _ := c.Get("address")
 	if authAddress != address {
 		c.JSON(http.StatusForbidden, gin.H{"error": "Address mismatch"})

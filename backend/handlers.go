@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"math/big"
 	"net/http"
 	"time"
 
@@ -12,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// Upload user contribution data with blockchain integration
+// Upload user contribution data with VRC-15 compliant data refinement
 func uploadData(c *gin.Context) {
 	var req UploadDataRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -26,9 +28,27 @@ func uploadData(c *gin.Context) {
 		return
 	}
 
-	dataHash := calculateDataHash(req.DataContent)
+	if err := validateYouTubeData(req.DataContent); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid YouTube data format"})
+		return
+	}
 
-	qualityScore := calculateQualityScore(req.DataContent)
+	maskingRules := map[string]bool{
+		"titles":        false,
+		"channelNames":  false,
+		"searchQueries": false,
+		"timestamps":    false,
+	}
+
+	refinedData, err := processDataForVRC15(req.Address, req.DataContent, maskingRules)
+	if err != nil {
+		log.Printf("Data refinement failed: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Data refinement failed"})
+		return
+	}
+
+	qualityScore := uint8(refinedData.Schema.Metadata["dataQuality"].(float64))
+	dataHash := refinedData.Hash
 
 	var txHash string
 	if ethClient != nil && dataPoolAddress != (common.Address{}) {
@@ -37,7 +57,7 @@ func uploadData(c *gin.Context) {
 			contributorAddr,
 			req.DataType,
 			dataHash,
-			"",
+			refinedData.IPFSHash,
 		)
 		if err != nil {
 			log.Printf("Blockchain submission failed: %v", err)
@@ -60,12 +80,13 @@ func uploadData(c *gin.Context) {
 		DataType:     req.DataType,
 		FileName:     req.FileName,
 		FileSize:     req.FileSize,
-		DataContent:  req.DataContent,
-		RewardAmount: float64(qualityScore) * 100, // Base reward * quality
+		DataContent:  refinedData.Schema,
+		RewardAmount: float64(qualityScore) * 100,
 		Timestamp:    time.Now(),
-		Status:       "pending_validation",
+		Status:       "refined_and_encrypted",
 		TxHash:       txHash,
 		QualityScore: int(qualityScore),
+		IPFSHash:     refinedData.IPFSHash,
 	}
 
 	result, err := collection.InsertOne(context.Background(), contribution)
@@ -163,4 +184,47 @@ func getUserRewards(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": rewards})
+}
+
+// Grant data access to a user
+func grantDataAccessHandler(c *gin.Context) {
+	var req struct {
+		DatasetId   string `json:"datasetId" binding:"required"`
+		UserAddress string `json:"userAddress" binding:"required"`
+		Duration    int64  `json:"duration" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	datasetId := common.HexToHash(req.DatasetId)
+	userAddr := common.HexToAddress(req.UserAddress)
+	duration := big.NewInt(req.Duration)
+
+	err := grantDataAccess([32]byte(datasetId), userAddr, duration)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to grant access: %v", err)})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Access granted successfully"})
+}
+
+// Check if user has access to dataset
+func checkDataAccessHandler(c *gin.Context) {
+	datasetId := c.Param("datasetId")
+	userAddress := c.Param("userAddress")
+
+	datasetHash := common.HexToHash(datasetId)
+	userAddr := common.HexToAddress(userAddress)
+
+	hasAccess, err := checkDataAccess([32]byte(datasetHash), userAddr)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to check access: %v", err)})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"hasAccess": hasAccess})
 }

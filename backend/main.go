@@ -29,6 +29,11 @@ func main() {
 		log.Printf("Blockchain initialization failed: %v", err)
 	}
 
+	// Initialize VRC-15 data access integration
+	if err := initVanaDataAccess(); err != nil {
+		log.Printf("Vana data access initialization failed: %v", err)
+	}
+
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{

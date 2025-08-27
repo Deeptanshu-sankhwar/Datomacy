@@ -1,0 +1,15 @@
+{
+  "network": "moksha",
+  "tokenAddress": "0xc4c83e316400176B7C0a962d339cc5387e323E8C",
+  "txHash": "0xa36945a19c6f7223ce86a4c6249faa0d67566e5ebee198b097bde6bc74d6bbc9",
+  "blockNumber": 4144703,
+  "timestamp": "2024-08-28T05:30:00.000Z",
+  "tokenDetails": {
+    "name": "TubeDAO Token",
+    "symbol": "TUBE",
+    "decimals": 18,
+    "totalSupply": "100000000000000000000000000"
+  },
+  "vanaScanURL": "https://moksha.vanascan.io/address/0xc4c83e316400176B7C0a962d339cc5387e323E8C",
+  "transactionURL": "https://moksha.vanascan.io/tx/0xa36945a19c6f7223ce86a4c6249faa0d67566e5ebee198b097bde6bc74d6bbc9"
+}

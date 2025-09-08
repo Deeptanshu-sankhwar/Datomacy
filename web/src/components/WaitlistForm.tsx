@@ -29,7 +29,7 @@ interface WaitlistFormProps {
 export function WaitlistForm({ 
   className = '', 
   variant = 'hero', 
-  triggerText = "Join Waitlist",
+  triggerText = "Join Community",
   triggerClassName = "",
   children
 }: WaitlistFormProps) {
@@ -80,10 +80,10 @@ export function WaitlistForm({
   const renderHeroVariant = () => (
     <div className={`text-center space-y-6 ${className}`}>
       <div className="text-center">
-        <p className="text-gray-300">Be among the first to access TubeDAO</p>
-        <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg p-3 mt-3 mb-2">
-          <p className="text-yellow-300 font-semibold text-sm">
-            First 300 users get exclusive token airdrop
+        <p className="text-gray-300">Join our community for early access to TubeDAO</p>
+        <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-lg p-3 mt-3 mb-2">
+          <p className="text-red-300 font-semibold text-sm">
+            Get priority access to new features and updates
           </p>
         </div>
       </div>
@@ -135,10 +135,10 @@ export function WaitlistForm({
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Joining Waitlist...
+              Joining Community...
             </>
           ) : (
-            'Join Waitlist'
+            'Join Community'
           )}
         </Button>
 
@@ -162,11 +162,11 @@ export function WaitlistForm({
     <Card className={`bg-slate-800/60 border-slate-600/50 p-6 backdrop-blur-sm ${className}`}>
       <div className="text-center space-y-6">
         <div>
-          <h3 className="text-xl font-bold text-white mb-2">Join the Waitlist</h3>
-          <p className="text-slate-400 text-sm">Earn rewards by contributing your data to TubeDAO</p>
-          <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg p-2 mt-2">
-            <p className="text-yellow-300 font-semibold text-xs">
-              First 300 users get token airdrop
+          <h3 className="text-xl font-bold text-white mb-2">Join Our Community</h3>
+          <p className="text-slate-400 text-sm">Connect with TubeDAO and get early access to new features</p>
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-lg p-2 mt-2">
+            <p className="text-red-300 font-semibold text-xs">
+              Priority access to product updates
             </p>
           </div>
         </div>
@@ -207,7 +207,7 @@ export function WaitlistForm({
             disabled={isSubmitting}
             className="w-full bg-gradient-to-r from-red-500 to-purple-600"
           >
-            {isSubmitting ? 'Joining...' : 'Join Waitlist'}
+            {isSubmitting ? 'Joining...' : 'Join Community'}
           </Button>
         </form>
 
@@ -268,9 +268,9 @@ export function WaitlistForm({
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">
-                Join the Waitlist
+                Join Our Community
               </h2>
-              <p className="text-gray-400 text-xs sm:text-sm">Get early access to TubeDAO chrome extension to start earning rewards and exclusive token airdrop</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Connect with TubeDAO to get early access to new features and product updates</p>
             </div>
 
             {/* Form */}
@@ -319,12 +319,12 @@ export function WaitlistForm({
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
-                      <span className="hidden sm:inline">Joining Waitlist...</span>
+                      <span className="hidden sm:inline">Joining Community...</span>
                       <span className="sm:hidden">Joining...</span>
                     </>
                   ) : (
                     <>
-                      <span>Join Waitlist</span>
+                      <span>Join Community</span>
                       <div className="ml-2 w-4 h-4 sm:w-5 sm:h-5 bg-white/20 rounded-full flex items-center justify-center">
                         <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></div>
                       </div>

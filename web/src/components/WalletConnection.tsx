@@ -4,7 +4,12 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
 
+
 export function WalletConnection() {
+
+  // Note: Wallet registration is now handled by the authentication flow
+  // This component only handles wallet connection UI
+
   return (
     <ConnectButton.Custom>
       {({
@@ -16,8 +21,6 @@ export function WalletConnection() {
         authenticationStatus,
         mounted,
       }) => {
-        // Note: If your app doesn't use authentication, you
-        // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading';
         const connected =
           ready &&
@@ -42,6 +45,7 @@ export function WalletConnection() {
                 return (
                   <Button
                     onClick={openConnectModal}
+                      data-testid="connect-wallet"
                     className="bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/40 px-6 py-3 text-sm font-medium backdrop-blur-md shadow-lg transition-all duration-300"
                   >
                     <Wallet className="w-4 h-4 mr-2" />

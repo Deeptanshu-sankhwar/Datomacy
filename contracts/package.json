@@ -1,0 +1,29 @@
+{
+  "name": "tubedao-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for TubeDAO platform",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:moksha": "hardhat run scripts/deploy.js --network moksha",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "verify:moksha": "hardhat verify --network moksha"
+  },
+  "keywords": [
+    "tubedao",
+    "smart-contracts",
+    "ethereum",
+    "vana"
+  ],
+  "author": "TubeDAO Team",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.19.0"
+  }
+}

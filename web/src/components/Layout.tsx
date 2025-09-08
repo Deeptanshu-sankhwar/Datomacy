@@ -7,7 +7,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/button";
-import { Wallet, Menu, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Wallet, Menu, X, Mail, MessageCircle, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { submitWaitlistEntry } from '@/lib/waitlist';
 
 const WalletConnection = dynamic(
   () => import("@/components/WalletConnection").then((mod) => ({ default: mod.WalletConnection })),
@@ -34,6 +37,58 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
   const [hasShownExitIntent, setHasShownExitIntent] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  
+  // Discord form state
+  const [discordEmail, setDiscordEmail] = useState('');
+  const [discordTelegram, setDiscordTelegram] = useState('');
+  const [discordSubmitting, setDiscordSubmitting] = useState(false);
+  const [discordStatus, setDiscordStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [discordMessage, setDiscordMessage] = useState('');
+
+  // Discord form submit handler
+  const handleDiscordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!discordEmail || !discordTelegram) {
+      setDiscordStatus('error');
+      setDiscordMessage('Please fill in both email and Telegram handle');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(discordEmail)) {
+      setDiscordStatus('error');
+      setDiscordMessage('Please enter a valid email address');
+      return;
+    }
+
+    setDiscordSubmitting(true);
+    setDiscordStatus('idle');
+
+    try {
+      const result = await submitWaitlistEntry({
+        email: discordEmail,
+        telegram: discordTelegram,
+        source: 'Discord Exit Intent'
+      });
+      
+      setDiscordStatus('success');
+      setDiscordMessage(result.message);
+      setDiscordEmail('');
+      setDiscordTelegram('');
+      
+      // After successful submission, close modal and redirect to Discord
+      setTimeout(() => {
+        setShowExitIntentModal(false);
+        window.open('https://discord.gg/GYqXDuqgp7', '_blank');
+      }, 2000);
+    } catch (error) {
+      setDiscordStatus('error');
+      setDiscordMessage(`Something went wrong. Please try again. ${error}`);
+    } finally {
+      setDiscordSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -257,35 +312,137 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
         <Dialog open={showExitIntentModal} onOpenChange={setShowExitIntentModal}>
           <DialogContent className="sm:max-w-md bg-black/95 backdrop-blur-xl border border-red-500/50 p-6">
             <div className="text-center">
-              <div className="mb-4">
-                <h3 className="text-2xl font-bold text-white mb-2">Wait! Don&apos;t Miss Out</h3>
-                <p className="text-red-400 font-bold text-lg">Exclusive Token Airdrop Ending Soon</p>
+              <div className="mb-6">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                  </div>
+                </div>
+                <h3 className="text-3xl font-black text-white mb-3">Wait, Before You Go</h3>
+                <p className="text-red-400 font-bold text-lg">Don&apos;t Miss Out on Insider Access</p>
               </div>
               
-              <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6">
-                <p className="text-white font-bold mb-2">LIMITED TIME:</p>
-                <p className="text-gray-300 text-sm">
-                  Only <span className="text-red-400 font-bold">47 spots left</span> for the exclusive TDAO token airdrop. 
-                  First 300 users get <span className="text-green-400 font-bold">free tokens at launch</span> - no purchase required.
+              <div className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20 rounded-lg p-6 mb-6">
+                <div className="text-center mb-4">
+                  <h4 className="text-white font-bold text-xl">Join Our Inner Circle</h4>
+                </div>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Get <span className="text-red-400 font-bold">exclusive early access</span> to new features,
+                  <span className="text-red-400 font-bold"> priority rewards</span>, and be the first to know about
+                  <span className="text-white font-bold"> major product updates</span> in our private Discord community.
                 </p>
               </div>
               
-              <div className="mb-6">
-                <div className="text-3xl font-black text-red-400 mb-2">47</div>
-                <p className="text-gray-300 text-sm">airdrop spots remaining</p>
-              </div>
-              
-              <WaitlistForm 
-                variant="modal" 
-                triggerText="Claim My Free Airdrop"
-                triggerClassName="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-black py-4 px-6 rounded-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 text-sm mb-4"
-              />
+              <form onSubmit={handleDiscordSubmit} className="space-y-6 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="discord-email" className="text-white text-sm font-medium mb-2 block">
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <Input
+                        id="discord-email"
+                        type="email"
+                        value={discordEmail}
+                        onChange={(e) => setDiscordEmail(e.target.value)}
+                        placeholder="your@email.com"
+                        className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-red-400 focus:ring-1 focus:ring-red-400/50"
+                        disabled={discordSubmitting}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="discord-telegram" className="text-white text-sm font-medium mb-2 block">
+                      Telegram Handle
+                    </Label>
+                    <div className="relative">
+                      <MessageCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <Input
+                        id="discord-telegram"
+                        type="text"
+                        value={discordTelegram}
+                        onChange={(e) => setDiscordTelegram(e.target.value)}
+                        placeholder="@username"
+                        className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-red-400 focus:ring-1 focus:ring-red-400/50"
+                        disabled={discordSubmitting}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="w-8 h-8 bg-red-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-300 text-xs font-medium">Early Access</p>
+                  </div>
+                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="w-8 h-8 bg-red-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-300 text-xs font-medium">Priority Rewards</p>
+                  </div>
+                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="w-8 h-8 bg-red-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 3h5v5l-5-5zM9 1v2m0 14v2m-7-7h2m14 0h2" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-300 text-xs font-medium">Product Updates</p>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={discordSubmitting}
+                  className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-black py-4 px-6 rounded-lg shadow-2xl hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-[1.02] text-base mb-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {discordSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Joining...
+                    </>
+                  ) : (
+                    'Join Discord Community'
+                  )}
+                </Button>
+
+                {/* Status Message */}
+                {discordStatus !== 'idle' && (
+                  <div className={`text-center p-3 rounded-lg text-sm ${
+                    discordStatus === 'success' 
+                      ? 'bg-green-500/20 text-green-300' 
+                      : 'bg-red-500/20 text-red-300'
+                  }`}>
+                    {discordStatus === 'success' ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <CheckCircle className="w-4 h-4" />
+                        {discordMessage} - Redirecting to Discord...
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        {discordMessage}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </form>
               
               <button 
                 onClick={() => setShowExitIntentModal(false)}
-                className="text-gray-400 hover:text-white text-sm underline"
+                className="text-gray-400 hover:text-white text-sm underline transition-colors"
               >
-                No thanks, I&apos;ll pass on free tokens
+                No thanks, I&apos;ll stay out of the loop
               </button>
             </div>
           </DialogContent>

@@ -1,0 +1,62 @@
+name: Chrome Extension Check
+
+on:
+  push:
+    paths:
+      - 'chrome-extension/**'
+  pull_request:
+    paths:
+      - 'chrome-extension/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Validate manifest.json
+        run: |
+          cd chrome-extension
+          node -e "
+            const manifest = require('./manifest.json');
+            if (!manifest.name || !manifest.version || !manifest.manifest_version) {
+              console.error('Invalid manifest.json: missing required fields');
+              process.exit(1);
+            }
+            console.log('Manifest validation passed');
+          "
+          
+      - name: Check for required files
+        run: |
+          cd chrome-extension
+          required_files=(
+            'manifest.json'
+            'background/background.js'
+            'popup/popup.html'
+            'popup/popup.js'
+            'content/content.js'
+            'icons/logo.png'
+          )
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Missing required file: $file"
+              exit 1
+            fi
+          done
+          echo "All required files present"
+          
+      - name: Validate JavaScript syntax
+        run: |
+          cd chrome-extension
+          node -c background/background.js
+          node -c popup/popup.js
+          node -c content/content.js
+          echo "JavaScript syntax validation passed"

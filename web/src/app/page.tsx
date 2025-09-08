@@ -69,10 +69,6 @@ export default function HomePage() {
 }
 
 function ClientTubeDAO() {
-  const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -87,34 +83,6 @@ function ClientTubeDAO() {
   if (isAuthenticated) {
     return <Dashboard authToken={token} />;
   }
-
-  const handleWaitlistSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setTimeout(() => {
-        setIsSubscribed(false);
-        setEmail("");
-      }, 3000);
-    }
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setUploadProgress(progress);
-        if (progress >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          setTimeout(() => setUploadProgress(0), 2000);
-        }
-      }, 200);
-    }
-  };
 
   return (
     <Layout showExitIntent={true}>

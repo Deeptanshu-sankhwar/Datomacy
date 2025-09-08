@@ -22,22 +22,22 @@ import (
 )
 
 const (
-	VANA_MOKSHA_CHAIN_ID = 14800
-	VANA_MOKSHA_RPC      = "https://rpc.moksha.vana.org"
-	JWT_EXPIRY_HOURS     = 24
+	VANA_MOKSHA_CHAIN_ID      = 14800
+	VANA_MOKSHA_RPC           = "https://rpc.moksha.vana.org"
+	JWT_EXPIRY_HOURS          = 24
 	TEMP_TOKEN_EXPIRY_MINUTES = 30
-	NONCE_EXPIRY_MINUTES = 10
+	NONCE_EXPIRY_MINUTES      = 10
 )
 
 var (
-	jwtSecret         []byte
-	ethClient         *ethclient.Client
-	registryContract  common.Address
-	registryABI       abi.ABI
+	jwtSecret        []byte
+	ethClient        *ethclient.Client
+	registryContract common.Address
+	registryABI      abi.ABI
 )
 
 func initAuth(database *mongo.Database) {
-	
+
 	jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 	if len(jwtSecret) == 0 {
 		log.Fatal("JWT_SECRET environment variable is required")
@@ -123,9 +123,9 @@ func verifySIWE(c *gin.Context) {
 	collection := db.Collection("nonces")
 	var nonceDoc Nonce
 	err = collection.FindOne(context.Background(), bson.M{
-		"address": message.GetAddress().Hex(),
-		"nonce":   message.GetNonce(),
-		"used":    false,
+		"address":   message.GetAddress().Hex(),
+		"nonce":     message.GetNonce(),
+		"used":      false,
 		"createdAt": bson.M{"$gte": time.Now().Add(-NONCE_EXPIRY_MINUTES * time.Minute)},
 	}).Decode(&nonceDoc)
 
@@ -318,12 +318,6 @@ func jwtMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if claims.Issuer != "tubedao-backend-temp" && claims.ChainID != VANA_MOKSHA_CHAIN_ID {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid chain ID in token"})
-			c.Abort()
-			return
-		}
-
 		if claims.Issuer != "tubedao-backend-temp" {
 			sessionCollection := db.Collection("auth_sessions")
 			var session AuthSession
@@ -457,7 +451,7 @@ func registerWithMoksha(c *gin.Context) {
 	// Verify SIWE signature
 	// TODO: Add SIWE signature verification
 
-	// Verify binding signature  
+	// Verify binding signature
 	// TODO: Add binding signature verification
 
 	// Generate registration ID
@@ -552,7 +546,7 @@ func checkRegistrationStatus(c *gin.Context) {
 // Process registration with relayer (mock implementation)
 func processRegistration(registrationID string) {
 	registrationCollection := db.Collection("moksha_registrations")
-	
+
 	// Update status to processing
 	registrationCollection.UpdateOne(context.Background(),
 		bson.M{"registrationId": registrationID},

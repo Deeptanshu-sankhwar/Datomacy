@@ -141,3 +141,34 @@ type MokshaIdentity struct {
 	CreatedAt     time.Time          `json:"createdAt" bson:"createdAt"`
 	LastVerified  time.Time          `json:"lastVerified" bson:"lastVerified"`
 }
+
+// Event models for Chrome extension data capture
+type UserEvent struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Address   string             `json:"address" bson:"address"`
+	EventType string             `json:"eventType" bson:"eventType"`
+	Category  string             `json:"category" bson:"category"`
+	Timestamp time.Time          `json:"timestamp" bson:"timestamp"`
+	SessionID string             `json:"sessionId" bson:"sessionId"`
+	PageURL   string             `json:"pageUrl" bson:"pageUrl"`
+	UserAgent string             `json:"userAgent" bson:"userAgent"`
+	Viewport  ViewportData       `json:"viewport" bson:"viewport"`
+	EventData interface{}        `json:"eventData" bson:"eventData"`
+	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
+}
+
+type ViewportData struct {
+	Width  int `json:"width" bson:"width"`
+	Height int `json:"height" bson:"height"`
+}
+
+type BatchEventUploadRequest struct {
+	Address string      `json:"address" binding:"required"`
+	Events  []UserEvent `json:"events" binding:"required"`
+}
+
+type BatchEventUploadResponse struct {
+	Message     string   `json:"message"`
+	EventsCount int      `json:"eventsCount"`
+	InsertedIDs []string `json:"insertedIds"`
+}

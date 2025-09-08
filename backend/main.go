@@ -21,6 +21,8 @@ func main() {
 		log.Println("No .env file found, using system environment variables")
 	}
 
+	log.Printf("Starting backend")
+
 	initMongoDB()
 	initAuth(db)
 
@@ -57,8 +59,9 @@ func main() {
 		api.GET("/auth/status", jwtMiddleware(), authStatus)
 
 		// Protected endpoints
-		protected := api.Group("", jwtMiddleware())
+		protected := api.Group("/events", jwtMiddleware())
 		{
+			protected.POST("/upload", uploadBatchedEvents)
 			protected.POST("/upload-data", uploadData)
 			protected.GET("/user/:address/contributions", getUserContributions)
 			protected.GET("/user/:address/rewards", getUserRewards)

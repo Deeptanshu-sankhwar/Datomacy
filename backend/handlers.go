@@ -228,3 +228,68 @@ func checkDataAccessHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"hasAccess": hasAccess})
 }
+
+// Upload batched events from Chrome extension
+func uploadBatchedEvents(c *gin.Context) {
+	var req BatchEventUploadRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	authAddress, _ := c.Get("address")
+	if authAddress != req.Address {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Address mismatch"})
+		return
+	}
+
+	if len(req.Events) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No events provided"})
+		return
+	}
+
+	if len(req.Events) > 50 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Too many events in batch (max 50)"})
+		return
+	}
+
+	collection := db.Collection("user_events")
+
+	// Prepare events for insertion
+	var eventsToInsert []interface{}
+	var insertedIDs []string
+
+	for _, event := range req.Events {
+		// Set the address from authenticated user
+		event.Address = req.Address
+		event.CreatedAt = time.Now()
+
+		// Convert timestamp string to time.Time if needed
+		if event.Timestamp.IsZero() {
+			event.Timestamp = time.Now()
+		}
+
+		eventsToInsert = append(eventsToInsert, event)
+	}
+
+	// Batch insert all events
+	result, err := collection.InsertMany(context.Background(), eventsToInsert)
+	if err != nil {
+		log.Printf("Failed to insert events: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload events"})
+		return
+	}
+
+	// Convert ObjectIDs to strings for response
+	for _, id := range result.InsertedIDs {
+		insertedIDs = append(insertedIDs, id.(primitive.ObjectID).Hex())
+	}
+
+	response := BatchEventUploadResponse{
+		Message:     "Events uploaded successfully",
+		EventsCount: len(req.Events),
+		InsertedIDs: insertedIDs,
+	}
+
+	c.JSON(http.StatusCreated, response)
+}

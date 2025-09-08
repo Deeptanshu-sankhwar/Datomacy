@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tube-dao.vercel.app/'),
+  metadataBase: new URL('https://tubedao.org/'),
   title: "TubeDAO - Own Your YouTube Data",
   description: "The first YouTube Premium Data DAO built on Vana. Contribute your behavioral data, participate in governance, and earn tokens when your insights are licensed to researchers and brands.",
   keywords: ["TubeDAO", "YouTube", "Data DAO", "Vana", "Web3", "Privacy", "Data Ownership", "Blockchain"],
@@ -90,8 +90,8 @@ export default function RootLayout({
     "@type": "Organization",
     "name": "TubeDAO",
     "description": "The first YouTube Premium Data DAO built on Vana ecosystem. Privacy-first behavioral data collection with user ownership and DAO governance.",
-    "url": "https://tube-dao.vercel.app/",
-    "logo": "https://tube-dao.vercel.app/",
+    "url": "https://tubedao.org/",
+    "logo": "https://tubedao.org/",
     "sameAs": [
       "https://twitter.com/TubeDAO",
       "https://github.com/TubeDAO",

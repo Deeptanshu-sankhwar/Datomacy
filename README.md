@@ -33,4 +33,4 @@ We're building a future where users own their digital footprint and benefit from
 
 ---
 
-**Ready to take back control of your YouTube data?** Visit [tube-dao.vercel.app](https://tube-dao.vercel.app/) to join the movement.
+**Ready to take back control of your YouTube data?** Visit [tube-dao.vercel.app](https://tubedao.org/) to join the movement.

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TubeDAO - Own Your YouTube Data",
+  "name": "TubeDAO",
   "version": "1.0.0",
-  "description": "Privacy-first extension to capture your YouTube behavioral data for the TubeDAO ecosystem. Your data, your control.",
+  "description": "Capture and monetize your YouTube viewing data through decentralized data ownership.",
 
   
   "permissions": [

@@ -3,128 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TubeDAO Extension</title>
+  <title>TubeDAO</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
+  <div class="app">
     <!-- Header -->
-    <div class="header">
-      <div class="logo">
-        <img src="../icons/logo.png" alt="TubeDAO" class="logo-icon">
-        <span class="logo-text">TubeDAO</span>
+    <header class="header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <img src="../icons/logo.png" alt="TubeDAO" class="brand-logo">
+        </div>
+        <h1 class="brand-name">TubeDAO</h1>
       </div>
-      <div class="status-indicator" id="statusIndicator">
-        <div class="dot"></div>
-        <span id="statusText">Disabled</span>
+      <div class="header-status" id="statusIndicator">
+        <div class="status-dot"></div>
+        <span class="status-text" id="statusText">Inactive</span>
       </div>
-    </div>
+    </header>
 
     <!-- Main Content -->
-    <div class="content">
-      <!-- Consent Section -->
-      <div class="section">
-        <h3>Data Collection</h3>
-        <div class="toggle-container" id="toggleContainer">
-          <label class="toggle">
-            <input type="checkbox" id="consentToggle">
-            <span class="toggle-slider"></span>
-          </label>
-          <div class="toggle-info">
-            <span class="toggle-label" id="toggleLabel">Enable data capture</span>
-            <span class="toggle-description" id="toggleDescription">Capture your YouTube interaction patterns locally</span>
-          </div>
+    <main class="main">
+      <!-- Auth Card -->
+      <div class="card auth-card" id="authCard">
+        <div class="card-icon">
+          <img src="../icons/logo.png" alt="TubeDAO" class="card-logo">
         </div>
-        
-        <!-- Authentication Status -->
-        <div class="auth-status" id="authStatus">
-          <div class="auth-status-content">
-            <div class="auth-icon" id="authIcon">🔒</div>
-            <div class="auth-text">
-              <div class="auth-title" id="authTitle">Authentication Required</div>
-              <div class="auth-subtitle" id="authSubtitle">Please authenticate your identity to start capturing data</div>
-            </div>
-            <button class="auth-button" id="authButton">
-              <span class="auth-button-icon">🔗</span>
-              Authenticate Now
-            </button>
-            <button class="auth-button secondary" id="refreshButton" style="margin-top: 8px; background: rgba(255, 255, 255, 0.1);">
-              <span class="auth-button-icon">🔄</span>
-              Refresh Status
-            </button>
-          </div>
-        </div>
+        <h2 class="card-title">Connect Wallet</h2>
+        <p class="card-description">Authenticate to start capturing your YouTube data</p>
+        <button class="btn btn-primary" id="authButton">
+          <span>Connect</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
 
-      <!-- Stats Section -->
-      <div class="section stats-section">
-        <h3>Captured Events</h3>
+      <!-- Connected State -->
+      <div class="connected-state" id="connectedState" style="display: none;">
+        <!-- Toggle Card -->
+        <div class="card toggle-card">
+          <div class="toggle-header">
+            <div>
+              <h3 class="toggle-title">Data Capture</h3>
+              <p class="toggle-subtitle">Earn rewards for your viewing data</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="consentToggle">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
         <div class="stats-grid">
-          <div class="stat-item">
-            <span class="stat-number" id="totalEvents">0</span>
-            <span class="stat-label">Total Events</span>
+          <div class="stat-card">
+            <div class="stat-value" id="totalEarnings">$0.00</div>
+            <div class="stat-label">Total Earned</div>
           </div>
-          <div class="stat-item">
-            <span class="stat-number" id="adEvents">0</span>
-            <span class="stat-label">Ad Interactions</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" id="playbackEvents">0</span>
-            <span class="stat-label">Playback Actions</span>
+          <div class="stat-card">
+            <div class="stat-value" id="todayEvents">0</div>
+            <div class="stat-label">Today's Events</div>
           </div>
         </div>
-      </div>
 
-      <!-- Data Preview -->
-      <div class="section" id="dataPreviewSection" style="display: none;">
-        <h3>Recent Activity</h3>
-        <div class="data-preview" id="dataPreview">
-          <!-- Recent events will be displayed here -->
+        <!-- Activity Card -->
+        <div class="card activity-card">
+          <div class="activity-header">
+            <h3 class="activity-title">Live Activity</h3>
+            <div class="activity-pulse" id="activityPulse">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="activity-list" id="activityList">
+            <div class="activity-empty">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" opacity="0.3">
+                <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 10V16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <p>No recent activity</p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Real-time Engagement Rewards -->
-      <div class="section rewards-section" id="rewardsSection">
-        <h3>Engagement Rewards</h3>
-        <div class="rewards-container">
-          <div class="rewards-header">
-            <div class="rewards-icon">💰</div>
-            <div class="rewards-info">
-              <div class="rewards-title">Real-time Data Contribution</div>
-            </div>
-          </div>
-          <div class="rewards-stats">
-            <div class="reward-stat">
-              <span class="reward-amount" id="totalEarnings">$0.00</span>
-              <span class="reward-label">Total Earned</span>
-            </div>
-            <div class="reward-stat">
-              <span class="reward-amount" id="todayEarnings">$0.00</span>
-              <span class="reward-label">Today</span>
-            </div>
-          </div>
-          <div class="rewards-status" id="rewardsStatus">
-            <div class="status-indicator">
-              <div class="pulse-dot"></div>
-              <span>Ready to capture data</span>
-            </div>
-          </div>
+        <!-- Actions -->
+        <div class="actions">
+          <button class="btn btn-secondary" id="refreshButton">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M14 8C14 11.3137 11.3137 14 8 14C5.5 14 3.5 12.5 2.5 10.5M2 8C2 4.68629 4.68629 2 8 2C10.5 2 12.5 3.5 13.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M14 5V5.5H13.5M2 10.5V11H2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Refresh</span>
+          </button>
+          <button class="btn btn-ghost disabled" id="dashboardButton">
+            <span>Dashboard</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M7 1H11V5M11 1L4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="tooltip">Coming Soon</div>
+          </button>
         </div>
       </div>
-
-      <!-- Footer -->
-      <div class="footer">
-        <div class="footer-text">
-          Part of the <strong>TubeDAO</strong> ecosystem
-        </div>
-        <div class="footer-links">
-          <a href="https://tube-dao.vercel.app/" target="_blank">Website</a> • 
-          <a href="#" id="helpLink">Help</a>
-        </div>
-      </div>
-    </div>
+    </main>
   </div>
 
+  <script src="earnings-calculator.js"></script>
   <script src="popup.js"></script>
 </body>
 </html> 

@@ -219,12 +219,31 @@ class TubeDAOMonitor {
     this.setupAdEventListeners();
     this.setupUIEventListeners();
     this.captureEvent('session_start', 'session', { session_id: this.sessionId });
+    
+    // Set up periodic upload of any remaining events
+    this.setupPeriodicUpload();
   }
 
   stopMonitoring() {
     if (this.isUnlocked) {
       this.captureEvent('session_end', 'session', { session_id: this.sessionId });
     }
+  }
+
+  setupPeriodicUpload() {
+    // Upload any pending events every 5 minutes
+    setInterval(async () => {
+      if (this.isUnlocked && this.eventBuffer.length > 0) {
+        await this.flushEvents();
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    // Also upload on page unload
+    window.addEventListener('beforeunload', async () => {
+      if (this.isUnlocked && this.eventBuffer.length > 0) {
+        await this.flushEvents();
+      }
+    });
   }
 
   setupVideoEventListeners() {
@@ -482,11 +501,28 @@ class TubeDAOMonitor {
     if (this.eventBuffer.length === 0) return;
 
     try {
+      // Store locally first
       const result = await chrome.storage.local.get(['tubeDAOEvents']);
       const existingEvents = result.tubeDAOEvents || [];
       const updatedEvents = [...existingEvents, ...this.eventBuffer];
-
       await chrome.storage.local.set({ tubeDAOEvents: updatedEvents });
+
+      // Try to upload to backend
+      try {
+        const uploadResult = await chrome.runtime.sendMessage({
+          type: 'UPLOAD_EVENTS',
+          events: this.eventBuffer
+        });
+
+        if (uploadResult.success) {
+          console.log('Events uploaded successfully:', uploadResult.data);
+        } else {
+          console.log('Event upload failed, keeping local copy:', uploadResult.error);
+        }
+      } catch (uploadError) {
+        console.log('Event upload failed, keeping local copy:', uploadError);
+      }
+
       this.eventBuffer = [];
     } catch (error) {
       console.error('Failed to flush events:', error);

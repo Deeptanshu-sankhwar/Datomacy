@@ -217,6 +217,15 @@ class TubeDAOBackground {
           sendResponse({ success: true });
           break;
           
+        case 'UPLOAD_EVENTS':
+          if (this.isUnlocked) {
+            const result = await this.handleEventUpload(message.events);
+            sendResponse(result);
+          } else {
+            sendResponse({ error: 'Authentication required' });
+          }
+          break;
+          
         case 'GET_STATS':
           if (this.isUnlocked) {
             const stats = await this.getStats();
@@ -400,6 +409,45 @@ class TubeDAOBackground {
     await chrome.storage.local.set({ tubeDAOEvents: [] });
     console.log('All event data cleared');
     return { success: true };
+  }
+
+  async handleEventUpload(events) {
+    if (!this.isUnlocked) {
+      return { error: 'Authentication required' };
+    }
+
+    try {
+      const sessionData = await chrome.storage.session.get(['tubedao_auth_token', 'tubedao_address']);
+      
+      if (!sessionData.tubedao_auth_token || !sessionData.tubedao_address) {
+        return { error: 'Authentication required' };
+      }
+
+      const response = await fetch(`${this.BACKEND_API}/events/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionData.tubedao_auth_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          address: sessionData.tubedao_address,
+          events: events
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to upload events');
+      }
+
+      const result = await response.json();
+      console.log('Events uploaded successfully:', result);
+      
+      return { success: true, data: result };
+    } catch (error) {
+      console.error('Event upload failed:', error);
+      return { error: error.message };
+    }
   }
 
   showNotification(title, message) {

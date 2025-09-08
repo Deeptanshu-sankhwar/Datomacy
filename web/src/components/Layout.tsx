@@ -308,7 +308,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
       </div>
 
       {/* Exit Intent Popup */}
-      {false && (
+      {showExitIntent && (
         <Dialog open={showExitIntentModal} onOpenChange={setShowExitIntentModal}>
           <DialogContent className="sm:max-w-md bg-black/95 backdrop-blur-xl border border-red-500/50 p-6">
             <div className="text-center">

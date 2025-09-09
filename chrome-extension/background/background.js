@@ -4,7 +4,7 @@ class TubeDAOBackground {
   constructor() {
     this.isUnlocked = false;
     this.TUBEDAO_HOMEPAGE = 'http://localhost:3000';
-    this.BACKEND_API = 'http://localhost:8080/api';
+    this.BACKEND_API = 'http://142.93.122.92:8080/api';
     this.VANA_MOKSHA_CHAIN_ID = 14800;
     this.init();
   }

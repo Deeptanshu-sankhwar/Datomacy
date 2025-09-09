@@ -17,7 +17,7 @@
     "https://www.youtube.com/*",
     "http://localhost:3000/*",
     "http://localhost:8080/*",
-    "http://142.93.122.92:8080/*"
+    "https://a0bf0a745acf.ngrok-free.app/*"
   ],
   
   "action": {

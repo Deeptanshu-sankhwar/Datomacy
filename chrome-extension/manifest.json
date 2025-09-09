@@ -16,7 +16,8 @@
   "host_permissions": [
     "https://www.youtube.com/*",
     "http://localhost:3000/*",
-    "http://localhost:8080/*"
+    "http://localhost:8080/*",
+    "http://142.93.122.92:8080/*"
   ],
   
   "action": {

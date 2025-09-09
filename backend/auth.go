@@ -366,6 +366,71 @@ func jwtMiddleware() gin.HandlerFunc {
 	}
 }
 
+// JWT middleware for protected routes
+func jwtAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header required"})
+			c.Abort()
+			return
+		}
+
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+		if tokenString == authHeader {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Bearer token required"})
+			c.Abort()
+			return
+		}
+
+		token, err := jwt.ParseWithClaims(tokenString, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return jwtSecret, nil
+		})
+
+		if err != nil {
+			log.Printf("JWT middleware: token parsing failed: %v", err)
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			c.Abort()
+			return
+		}
+
+		claims, ok := token.Claims.(*JWTClaims)
+		if !ok || !token.Valid {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+			c.Abort()
+			return
+		}
+
+		if claims.Issuer != "tubedao-backend-temp" {
+			sessionCollection := db.Collection("auth_sessions")
+			var session AuthSession
+			err = sessionCollection.FindOne(context.Background(), bson.M{
+				"address":   claims.Address,
+				"token":     tokenString,
+				"isActive":  true,
+				"expiresAt": bson.M{"$gte": time.Now()},
+			}).Decode(&session)
+
+			if err != nil {
+				if err == mongo.ErrNoDocuments {
+					c.JSON(http.StatusUnauthorized, gin.H{"error": "Session expired or invalid"})
+				} else {
+					c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify session"})
+				}
+				c.Abort()
+				return
+			}
+		}
+
+		c.Set("address", claims.Address)
+		c.Set("chainId", claims.ChainID)
+		c.Next()
+	}
+}
+
 // Logout - invalidate session
 func logout(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")

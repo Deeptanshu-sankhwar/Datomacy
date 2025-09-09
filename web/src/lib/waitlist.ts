@@ -5,7 +5,7 @@ export interface WaitlistEntry {
   source: string;
 }
 
-const GOOGLE_APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL || '';
+const GOOGLE_APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbypXsBH4KO-TPeg8YTicjgKLhE43Kor7Nb_EkYNFb0fFgHQ9Au8moDSNVlGXLvzmlMVWQ/exec';
 
 export async function submitWaitlistEntry(data: Omit<WaitlistEntry, 'timestamp'>): Promise<{ success: boolean; message: string }> {
   try {

@@ -39,11 +39,11 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowAllOrigins:  true, // Allow Chrome extension origins
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
+		AllowCredentials: false, // Must be false when AllowAllOrigins is true
 		MaxAge:           12 * time.Hour,
 	}))
 
@@ -59,7 +59,7 @@ func main() {
 		api.GET("/auth/status", jwtMiddleware(), authStatus)
 
 		// Protected endpoints
-		protected := api.Group("/events", jwtMiddleware())
+		protected := api.Group("/events", jwtAuthMiddleware())
 		{
 			protected.POST("/upload", uploadBatchedEvents)
 			protected.POST("/upload-data", uploadData)

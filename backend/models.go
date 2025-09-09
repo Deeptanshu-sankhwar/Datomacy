@@ -163,12 +163,21 @@ type ViewportData struct {
 }
 
 type BatchEventUploadRequest struct {
-	Address string      `json:"address" binding:"required"`
-	Events  []UserEvent `json:"events" binding:"required"`
+	Address string        `json:"address" binding:"required"`
+	Events  []interface{} `json:"events" binding:"required"` // Accept raw JSON events
 }
 
 type BatchEventUploadResponse struct {
-	Message     string   `json:"message"`
-	EventsCount int      `json:"eventsCount"`
-	InsertedIDs []string `json:"insertedIds"`
+	Message     string `json:"message"`
+	EventsCount int    `json:"eventsCount"`
+	UpdatedUser any    `json:"updatedUser"`
+}
+
+// UserEventDocument
+type UserEventDocument struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Address   string             `json:"address" bson:"address"`
+	Events    []interface{}      `json:"events" bson:"events"` // Raw JSON events
+	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt" bson:"updatedAt"`
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Upload user contribution data with VRC-15 compliant data refinement
@@ -212,23 +213,6 @@ func grantDataAccessHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Access granted successfully"})
 }
 
-// Check if user has access to dataset
-func checkDataAccessHandler(c *gin.Context) {
-	datasetId := c.Param("datasetId")
-	userAddress := c.Param("userAddress")
-
-	datasetHash := common.HexToHash(datasetId)
-	userAddr := common.HexToAddress(userAddress)
-
-	hasAccess, err := checkDataAccess([32]byte(datasetHash), userAddr)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to check access: %v", err)})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"hasAccess": hasAccess})
-}
-
 // Upload batched events from Chrome extension
 func uploadBatchedEvents(c *gin.Context) {
 	var req BatchEventUploadRequest
@@ -255,40 +239,40 @@ func uploadBatchedEvents(c *gin.Context) {
 
 	collection := db.Collection("user_events")
 
-	// Prepare events for insertion
-	var eventsToInsert []interface{}
-	var insertedIDs []string
-
-	for _, event := range req.Events {
-		// Set the address from authenticated user
-		event.Address = req.Address
-		event.CreatedAt = time.Now()
-
-		// Convert timestamp string to time.Time if needed
-		if event.Timestamp.IsZero() {
-			event.Timestamp = time.Now()
-		}
-
-		eventsToInsert = append(eventsToInsert, event)
+	// Find existing user document or create new one
+	filter := bson.M{"address": authAddress}
+	update := bson.M{
+		"$push": bson.M{
+			"events": bson.M{
+				"$each": req.Events, // Append all events to the array
+			},
+		},
+		"$set": bson.M{
+			"updatedAt": time.Now(),
+		},
+		"$setOnInsert": bson.M{
+			"address":   authAddress,
+			"createdAt": time.Now(),
+		},
 	}
 
-	// Batch insert all events
-	result, err := collection.InsertMany(context.Background(), eventsToInsert)
+	// Use upsert to create document if it doesn't exist
+	opts := options.UpdateOptions{}
+	opts.SetUpsert(true)
+
+	_, err := collection.UpdateOne(context.Background(), filter, update, &opts)
 	if err != nil {
-		log.Printf("Failed to insert events: %v", err)
+		log.Printf("Failed to insert events for user %s: %v", authAddress, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload events"})
 		return
 	}
 
-	// Convert ObjectIDs to strings for response
-	for _, id := range result.InsertedIDs {
-		insertedIDs = append(insertedIDs, id.(primitive.ObjectID).Hex())
-	}
+	log.Printf("Successfully updated user %s with %d new events", authAddress, len(req.Events))
 
 	response := BatchEventUploadResponse{
 		Message:     "Events uploaded successfully",
 		EventsCount: len(req.Events),
-		InsertedIDs: insertedIDs,
+		UpdatedUser: authAddress,
 	}
 
 	c.JSON(http.StatusCreated, response)

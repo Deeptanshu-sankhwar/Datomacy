@@ -193,7 +193,7 @@ class TubeDAOMonitor {
     document.body.appendChild(notification);
     
     notification.querySelector('#tubedao-auth-button').addEventListener('click', () => {
-      window.open('http://localhost:3000', '_blank');
+      window.open('https://www.tubedao.org', '_blank');
     });
     
     notification.querySelector('#tubedao-close-notification').addEventListener('click', () => {

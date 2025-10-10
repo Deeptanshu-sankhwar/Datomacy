@@ -182,7 +182,7 @@ class TubeDAOPopup {
 
   redirectToHomepage() {
     chrome.tabs.create({ 
-      url: 'http://localhost:3000',
+      url: 'https://www.tubedao.org',
       active: true 
     });
   }

@@ -3,7 +3,7 @@
 class TubeDAOBackground {
   constructor() {
     this.isUnlocked = false;
-    this.TUBEDAO_HOMEPAGE = 'http://localhost:3000';
+    this.TUBEDAO_HOMEPAGE = 'https://www.tubedao.org';
     this.BACKEND_API = 'https://a0bf0a745acf.ngrok-free.app/api';
     this.VANA_MOKSHA_CHAIN_ID = 14800;
     this.init();

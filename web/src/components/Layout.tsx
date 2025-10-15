@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Wallet, Menu, X, Mail, MessageCircle, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { submitWaitlistEntry } from '@/lib/waitlist';
+import { ThemeToggle } from './ThemeToggle';
 
 const WalletConnection = dynamic(
   () => import("@/components/WalletConnection").then((mod) => ({ default: mod.WalletConnection })),
@@ -141,25 +142,22 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'How It Works', href: '/how-it-works' },
-    { name: 'Why TubeDAO', href: '/why-tubedao' },
+    { name: 'Why Datomacy', href: '/why-datomacy' },
     { name: 'Technology', href: '/technology' },
     { name: 'Join Waitlist', href: '/join-waitlist' }
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navigation Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 group">
               <div className="text-xl sm:text-2xl font-black">
-                <span className="bg-gradient-to-r from-white via-red-200 to-pink-200 bg-clip-text text-transparent group-hover:from-red-400 group-hover:via-pink-400 group-hover:to-purple-400 transition-all duration-300">
-                  TUBE
-                </span>
-                <span className="bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent group-hover:from-white group-hover:via-red-200 group-hover:to-pink-200 transition-all duration-300">
-                  DAO
+                <span className="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent group-hover:from-primary/80 group-hover:via-accent group-hover:to-primary transition-all duration-300">
+                  DATOMACY
                 </span>
               </div>
             </Link>
@@ -172,8 +170,8 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
                   href={item.href}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                     pathname === item.href
-                      ? 'bg-gradient-to-r from-red-500/20 to-purple-500/20 text-white border border-red-500/30'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-gradient-to-r from-primary/20 to-accent/20 text-foreground border border-primary/30'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                   }`}
                 >
                   {item.name}
@@ -183,18 +181,19 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
 
             {/* Desktop Wallet + CTA */}
             <div className="hidden md:flex items-center space-x-4">
+              <ThemeToggle />
               <WalletConnection />
               <WaitlistForm 
                 variant="modal" 
                 triggerText="Start Earning"
-                triggerClassName="px-4 py-2 text-sm font-bold rounded-lg bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white shadow-lg hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105"
+                triggerClassName="px-4 py-2 text-sm font-bold rounded-lg bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white shadow-lg hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105"
               />
             </div>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+              className="md:hidden p-2 rounded-lg text-foreground hover:bg-muted/50 transition-colors"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -202,7 +201,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-white/10">
+            <div className="md:hidden py-4 border-t border-border">
               <div className="flex flex-col space-y-2">
                 {navItems.map((item) => (
                   <Link
@@ -211,19 +210,22 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
                     onClick={() => setMobileMenuOpen(false)}
                     className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                       pathname === item.href
-                        ? 'bg-gradient-to-r from-red-500/20 to-purple-500/20 text-white border border-red-500/30'
-                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                        ? 'bg-gradient-to-r from-primary/20 to-accent/20 text-foreground border border-primary/30'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                     }`}
                   >
                     {item.name}
                   </Link>
                 ))}
                 <div className="pt-4 space-y-3">
+                  <div className="flex justify-center">
+                    <ThemeToggle />
+                  </div>
                   <WalletConnection />
                   <WaitlistForm 
                     variant="modal" 
                     triggerText="Start Earning"
-                    triggerClassName="w-full px-4 py-3 text-sm font-bold rounded-lg bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white shadow-lg hover:shadow-red-500/25 transition-all duration-300"
+                    triggerClassName="w-full px-4 py-3 text-sm font-bold rounded-lg bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white shadow-lg hover:shadow-primary/25 transition-all duration-300"
                   />
                 </div>
               </div>
@@ -258,7 +260,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
         
         {/* Scroll-responsive orbs */}
         <div 
-          className="absolute w-96 h-96 bg-gradient-to-br from-red-500/10 to-purple-500/10 rounded-full blur-3xl" 
+          className="absolute w-96 h-96 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl" 
           style={{ 
             left: '10%',
             top: '20%',
@@ -266,7 +268,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
           }}
         />
         <div 
-          className="absolute w-80 h-80 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" 
+          className="absolute w-80 h-80 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full blur-3xl" 
           style={{ 
             right: '10%',
             top: '60%',
@@ -274,7 +276,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
           }}
         />
         <div 
-          className="absolute w-72 h-72 bg-gradient-to-br from-pink-500/10 to-red-500/10 rounded-full blur-3xl" 
+          className="absolute w-72 h-72 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full blur-3xl" 
           style={{ 
             left: '50%',
             bottom: '20%',
@@ -295,7 +297,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-2xl opacity-40 scale-150" style={{
             animation: 'breathe 2s ease-in-out infinite'
           }}></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 rounded-full blur-xl opacity-30 scale-125" style={{
+          <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-full blur-xl opacity-30 scale-125" style={{
             animation: 'breathe 2.5s ease-in-out infinite reverse'
           }}></div>
           
@@ -310,27 +312,27 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
       {/* Exit Intent Popup */}
       {showExitIntent && (
         <Dialog open={showExitIntentModal} onOpenChange={setShowExitIntentModal}>
-          <DialogContent className="sm:max-w-md bg-black/95 backdrop-blur-xl border border-red-500/50 p-6">
+          <DialogContent className="sm:max-w-md bg-black/95 backdrop-blur-xl border border-primary/50 p-6">
             <div className="text-center">
               <div className="mb-6">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
                     <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
                     </svg>
                   </div>
                 </div>
                 <h3 className="text-3xl font-black text-white mb-3">Wait, Before You Go</h3>
-                <p className="text-red-400 font-bold text-lg">Don&apos;t Miss Out on Insider Access</p>
+                <p className="text-primary font-bold text-lg">Don&apos;t Miss Out on Insider Access</p>
               </div>
               
-              <div className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20 rounded-lg p-6 mb-6">
+              <div className="bg-gradient-to-br from-primary/10 to-accent/5 backdrop-blur-xl border border-primary/20 rounded-lg p-6 mb-6">
                 <div className="text-center mb-4">
                   <h4 className="text-white font-bold text-xl">Join Our Inner Circle</h4>
                 </div>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Get <span className="text-red-400 font-bold">exclusive early access</span> to new features,
-                  <span className="text-red-400 font-bold"> priority rewards</span>, and be the first to know about
+                  Get <span className="text-primary font-bold">exclusive early access</span> to new features,
+                  <span className="text-primary font-bold"> priority rewards</span>, and be the first to know about
                   <span className="text-white font-bold"> major product updates</span> in our private Discord community.
                 </p>
               </div>
@@ -349,7 +351,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
                         value={discordEmail}
                         onChange={(e) => setDiscordEmail(e.target.value)}
                         placeholder="your@email.com"
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-red-400 focus:ring-1 focus:ring-red-400/50"
+                        className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary/50"
                         disabled={discordSubmitting}
                       />
                     </div>
@@ -367,7 +369,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
                         value={discordTelegram}
                         onChange={(e) => setDiscordTelegram(e.target.value)}
                         placeholder="@username"
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-red-400 focus:ring-1 focus:ring-red-400/50"
+                        className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary/50"
                         disabled={discordSubmitting}
                       />
                     </div>
@@ -376,24 +378,24 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
 
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="text-center p-3 bg-white/5 rounded-lg">
-                    <div className="w-8 h-8 bg-red-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-8 h-8 bg-primary/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
                     <p className="text-gray-300 text-xs font-medium">Early Access</p>
                   </div>
                   <div className="text-center p-3 bg-white/5 rounded-lg">
-                    <div className="w-8 h-8 bg-red-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-8 h-8 bg-primary/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                       </svg>
                     </div>
                     <p className="text-gray-300 text-xs font-medium">Priority Rewards</p>
                   </div>
                   <div className="text-center p-3 bg-white/5 rounded-lg">
-                    <div className="w-8 h-8 bg-red-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-8 h-8 bg-primary/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 3h5v5l-5-5zM9 1v2m0 14v2m-7-7h2m14 0h2" />
                       </svg>
                     </div>
@@ -404,7 +406,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
                 <Button
                   type="submit"
                   disabled={discordSubmitting}
-                  className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-black py-4 px-6 rounded-lg shadow-2xl hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-[1.02] text-base mb-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white font-black py-4 px-6 rounded-lg shadow-2xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-[1.02] text-base mb-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {discordSubmitting ? (
                     <>
@@ -421,7 +423,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
                   <div className={`text-center p-3 rounded-lg text-sm ${
                     discordStatus === 'success' 
                       ? 'bg-green-500/20 text-green-300' 
-                      : 'bg-red-500/20 text-red-300'
+                      : 'bg-primary/20 text-primary/80'
                   }`}>
                     {discordStatus === 'success' ? (
                       <div className="flex items-center justify-center gap-2">

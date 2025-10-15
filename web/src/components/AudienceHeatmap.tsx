@@ -31,7 +31,7 @@ export function AudienceHeatmap({ data, title }: AudienceHeatmapProps) {
   };
 
   const getIntensityColor = (intensity: number) => {
-    if (intensity >= 80) return 'bg-red-500';
+    if (intensity >= 80) return 'bg-primary';
     if (intensity >= 60) return 'bg-orange-500';
     if (intensity >= 40) return 'bg-yellow-500';
     if (intensity >= 20) return 'bg-green-500';
@@ -54,7 +54,7 @@ export function AudienceHeatmap({ data, title }: AudienceHeatmapProps) {
           <Clock className="w-5 h-5 text-blue-400" />
           {title}
         </h3>
-        <Badge className="bg-red-500/20 text-red-400 border border-red-500/30">
+        <Badge className="bg-primary/20 text-primary border border-primary/30">
           Peak: {peakData.day} {peakData.hour}:00
         </Badge>
       </div>
@@ -132,7 +132,7 @@ export function AudienceHeatmap({ data, title }: AudienceHeatmapProps) {
         </div>
         
         <div className="p-3 bg-slate-700/50 rounded-lg border border-slate-600/30">
-          <div className="text-sm font-medium text-purple-400">Avg. Daily</div>
+          <div className="text-sm font-medium text-accent">Avg. Daily</div>
           <div className="text-lg font-bold text-white">
             {Math.round(data.reduce((sum, d) => sum + d.viewers, 0) / 7).toLocaleString()}
           </div>

@@ -46,7 +46,7 @@ export function WalletConnection() {
                   <Button
                     onClick={openConnectModal}
                       data-testid="connect-wallet"
-                    className="bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/40 px-6 py-3 text-sm font-medium backdrop-blur-md shadow-lg transition-all duration-300"
+                    className="bg-muted/50 border border-border text-foreground hover:bg-muted hover:border-border/80 px-6 py-3 text-sm font-medium shadow-lg transition-all duration-300"
                   >
                     <Wallet className="w-4 h-4 mr-2" />
                     Connect Wallet
@@ -58,7 +58,7 @@ export function WalletConnection() {
                 return (
                   <Button
                     onClick={openChainModal}
-                    className="bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500/30 px-6 py-3 text-sm font-medium backdrop-blur-md shadow-lg transition-all duration-300"
+                    className="bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 px-6 py-3 text-sm font-medium backdrop-blur-md shadow-lg transition-all duration-300"
                   >
                     Wrong network
                   </Button>
@@ -77,7 +77,7 @@ export function WalletConnection() {
                     onClick={openAccountModal}
                     variant="outline"
                     size="sm"
-                    className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs px-3 py-1"
+                    className="border-primary/30 text-primary hover:bg-primary/10 text-xs px-3 py-1"
                   >
                     Disconnect
                   </Button>

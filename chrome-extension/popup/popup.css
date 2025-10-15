@@ -2,7 +2,7 @@
    TubeDAO Chrome Extension - Professional UI
    ============================================ */
 
-/* CSS Variables */
+/* CSS Variables - Dark Mode (Default) */
 :root {
   --color-bg: #0A0A0B;
   --color-surface: #141416;
@@ -33,6 +33,30 @@
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
   
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Mode Variables */
+body.light-mode {
+  --color-bg: #FFFFFF;
+  --color-surface: #F8FAFC;
+  --color-surface-hover: #F1F5F9;
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
+  
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94A3B8;
+  
+  --color-accent: #EF4444;
+  --color-accent-hover: #DC2626;
+  --color-accent-light: rgba(239, 68, 68, 0.1);
+  
+  --color-success: #059669;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* Reset */
@@ -71,12 +95,20 @@ body {
   padding: 16px 20px;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
+  gap: 12px;
 }
 
 .header-brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .brand-icon {
@@ -108,18 +140,29 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  background: var(--color-bg);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
   transition: var(--transition);
+}
+
+body.light-mode .header-status {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .header-status.active {
   background: var(--color-success-light);
+  border-color: var(--color-success);
   color: var(--color-success);
+}
+
+body.light-mode .header-status.active {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: var(--color-success);
 }
 
 .status-dot {
@@ -132,12 +175,85 @@ body {
 
 .header-status.active .status-dot {
   background: var(--color-success);
-  box-shadow: 0 0 0 2px var(--color-success-light);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .status-text {
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+body.light-mode .theme-toggle {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+}
+
+body.light-mode .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-icon {
+  position: absolute;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--color-text-primary);
+}
+
+.theme-icon-light {
+  opacity: 0;
+  transform: rotate(180deg) scale(0.5);
+  color: #F59E0B;
+}
+
+.theme-icon-dark {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+  color: #94A3B8;
+}
+
+body.light-mode .theme-icon-light {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+body.light-mode .theme-icon-dark {
+  opacity: 0;
+  transform: rotate(-180deg) scale(0.5);
 }
 
 /* Main Content */
@@ -456,8 +572,8 @@ body {
 
 /* Activity List */
 .activity-list {
-  min-height: 120px;
-  max-height: 150px;
+  min-height: 200px;
+  max-height: 300px;
   display: block;
   overflow-y: auto;
   overflow-x: hidden;
@@ -485,13 +601,19 @@ body {
 
 .activity-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
   background: var(--color-bg);
   border-radius: var(--radius-md);
   font-size: 13px;
   animation: slideIn 0.3s ease-out;
+  cursor: default;
+  transition: background 0.2s;
+}
+
+.activity-item:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 @keyframes slideIn {
@@ -505,9 +627,52 @@ body {
   }
 }
 
+.activity-favicon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.activity-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .activity-type {
   color: var(--color-text-primary);
   font-weight: 500;
+}
+
+.activity-subtitle {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.activity-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.activity-site {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .activity-time {

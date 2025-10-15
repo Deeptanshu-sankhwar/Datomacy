@@ -61,7 +61,7 @@ export function CreatorPricing() {
       ],
       popular: true,
       icon: TrendingUp,
-      gradient: 'from-purple-500 to-pink-500',
+      gradient: 'from-primary to-accent',
       buttonText: 'Choose Pro'
     },
     {
@@ -92,9 +92,9 @@ export function CreatorPricing() {
     <div className="py-16 bg-gradient-to-b from-slate-900 to-slate-800">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-purple-400 text-sm font-medium">Creator Studio Pricing</span>
+          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-primary text-sm font-medium">Creator Studio Pricing</span>
           </div>
           
           <h2 className="text-4xl md:text-5xl font-black mb-6">
@@ -102,7 +102,7 @@ export function CreatorPricing() {
               Unlock Deep
             </span>
             <br />
-            <span className="bg-gradient-to-r from-red-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
               YouTube Insights
             </span>
           </h2>
@@ -125,7 +125,7 @@ export function CreatorPricing() {
           </div>
           
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-lg font-semibold mb-2 text-white">AI Optimization</h3>
@@ -152,12 +152,12 @@ export function CreatorPricing() {
               <Card 
                 key={tier.name}
                 className={`relative bg-slate-800/60 border-slate-600/50 p-8 backdrop-blur-sm ${
-                  tier.popular ? 'border-purple-500 scale-105 shadow-2xl shadow-purple-500/20' : ''
+                  tier.popular ? 'border-primary scale-105 shadow-2xl shadow-primary/20' : ''
                 } hover:border-slate-500 transition-all duration-300`}
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1">
+                    <Badge className="bg-gradient-to-r from-primary to-accent text-white px-4 py-1">
                       Most Popular
                     </Badge>
                   </div>
@@ -179,7 +179,7 @@ export function CreatorPricing() {
                   <Button 
                     className={`w-full ${
                       tier.popular 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700' 
+                        ? 'bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80' 
                         : 'bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 border border-slate-500'
                     } text-white font-semibold py-3 shadow-lg`}
                   >
@@ -200,8 +200,8 @@ export function CreatorPricing() {
           })}
         </div>
 
-        <div className="text-center bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-2xl p-12 backdrop-blur-sm">
-          <Rocket className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+        <div className="text-center bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-2xl p-12 backdrop-blur-sm">
+          <Rocket className="w-16 h-16 text-primary mx-auto mb-6" />
           <h3 className="text-3xl font-bold mb-4 text-white">Ready to Transform Your Content Strategy?</h3>
           <p className="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
             Join thousands of creators who are already using TubeDAO&apos;s deep engagement insights 
@@ -210,14 +210,14 @@ export function CreatorPricing() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 shadow-lg"
+              className="bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white px-8 py-3 shadow-lg"
             >
               Start 14-Day Free Trial
             </Button>
             <Button 
               size="lg"
               variant="outline"
-              className="border-purple-500/50 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400 px-8 py-3"
+              className="border-primary/50 text-primary/80 hover:bg-primary/10 hover:border-primary px-8 py-3"
             >
               Schedule Demo
             </Button>

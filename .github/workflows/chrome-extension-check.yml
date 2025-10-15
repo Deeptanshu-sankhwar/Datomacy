@@ -41,7 +41,14 @@ jobs:
             'background/background.js'
             'popup/popup.html'
             'popup/popup.js'
-            'content/content.js'
+            'content/main.js'
+            'content/tubedao-content.js'
+            'core/collector.js'
+            'core/registry.js'
+            'core/utils.js'
+            'adapters/base.js'
+            'adapters/default.js'
+            'adapters/youtube.js'
             'icons/logo.png'
           )
           
@@ -58,5 +65,12 @@ jobs:
           cd chrome-extension
           node -c background/background.js
           node -c popup/popup.js
-          node -c content/content.js
+          node -c content/main.js
+          node -c content/tubedao-content.js
+          node -c core/collector.js
+          node -c core/registry.js
+          node -c core/utils.js
+          node -c adapters/base.js
+          node -c adapters/default.js
+          node -c adapters/youtube.js
           echo "JavaScript syntax validation passed"

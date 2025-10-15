@@ -210,7 +210,7 @@ export function Dashboard({ authToken }: DashboardProps) {
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 p-8 text-center max-w-md">
           <CardHeader>
-            <Wallet className="w-16 h-16 mx-auto mb-4 text-red-400" />
+            <Wallet className="w-16 h-16 mx-auto mb-4 text-primary" />
             <CardTitle className="text-2xl text-white">Connect Your Wallet</CardTitle>
             <CardDescription className="text-gray-400">
               Connect your wallet to access your TubeDAO dashboard
@@ -225,7 +225,7 @@ export function Dashboard({ authToken }: DashboardProps) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-400">Loading your dashboard...</p>
         </div>
       </div>
@@ -238,7 +238,7 @@ export function Dashboard({ authToken }: DashboardProps) {
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-black mb-2">
-              <span className="bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
                 TubeDAO
               </span>
               <span className="text-white ml-2">Dashboard</span>
@@ -249,7 +249,7 @@ export function Dashboard({ authToken }: DashboardProps) {
           <Button
             onClick={() => disconnect()}
             variant="outline"
-            className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-400 px-6 py-3"
+            className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary px-6 py-3"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Disconnect Wallet
@@ -257,9 +257,9 @@ export function Dashboard({ authToken }: DashboardProps) {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/5 backdrop-blur-xl border border-red-500/20">
+          <Card className="bg-gradient-to-br from-primary/10 to-accent/5 backdrop-blur-xl border border-primary/20">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center text-red-400 text-lg">
+              <CardTitle className="flex items-center text-primary text-lg">
                 <Coins className="w-5 h-5 mr-2" />
                 Total Rewards
               </CardTitle>
@@ -287,9 +287,9 @@ export function Dashboard({ authToken }: DashboardProps) {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500/10 to-indigo-500/5 backdrop-blur-xl border border-purple-500/20">
+          <Card className="bg-gradient-to-br from-accent/10 to-primary/5 backdrop-blur-xl border border-accent/20">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center text-purple-400 text-lg">
+              <CardTitle className="flex items-center text-accent text-lg">
                 <Trophy className="w-5 h-5 mr-2" />
                 Rank
               </CardTitle>
@@ -305,7 +305,7 @@ export function Dashboard({ authToken }: DashboardProps) {
 
         <Tabs defaultValue="upload" className="space-y-6">
           <TabsList className="bg-gray-900/50 border border-gray-700/50">
-            <TabsTrigger value="upload" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400">
+            <TabsTrigger value="upload" className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
               <Upload className="w-4 h-4 mr-2" />
               Upload Data
             </TabsTrigger>
@@ -313,7 +313,7 @@ export function Dashboard({ authToken }: DashboardProps) {
               <FileText className="w-4 h-4 mr-2" />
               My Contributions
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400">
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-accent/20 data-[state=active]:text-accent">
               <BarChart3 className="w-4 h-4 mr-2" />
               Analytics
             </TabsTrigger>
@@ -323,7 +323,7 @@ export function Dashboard({ authToken }: DashboardProps) {
             <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center text-2xl">
-                  <Upload className="w-6 h-6 mr-3 text-red-400" />
+                  <Upload className="w-6 h-6 mr-3 text-primary" />
                   Upload YouTube Data
                 </CardTitle>
                 <CardDescription className="text-gray-300">
@@ -356,7 +356,7 @@ export function Dashboard({ authToken }: DashboardProps) {
                   <div
                     className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
                       dragActive 
-                        ? 'border-red-400 bg-red-500/10' 
+                        ? 'border-primary bg-primary/10' 
                         : uploading 
                         ? 'border-green-400 bg-green-500/10' 
                         : 'border-gray-600 bg-gray-800/30 hover:border-gray-500 hover:bg-gray-800/50'
@@ -379,14 +379,14 @@ export function Dashboard({ authToken }: DashboardProps) {
                       {uploading ? (
                         <FileCheck className="w-16 h-16 text-green-400" />
                       ) : dragActive ? (
-                        <CloudUpload className="w-16 h-16 text-red-400" />
+                        <CloudUpload className="w-16 h-16 text-primary" />
                       ) : (
                         <Upload className="w-16 h-16 text-gray-400" />
                       )}
                       
                       <div>
                         <h3 className={`text-xl font-bold mb-2 ${
-                          uploading ? 'text-green-400' : dragActive ? 'text-red-400' : 'text-white'
+                          uploading ? 'text-green-400' : dragActive ? 'text-primary' : 'text-white'
                         }`}>
                           {uploading ? 'Processing...' : dragActive ? 'Drop your file here' : 'Drag & drop your file here'}
                         </h3>
@@ -406,7 +406,7 @@ export function Dashboard({ authToken }: DashboardProps) {
                       {!uploading && !dragActive && (
                         <Button 
                           variant="outline"
-                          className="border-red-500/30 text-red-400 hover:bg-red-500/10 mt-4"
+                          className="border-primary/30 text-primary hover:bg-primary/10 mt-4"
                         >
                           <Upload className="w-4 h-4 mr-2" />
                           Choose File
@@ -472,7 +472,7 @@ export function Dashboard({ authToken }: DashboardProps) {
                             </div>
                             <div className="flex flex-wrap gap-2">
                               {getDataInsights(contribution).map((insight, index) => (
-                                <span key={index} className="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-md">
+                                <span key={index} className="text-xs bg-accent/20 text-accent/80 px-2 py-1 rounded-md">
                                   {insight}
                                 </span>
                               ))}
@@ -525,7 +525,7 @@ export function Dashboard({ authToken }: DashboardProps) {
             <Card className="bg-gradient-to-br from-gray-900/90 to-gray-800/50 backdrop-blur-xl border border-gray-700/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center text-2xl">
-                  <BarChart3 className="w-6 h-6 mr-3 text-purple-400" />
+                  <BarChart3 className="w-6 h-6 mr-3 text-accent" />
                   Contribution Analytics
                 </CardTitle>
                 <CardDescription className="text-gray-300">
@@ -534,13 +534,13 @@ export function Dashboard({ authToken }: DashboardProps) {
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-purple-500/10 rounded-xl p-6 border border-purple-500/20">
-                    <h3 className="text-purple-400 font-bold mb-4">Contribution Timeline</h3>
+                  <div className="bg-accent/10 rounded-xl p-6 border border-accent/20">
+                    <h3 className="text-accent font-bold mb-4">Contribution Timeline</h3>
                     <div className="space-y-3">
                       {contributions.slice(0, 5).map((contribution) => (
                         <div key={contribution.id} className="flex items-center justify-between">
                           <span className="text-gray-300 text-sm">{formatDate(contribution.timestamp)}</span>
-                          <Badge variant="outline" className="border-purple-500/30 text-purple-400 text-xs">
+                          <Badge variant="outline" className="border-accent/30 text-accent text-xs">
                             +{contribution.rewardAmount} TDAO
                           </Badge>
                         </div>
@@ -654,8 +654,8 @@ export function Dashboard({ authToken }: DashboardProps) {
                       <div className="text-sm text-green-400 mb-1">Reward Earned</div>
                       <div className="text-white font-bold">{selectedContribution.rewardAmount} TDAO</div>
                     </div>
-                    <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/20">
-                      <div className="text-sm text-purple-400 mb-1">Upload Date</div>
+                    <div className="bg-accent/10 rounded-lg p-4 border border-accent/20">
+                      <div className="text-sm text-accent mb-1">Upload Date</div>
                       <div className="text-white font-bold">{formatDate(selectedContribution.timestamp)}</div>
                     </div>
                     <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20">
@@ -671,7 +671,7 @@ export function Dashboard({ authToken }: DashboardProps) {
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {getDataInsights(selectedContribution).map((insight, index) => (
-                        <Badge key={index} variant="outline" className="border-purple-500/30 text-purple-300">
+                        <Badge key={index} variant="outline" className="border-accent/30 text-accent/80">
                           {insight}
                         </Badge>
                       ))}

@@ -7,7 +7,6 @@ import {
   Shield, 
   Brain,
   FileText,
-  Lock,
   Eye,
   Cpu
 } from "lucide-react";

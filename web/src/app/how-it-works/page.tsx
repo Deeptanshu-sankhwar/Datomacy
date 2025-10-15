@@ -5,7 +5,6 @@ import { WaitlistForm } from '@/components/WaitlistForm';
 import Layout from '@/components/Layout';
 import { 
   Play, 
-  Shield, 
   Brain,
   Coins,
   Target,

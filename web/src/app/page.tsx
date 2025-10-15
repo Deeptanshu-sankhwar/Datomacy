@@ -44,10 +44,8 @@ import Layout from '@/components/Layout';
 import Link from 'next/link';
 import {
   Users,
-  Shield,
   Coins,
   Target,
-  Lock,
   ChevronDown,
   Github,
   Twitter,

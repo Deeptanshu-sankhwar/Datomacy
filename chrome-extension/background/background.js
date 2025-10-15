@@ -3,35 +3,56 @@
 class TubeDAOBackground {
   constructor() {
     this.isUnlocked = false;
-    this.TUBEDAO_HOMEPAGE = 'https://www.tubedao.org';
-    this.BACKEND_API = 'https://a0bf0a745acf.ngrok-free.app/api';
+    this.TUBEDAO_HOMEPAGE = 'http://localhost:3000';
+    this.BACKEND_API = 'http://localhost:8080/api'; // Make sure this matches your backend port
     this.VANA_MOKSHA_CHAIN_ID = 14800;
-    this.init();
+    
+    console.log('TubeDAO Background Service Worker starting...');
+    console.log('Backend API:', this.BACKEND_API);
+    
+    try {
+      this.init();
+    } catch (error) {
+      console.error('Failed to initialize background service:', error);
+    }
   }
 
   init() {
+    console.log('Initializing TubeDAO Background Service Worker...');
     
     this.isUnlocked = false;
     this.blockAllFeatures();
 
+    // Add error handlers
     chrome.runtime.onInstalled.addListener((details) => {
+      console.log('Extension installed/updated:', details);
       this.handleInstallation(details);
     });
 
     chrome.runtime.onStartup.addListener(() => {
+      console.log('Chrome started, initializing extension...');
       this.handleStartup();
     });
 
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (changeInfo.status === 'complete') {
+        console.log('Tab updated:', tab.url);
+      }
       this.handleTabUpdate(tabId, changeInfo, tab);
     });
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      console.log('Background received message:', message.type, 'from', sender.tab ? `tab ${sender.tab.id}` : 'popup');
       this.handleMessage(message, sender, sendResponse);
       return true;
     });
 
+    // Test backend connectivity
+    this.testBackendConnection();
+
     this.checkAuthStatus();
+    
+    console.log('Background service worker initialized successfully');
   }
 
   async handleInstallation(details) {
@@ -114,6 +135,26 @@ class TubeDAOBackground {
     }
   }
 
+  async testBackendConnection() {
+    try {
+      console.log('Testing backend connection to:', this.BACKEND_API);
+      const response = await fetch(`${this.BACKEND_API}/../health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        console.log('Backend connection successful');
+      } else {
+        console.error('Backend responded with error:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Backend connection failed:', error);
+    }
+  }
+
   async verifyToken(token) {
     try {
       const response = await fetch(`${this.BACKEND_API}/auth/status`, {
@@ -132,6 +173,7 @@ class TubeDAOBackground {
   }
 
   notifyUnlocked() {
+    console.log('Broadcasting AUTH_SUCCESS to all tabs');
     this.broadcastMessage({
       type: 'AUTH_SUCCESS',
       message: 'Authentication successful - features enabled'
@@ -139,7 +181,7 @@ class TubeDAOBackground {
   }
 
   handleTabUpdate(tabId, changeInfo, tab) {
-    if (tab.url && tab.url.includes('youtube.com') && changeInfo.status === 'complete') {
+    if (tab.url && changeInfo.status === 'complete') {
       if (this.isUnlocked) {
         this.ensureContentScriptInjected(tabId);
       } else {
@@ -160,7 +202,18 @@ class TubeDAOBackground {
       try {
         await chrome.scripting.executeScript({
           target: { tabId: tabId },
-          files: ['content/content.js']
+          files: [
+            'core/utils.js',
+            'core/registry.js',
+            'core/collector.js',
+            'adapters/base.js',
+            'adapters/default.js',
+            'adapters/youtube.js',
+            'adapters/twitter.js',
+            'adapters/reddit.js',
+            'adapters/medium.js',
+            'content/main.js'
+          ]
         });
         
         setTimeout(() => {
@@ -185,8 +238,14 @@ class TubeDAOBackground {
 
   async handleMessage(message, sender, sendResponse) {
     try {
+      console.log('Background: Received message', message.type, 'from', sender.tab ? `tab ${sender.tab.id}` : 'popup');
       
       switch (message.type) {
+        case 'PING':
+          console.log('Background: Responding to PING');
+          sendResponse({ status: 'ok', timestamp: Date.now() });
+          break;
+          
         case 'AUTH_SUCCESS':
           await this.handleAuthSuccess(message);
           sendResponse({ success: true });
@@ -207,6 +266,22 @@ class TubeDAOBackground {
           
         case 'LOGOUT':
           await this.handleLogout();
+          sendResponse({ success: true });
+          break;
+          
+        case 'CONSENT_CHANGED':
+          const tabs = await chrome.tabs.query({});
+          for (const tab of tabs) {
+            if (tab.url && (tab.url.startsWith('http://') || tab.url.startsWith('https://'))) {
+              try {
+                await chrome.tabs.sendMessage(tab.id, {
+                  type: 'CONSENT_CHANGED',
+                  enabled: message.enabled
+                });
+              } catch (error) {
+              }
+            }
+          }
           sendResponse({ success: true });
           break;
           
@@ -272,20 +347,20 @@ class TubeDAOBackground {
     const { token, address, chainId, expiresAt } = message;
     
     if (!token || !address) {
-      console.error('Invalid auth success message:', message);
       return;
     }
 
-    await chrome.storage.session.set({
+    const sessionData = {
       tubedao_auth_token: token,
       tubedao_address: address,
       tubedao_chainId: chainId || 1,
       tubedao_expiresAt: expiresAt || (Date.now() + 24 * 60 * 60 * 1000)
-    });
+    };
+
+    await chrome.storage.session.set(sessionData);
 
     this.isUnlocked = true;
     this.notifyUnlocked();
-    
     this.forwardToPopup(message);
   }
 
@@ -333,7 +408,7 @@ class TubeDAOBackground {
   broadcastMessage(message) {
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach(tab => {
-        if (tab.url && tab.url.includes('youtube.com')) {
+        if (tab.url && (tab.url.startsWith('http://') || tab.url.startsWith('https://'))) {
           this.sendMessageToTab(tab.id, message);
         }
       });
@@ -358,10 +433,22 @@ class TubeDAOBackground {
     const result = await chrome.storage.local.get(['tubeDAOEvents']);
     const events = result.tubeDAOEvents || [];
     
+    const categoryCounts = {};
+    const siteCounts = {};
+    
+    events.forEach(e => {
+      categoryCounts[e.category] = (categoryCounts[e.category] || 0) + 1;
+      siteCounts[e.site] = (siteCounts[e.site] || 0) + 1;
+    });
+    
     return {
       total: events.length,
+      byCategory: categoryCounts,
+      bySite: siteCounts,
       adEvents: events.filter(e => e.category === 'ad').length,
       playbackEvents: events.filter(e => e.category === 'playback').length,
+      interactionEvents: events.filter(e => e.category === 'interaction').length,
+      engagementEvents: events.filter(e => e.category === 'engagement').length,
       lastUpdate: events.length > 0 ? events[events.length - 1].timestamp : null
     };
   }

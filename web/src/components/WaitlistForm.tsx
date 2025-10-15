@@ -81,8 +81,8 @@ export function WaitlistForm({
     <div className={`text-center space-y-6 ${className}`}>
       <div className="text-center">
         <p className="text-gray-300">Join our community for early access to TubeDAO</p>
-        <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-lg p-3 mt-3 mb-2">
-          <p className="text-red-300 font-semibold text-sm">
+        <div className="bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 rounded-lg p-3 mt-3 mb-2">
+          <p className="text-primary/80 font-semibold text-sm">
             Get priority access to new features and updates
           </p>
         </div>
@@ -130,7 +130,7 @@ export function WaitlistForm({
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg"
+          className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white font-semibold py-3 px-6 rounded-lg"
         >
           {isSubmitting ? (
             <>
@@ -144,7 +144,7 @@ export function WaitlistForm({
 
         {status !== 'idle' && (
           <div className={`flex items-center justify-center gap-2 text-sm ${
-            status === 'success' ? 'text-green-400' : 'text-red-400'
+            status === 'success' ? 'text-green-600' : 'text-primary'
           }`}>
             {status === 'success' ? (
               <CheckCircle className="w-4 h-4" />
@@ -164,8 +164,8 @@ export function WaitlistForm({
         <div>
           <h3 className="text-xl font-bold text-white mb-2">Join Our Community</h3>
           <p className="text-slate-400 text-sm">Connect with TubeDAO and get early access to new features</p>
-          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-lg p-2 mt-2">
-            <p className="text-red-300 font-semibold text-xs">
+          <div className="bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 rounded-lg p-2 mt-2">
+            <p className="text-primary/80 font-semibold text-xs">
               Priority access to product updates
             </p>
           </div>
@@ -205,14 +205,14 @@ export function WaitlistForm({
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-red-500 to-purple-600"
+            className="w-full bg-gradient-to-r from-primary to-accent"
           >
             {isSubmitting ? 'Joining...' : 'Join Community'}
           </Button>
         </form>
 
         {status !== 'idle' && (
-          <div className={`text-sm ${status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+          <div className={`text-sm ${status === 'success' ? 'text-green-600' : 'text-primary'}`}>
             {message}
           </div>
         )}
@@ -241,7 +241,7 @@ export function WaitlistForm({
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="bg-gradient-to-r from-red-500 to-purple-600"
+        className="bg-gradient-to-r from-primary to-accent"
       >
         {isSubmitting ? 'Joining...' : 'Join'}
       </Button>
@@ -254,7 +254,7 @@ export function WaitlistForm({
         {children ? (
           <div>{children}</div>
         ) : (
-          <Button className={`relative overflow-hidden bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 hover:from-red-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-xl text-lg shadow-xl hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105 ${triggerClassName}`}>
+          <Button className={`relative overflow-hidden bg-gradient-to-r from-primary via-primary/80 to-accent hover:from-primary/80 hover:via-primary/60 hover:to-accent/80 text-white font-bold py-4 px-8 rounded-xl text-lg shadow-xl hover:shadow-primary/50 transition-all duration-300 transform hover:scale-105 ${triggerClassName}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10 flex items-center gap-2">
               {triggerText}
@@ -287,7 +287,7 @@ export function WaitlistForm({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="your@email.com"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-purple-400 focus:ring-1 focus:ring-purple-400/50 transition-colors text-sm sm:text-base"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors text-sm sm:text-base"
                       disabled={isSubmitting}
                     />
                   </div>
@@ -302,7 +302,7 @@ export function WaitlistForm({
                       value={telegram}
                       onChange={(e) => setTelegram(e.target.value)}
                       placeholder="@username"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-purple-400 focus:ring-1 focus:ring-purple-400/50 transition-colors text-sm sm:text-base"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors text-sm sm:text-base"
                       disabled={isSubmitting}
                     />
                   </div>
@@ -312,7 +312,7 @@ export function WaitlistForm({
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full relative overflow-hidden bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
+                className="w-full relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg shadow-lg hover:shadow-primary/25 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative flex items-center justify-center">
@@ -338,7 +338,7 @@ export function WaitlistForm({
                 <div className={`text-center p-2 sm:p-3 rounded-lg text-xs sm:text-sm ${
                   status === 'success' 
                     ? 'bg-green-500/20 text-green-300' 
-                    : 'bg-red-500/20 text-red-300'
+                    : 'bg-primary/20 text-primary/80'
                 }`}>
                   {status === 'success' ? (
                     <div className="flex items-center justify-center gap-2">
@@ -358,7 +358,7 @@ export function WaitlistForm({
             {/* Trust Indicators */}
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:gap-6 mt-4 sm:mt-6 text-xs text-gray-400">
               <div className="flex items-center gap-1">
-                <Shield className="w-3 h-3 text-green-400" />
+                <Shield className="w-3 h-3 text-green-600" />
                 <span>Privacy Protected</span>
               </div>
               <div className="flex items-center gap-1">

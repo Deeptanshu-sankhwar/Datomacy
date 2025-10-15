@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "TubeDAO",
-  "version": "1.0.0",
-  "description": "Capture and monetize your YouTube viewing data through decentralized data ownership.",
+  "version": "2.0.0",
+  "description": "Universal data capture extension - Capture and monetize your web browsing data through decentralized data ownership.",
 
   
   "permissions": [
@@ -14,11 +14,7 @@
   ],
   
   "host_permissions": [
-    "https://www.youtube.com/*",
-    "http://localhost:3000/*",
-    "https://www.tubedao.org/*",
-    "http://localhost:8080/*",
-    "https://a0bf0a745acf.ngrok-free.app/*"
+    "<all_urls>"
   ],
   
   "action": {
@@ -34,17 +30,24 @@
   
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["content/content.js"],
-      "run_at": "document_end"
+      "matches": ["<all_urls>"],
+      "js": [
+        "core/utils.js",
+        "core/registry.js",
+        "core/collector.js",
+        "adapters/base.js",
+        "adapters/default.js",
+        "adapters/youtube.js",
+        "adapters/twitter.js",
+        "adapters/reddit.js",
+        "adapters/medium.js",
+        "content/main.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
     },
     {
-      "matches": ["http://localhost:3000/*"],
-      "js": ["content/tubedao-content.js"],
-      "run_at": "document_end"
-    },
-    {
-      "matches": ["https://www.tubedao.org/*"],
+      "matches": ["http://localhost:3000/*", "https://www.tubedao.org/*"],
       "js": ["content/tubedao-content.js"],
       "run_at": "document_end"
     }

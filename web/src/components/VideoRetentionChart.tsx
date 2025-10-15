@@ -135,9 +135,9 @@ export function VideoRetentionChart({ data, title = "Video Retention Analysis" }
 
       {/* Insights */}
       <div className="space-y-3">
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+        <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingDown className="w-4 h-4 text-red-400" />
+            <TrendingDown className="w-4 h-4 text-primary" />
             <span className="text-white font-medium">Major Drop-off Points</span>
           </div>
           <p className="text-slate-400 text-sm">30s and 2m marks show significant viewer loss</p>

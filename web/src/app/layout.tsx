@@ -15,12 +15,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tubedao.org/'),
-  title: "TubeDAO - Own Your YouTube Data",
-  description: "The first YouTube Premium Data DAO built on Vana. Contribute your behavioral data, participate in governance, and earn tokens when your insights are licensed to researchers and brands.",
-  keywords: ["TubeDAO", "YouTube", "Data DAO", "Vana", "Web3", "Privacy", "Data Ownership", "Blockchain"],
-  authors: [{ name: "TubeDAO Team" }],
-  creator: "TubeDAO",
-  publisher: "TubeDAO",
+  title: "DATOMACY - Own Your Online Data",
+  description: "Contribute your behavioral data, participate in governance, and earn tokens when your insights are licensed to researchers and brands.",
+  keywords: ["Datomacy", "Online", "Data DAO", "Web3", "Privacy", "Data Ownership", "Blockchain"],
+  authors: [{ name: "Datomacy Team" }],
+  creator: "Datomacy",
+  publisher: "Datomacy",
   
   // Favicon and icons
   icons: {
@@ -34,15 +34,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    title: 'TubeDAO - Own Your YouTube Data',
+    title: 'Datomacy - Own Your Online Data',
     description: 'The first YouTube Premium Data DAO built on Vana. Contribute your behavioral data, participate in governance, and earn tokens when your insights are licensed to researchers and brands.',
-    siteName: 'TubeDAO',
+    siteName: 'Datomacy',
     images: [
       {
         url: '/logo.png',
         width: 1200,
         height: 630,
-        alt: 'TubeDAO - Own Your YouTube Data',
+        alt: 'Datomacy - Own Your Online Data',
       },
     ],
   },
@@ -50,10 +50,10 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: 'summary_large_image',
-    title: 'TubeDAO - Own Your YouTube Data',
+    title: 'Datomacy - Own Your Online Data',
     description: 'The first YouTube Premium Data DAO built on Vana. Upload, vote, earn. 🎬✨',
-    creator: '@TubeDAO',
-    site: '@TubeDAO',
+    creator: '@Datomacy',
+    site: '@Datomacy',
     images: ['/logo.png'],
   },
 
@@ -88,10 +88,10 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "TubeDAO",
+    "name": "Datomacy",
     "description": "The first YouTube Premium Data DAO built on Vana ecosystem. Privacy-first behavioral data collection with user ownership and DAO governance.",
-    "url": "https://tubedao.org/",
-    "logo": "https://tubedao.org/",
+    "url": "https://datomacy.com/",
+    "logo": "https://datomacy.co/",
     "sameAs": [
       "https://twitter.com/TubeDAO",
       "https://github.com/TubeDAO",

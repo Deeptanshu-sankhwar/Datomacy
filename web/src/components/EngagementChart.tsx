@@ -47,7 +47,7 @@ export function EngagementChart({ data, title, metric }: EngagementChartProps) {
     <Card className="bg-slate-800/60 border-slate-600/50 p-6 backdrop-blur-sm hover:bg-slate-800/80 transition-all duration-200">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-white">{title}</h3>
-        <Badge className={`${trend === 'up' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+        <Badge className={`${trend === 'up' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-primary/20 text-primary border border-primary/30'}`}>
           {trend === 'up' ? (
             <TrendingUp className="w-3 h-3 mr-1" />
           ) : (

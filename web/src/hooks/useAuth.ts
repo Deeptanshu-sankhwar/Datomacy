@@ -32,22 +32,72 @@ export function useAuth() {
     isProcessingRegistration: false,
   });
 
-  // Check for existing auth session on load
-  useEffect(() => {
-    checkAuthSession();
-  }, []);
-
-  // Check auth session on mount
-  useEffect(() => {
-    checkAuthSession();
-  }, []);
-
-  // Handle wallet connection changes
-  useEffect(() => {
-    if (!isConnected) {
-      clearAuth();
+  const notifyExtension = useCallback((token: string, address: string, chainId: number, expiresAt: number, retryCount = 0) => {
+    if (typeof window !== 'undefined') {
+      try {
+        console.log('Sending AUTH_SUCCESS to extension via content script:', { token: token.substring(0, 10) + '...', address, chainId, expiresAt, retryCount });
+        
+        window.postMessage({
+          type: 'TUBEDAO_AUTH_SUCCESS',
+          token,
+          address,
+          chainId,
+          expiresAt,
+        }, window.location.origin);
+        
+        console.log('Auth message sent to content script');
+        
+        // Set up a retry mechanism if no confirmation received
+        if (retryCount < 3) {
+          setTimeout(() => {
+            // Check if we got confirmation, if not retry
+            const hasConfirmation = document.querySelector('[data-auth-confirmed="true"]');
+            if (!hasConfirmation) {
+              console.log(`Retrying auth notification (attempt ${retryCount + 1})`);
+              notifyExtension(token, address, chainId, expiresAt, retryCount + 1);
+            }
+          }, 1000);
+        }
+      } catch (error) {
+        console.log('Failed to send auth message:', error);
+      }
+    } else {
+      console.log('Window not available');
     }
-  }, [isConnected, address]);
+  }, []);
+
+  const notifyExtensionLogout = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        console.log('Sending AUTH_REQUIRED to extension via content script');
+        
+        window.postMessage({
+          type: 'TUBEDAO_AUTH_REQUIRED',
+        }, window.location.origin);
+        
+        console.log('Logout message sent to content script');
+      } catch (error) {
+        console.log('Failed to send logout message:', error);
+      }
+    }
+  }, []);
+
+  const clearAuth = useCallback(() => {
+    localStorage.removeItem('tubedao_token');
+    localStorage.removeItem('tubedao_address');
+    localStorage.removeItem('tubedao_expires_at');
+    
+    setAuthState({
+      isAuthenticated: false,
+      isLoading: false,
+      token: null,
+      address: null,
+      chainId: null,
+      error: null,
+      needsRegistration: false,
+      isProcessingRegistration: false,
+    });
+  }, []);
 
   const checkAuthSession = useCallback(async () => {
     try {
@@ -88,7 +138,19 @@ export function useAuth() {
       console.error('Error checking auth session:', error);
       clearAuth();
     }
-  }, []);
+  }, [chainId, notifyExtension, clearAuth]);
+
+  // Check for existing auth session on load
+  useEffect(() => {
+    checkAuthSession();
+  }, [checkAuthSession]);
+
+  // Handle wallet connection changes
+  useEffect(() => {
+    if (!isConnected) {
+      clearAuth();
+    }
+  }, [isConnected, address, clearAuth]);
 
   const authenticate = useCallback(async () => {
     if (!address || !isConnected) {
@@ -178,7 +240,7 @@ export function useAuth() {
         error: authError.message || 'Authentication failed',
       }));
     }
-  }, [address, isConnected, chainId, signMessageAsync]);
+  }, [address, isConnected, chainId, signMessageAsync, notifyExtension]);
 
   const handleMokshaBinding = useCallback(async (siweResponse: { tempToken: string }, userAddress: string, siweMessage: string, siweSignature: string) => {
     try {
@@ -232,7 +294,7 @@ export function useAuth() {
         error: bindingError.message || 'Failed to bind Moksha identity',
       }));
     }
-  }, [signMessageAsync]);
+  }, [signMessageAsync, notifyExtension]);
 
   const handleRegistrationFlow = useCallback(async (siweMessage: string, siweSignature: string, userAddress: string) => {
     setAuthState(prev => ({ 
@@ -272,7 +334,7 @@ export function useAuth() {
         error: registrationError.message || 'Registration failed',
       }));
     }
-  }, [signMessageAsync]);
+  }, [signMessageAsync, notifyExtension]);
 
   const pollRegistrationStatus = useCallback(async (registrationId: string, userAddress: string) => {
     const maxAttempts = 30; // 5 minutes with 10 second intervals
@@ -328,7 +390,7 @@ export function useAuth() {
     };
 
     poll();
-  }, []);
+  }, [notifyExtension]);
 
   const logout = useCallback(async () => {
     const token = authState.token;
@@ -344,46 +406,51 @@ export function useAuth() {
       // Notify extension about logout
       notifyExtensionLogout();
     }
-  }, [authState.token]);
+  }, [authState.token, clearAuth, notifyExtensionLogout]);
 
-  const clearAuth = useCallback(() => {
-    localStorage.removeItem('tubedao_token');
-    localStorage.removeItem('tubedao_address');
-    localStorage.removeItem('tubedao_expires_at');
-    
-    setAuthState({
-      isAuthenticated: false,
-      isLoading: false,
-      token: null,
-      address: null,
-      chainId: null,
-      error: null,
-      needsRegistration: false,
-      isProcessingRegistration: false,
-    });
-  }, []);
-
-  const notifyExtension = useCallback((token: string, address: string, chainId: number, expiresAt: number) => {
+  // Debug function - expose to window for manual testing
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      try {
-        console.log('Sending AUTH_SUCCESS to extension via content script:', { token: token.substring(0, 10) + '...', address, chainId, expiresAt });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).debugNotifyExtension = () => {
+        const token = localStorage.getItem('tubedao_token');
+        const address = localStorage.getItem('tubedao_address');
+        const expiresAt = localStorage.getItem('tubedao_expires_at');
         
-        window.postMessage({
-          type: 'TUBEDAO_AUTH_SUCCESS',
-          token,
-          address,
-          chainId,
-          expiresAt,
-        }, window.location.origin);
+        if (token && address && expiresAt) {
+          console.log('Manual debug: Sending auth to extension');
+          notifyExtension(token, address, 1, parseInt(expiresAt));
+        } else {
+          console.log('Manual debug: No auth data found in localStorage');
+        }
+      };
+      
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as unknown as { debugCheckExtension: () => void }).debugCheckExtension = () => {
+        console.log('Checking if extension content script is loaded...');
+        window.postMessage({ type: 'TUBEDAO_EXTENSION_PING' }, window.location.origin);
+      };
+      
+      (window as unknown as { debugForceAuth: () => void }).debugForceAuth = () => {
+        const token = localStorage.getItem('tubedao_token');
+        const address = localStorage.getItem('tubedao_address');
+        const expiresAt = localStorage.getItem('tubedao_expires_at');
         
-        console.log('Auth message sent to content script');
-      } catch (error) {
-        console.log('Failed to send auth message:', error);
-      }
-    } else {
-      console.log('Window not available');
+        if (token && address && expiresAt) {
+          console.log('🔥 FORCE SENDING AUTH TO EXTENSION');
+          window.postMessage({
+            type: 'TUBEDAO_AUTH_SUCCESS',
+            token,
+            address,
+            chainId: 1,
+            expiresAt: parseInt(expiresAt),
+          }, window.location.origin);
+        } else {
+          console.log('❌ No auth data found in localStorage');
+        }
+      };
     }
-  }, []);
+  }, [notifyExtension]);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -391,28 +458,33 @@ export function useAuth() {
       
       if (event.data.type === 'TUBEDAO_EXTENSION_READY') {
         console.log('TubeDAO extension content script is ready');
+        
+        // If we're already authenticated, resend auth data to extension
+        if (authState.isAuthenticated && authState.token) {
+          console.log('Resending auth data to extension...');
+          notifyExtension(
+            authState.token, 
+            authState.address!, 
+            authState.chainId!, 
+            parseInt(localStorage.getItem('tubedao_expires_at') || '0')
+          );
+        }
+      }
+      
+      if (event.data.type === 'TUBEDAO_AUTH_CONFIRMED') {
+        console.log('Extension confirmed auth data received');
+        // Clear any retry timeouts since we got confirmation
+        document.body.setAttribute('data-auth-confirmed', 'true');
+      }
+      
+      if (event.data.type === 'TUBEDAO_EXTENSION_PONG') {
+        console.log('✅ Extension content script is responding!');
       }
     };
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
-  const notifyExtensionLogout = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        console.log('Sending AUTH_REQUIRED to extension via content script');
-        
-        window.postMessage({
-          type: 'TUBEDAO_AUTH_REQUIRED',
-        }, window.location.origin);
-        
-        console.log('Logout message sent to content script');
-      } catch (error) {
-        console.log('Failed to send logout message:', error);
-      }
-    }
-  }, []);
+  }, [authState.isAuthenticated, authState.token, authState.address, authState.chainId, notifyExtension]);
 
   const clearError = useCallback(() => {
     setAuthState(prev => ({ ...prev, error: null }));

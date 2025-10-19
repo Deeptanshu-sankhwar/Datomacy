@@ -144,6 +144,7 @@ export default function Layout({ children, showExitIntent = false }: LayoutProps
     { name: 'How It Works', href: '/how-it-works' },
     { name: 'Why Datomacy', href: '/why-datomacy' },
     { name: 'Technology', href: '/technology' },
+    { name: 'Blog', href: '/blog' },
     { name: 'Join Waitlist', href: '/join-waitlist' }
   ];
 

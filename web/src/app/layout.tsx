@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   
   // Favicon and icons
   icons: {
-    icon: '/logo.png',
-    shortcut: '/favicon.ico',
-    apple: '/logo.png',
+    icon: '/datomacy.png',
+    shortcut: '/datomacy.png',
+    apple: '/datomacy.png',
   },
 
   // Open Graph for social sharing
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: 'Datomacy',
     images: [
       {
-        url: '/logo.png',
+        url: '/datomacy.png',
         width: 1200,
         height: 630,
         alt: 'Datomacy - Own Your Online Data',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     description: 'The first YouTube Premium Data DAO built on Vana. Upload, vote, earn. 🎬✨',
     creator: '@Datomacy',
     site: '@Datomacy',
-    images: ['/logo.png'],
+    images: ['/datomacy.png'],
   },
 
   // Additional meta tags

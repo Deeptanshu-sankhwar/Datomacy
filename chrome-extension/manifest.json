@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TubeDAO",
+  "name": "Datomacy",
   "version": "2.0.0",
-  "description": "Universal data capture extension - Capture and monetize your web browsing data through decentralized data ownership.",
+  "description": "Universal data capture extension - Earn DMCY token rewards by contributing your browsing data to enterprise intent intelligence.",
 
   
   "permissions": [
@@ -19,7 +19,7 @@
   
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "TubeDAO Extension",
+    "default_title": "Datomacy Extension",
     "default_icon": {
       "16": "icons/logo.png",
       "32": "icons/logo.png",
@@ -47,7 +47,7 @@
       "all_frames": false
     },
     {
-      "matches": ["http://localhost:3000/*", "https://www.tubedao.org/*"],
+      "matches": ["http://localhost:3000/*", "https://www.tubedao.org/*", "https://tubedao.org/*", "https://datomacy.com/*", "https://www.datomacy.com/*"],
       "js": ["content/tubedao-content.js"],
       "run_at": "document_end"
     }

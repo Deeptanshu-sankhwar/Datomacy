@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Layout from '@/components/Layout';
@@ -10,7 +9,6 @@ import {
   Clock,
   User,
   ArrowLeft,
-  TrendingUp
 } from "lucide-react";
 
 export default function BlogPostPage() {

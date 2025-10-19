@@ -5,13 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Layout from '@/components/Layout';
 import Link from 'next/link';
-import Image from 'next/image';
 import { 
   Calendar,
   Clock,
   User,
   ArrowRight,
-  TrendingUp
 } from "lucide-react";
 
 export default function BlogPage() {
